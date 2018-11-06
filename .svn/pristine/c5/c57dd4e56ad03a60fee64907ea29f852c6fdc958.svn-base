@@ -1,0 +1,54 @@
+
+package com.nuebus.mvc;
+
+import com.nuebus.dto.ComboStrDTO;
+import com.nuebus.model.Servicio;
+import com.nuebus.service.LineaService;
+import com.nuebus.service.ServicioService;
+import java.util.List;
+import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ *
+ * @author Valeria
+ */
+
+@RestController
+@CrossOrigin
+@RequestMapping(value = "api")
+public class DiagramacionController {
+    
+    final static Logger LOG = LoggerFactory.getLogger(DiagramacionController.class);
+      
+    @Inject
+    LineaService lineaService;
+    
+    @Inject 
+    ServicioService servicioService;
+    
+    @RequestMapping(value = "/diagr/empresa/{idEmpresa}/lineas", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ComboStrDTO>> finAllLinea( @PathVariable String idEmpresa ) {             
+        List<ComboStrDTO> lista = lineaService.finAllLinea( idEmpresa );
+        return new ResponseEntity<>(lista, HttpStatus.OK);
+    } 
+    
+    @RequestMapping(value = "/diagr/empresa/{idEmpresa}/linea/{idLinea}/servicios", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Servicio>> finAllLinea( @PathVariable String idEmpresa, @PathVariable String idLinea,
+            @PathVariable java.util.Date inicio, @PathVariable java.util.Date fin ) {             
+        List<Servicio> lista = servicioService.findServiciosByFecha(idEmpresa, idLinea, inicio, fin );
+        return new ResponseEntity<>(lista, HttpStatus.OK);
+    } 
+    
+    
+    
+}

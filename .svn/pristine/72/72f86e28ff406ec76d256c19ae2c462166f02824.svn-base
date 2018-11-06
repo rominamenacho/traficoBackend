@@ -1,0 +1,239 @@
+package com.nuebus.vistas;
+
+import com.nuebus.dto.CbMapaAsientoDTO;
+import com.nuebus.dto.ChoferIncidenciaDTO;
+import com.nuebus.dto.ChoferMinDTO;
+import com.nuebus.dto.ComboDTO;
+import com.nuebus.dto.ComboStrDTO;
+import com.nuebus.dto.VehiculoDTO;
+import com.nuebus.dto.VehiculoIncidenciaDTO;
+import com.nuebus.dto.VehiculoMinDTO;
+import com.nuebus.dto.ViajeEspecialDTO;
+import com.nuebus.dto.VueltaDTO;
+import com.nuebus.mapper.VehiculoMapper;
+import com.nuebus.mapper.ViajeEspecialMapper;
+import com.nuebus.model.Chofer;
+import com.nuebus.model.ChoferIncidencia;
+import com.nuebus.model.ChoferViaje;
+import com.nuebus.model.Escala;
+import com.nuebus.model.ServiciosChoferes;
+import com.nuebus.model.ServiciosVehiculos;
+import com.nuebus.model.Vehiculo;
+import com.nuebus.model.VehiculoIncidencia;
+import com.nuebus.model.ViajeEspecial;
+import com.nuebus.model.Vuelta;
+import com.nuebus.vistas.combos.CbMapaAsiento;
+import com.nuebus.vistas.combos.Combo;
+import com.nuebus.vistas.combos.ComboStr;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+
+/**
+ *
+ * @author Valeria
+ */
+public class MapperVistas {
+
+    @Autowired
+    ViajeEspecialMapper viajeEspecialMapper;
+    @Autowired
+    VehiculoMapper vehiculoMapper;
+
+    public static CbMapaAsientoDTO toDTO(CbMapaAsiento mapa) {
+
+        CbMapaAsientoDTO mapaDTO = new CbMapaAsientoDTO();
+        mapaDTO.setCodigo(mapa.getCodigo());
+        mapaDTO.setDescripcion(mapa.getDescripcion());
+
+        return mapaDTO;
+    }
+
+    public static ComboDTO toDTO(Combo combo) {
+
+        ComboDTO comboDTO = new ComboDTO();
+        comboDTO.setCodigo(combo.getCodigo());
+        comboDTO.setDescripcion(combo.getDescripcion());
+
+        return comboDTO;
+    }
+
+    public static ComboStrDTO toDTO(ComboStr combo) {
+
+        ComboStrDTO comboStrDTO = new ComboStrDTO();
+        comboStrDTO.setCodigo(combo.getCodigo());
+        comboStrDTO.setDescripcion(combo.getDescripcion());
+
+        return comboStrDTO;
+    }
+
+    public static VehiculoIncidenciaDTO toVehiculoIncidenciaDTO(VehiculoIncidencia vehiculoIncidencia) {
+        VehiculoIncidenciaDTO vehiculoIncidenciaDTO = new VehiculoIncidenciaDTO();
+        vehiculoIncidenciaDTO.setId(vehiculoIncidencia.getId());
+        vehiculoIncidenciaDTO.setIdIncidencia(vehiculoIncidencia.getIncidencia().getId());
+        vehiculoIncidenciaDTO.setInicio(vehiculoIncidencia.getInicio());
+        vehiculoIncidenciaDTO.setFin(vehiculoIncidencia.getFin());
+        return vehiculoIncidenciaDTO;
+    }
+
+    public static ChoferIncidenciaDTO toChoferIncidenciaDTO(ChoferIncidencia choferIncidencia) {
+        ChoferIncidenciaDTO choferIncidenciaDTO = new ChoferIncidenciaDTO();
+        choferIncidenciaDTO.setId(choferIncidencia.getId());
+        choferIncidenciaDTO.setIdIncidencia(choferIncidencia.getIncidencia().getId());
+        choferIncidenciaDTO.setInicio(choferIncidencia.getInicio());
+        choferIncidenciaDTO.setFin(choferIncidencia.getFin());
+        return choferIncidenciaDTO;
+    }
+
+    public ViajeEspecialDTO toDTO(ViajeEspecial viajeEspecial, Map<String, Set<String>> listaConf,
+            Map<String, Set<String>> listaConfVehi, Escala origen, Escala destino) {
+
+        if (viajeEspecial == null) {
+            return null;
+        }
+
+        ViajeEspecialDTO viajeEspecialDTO = new ViajeEspecialDTO();
+
+        viajeEspecialDTO.setId(viajeEspecial.getId());
+        viajeEspecialDTO.setAgenciaContratante(viajeEspecial.getAgenciaContratante());
+        viajeEspecialDTO.setFechaHoraSalida(viajeEspecial.getFechaHoraSalida());
+
+        String origenDet = viajeEspecial.getOrigen();
+        origenDet += (origen != null) ? " - " + origen.getEscNombre() : "";
+        viajeEspecialDTO.setOrigen(origenDet);
+
+        String destinoStr = viajeEspecial.getDestino();
+        destinoStr += (destino != null) ? " - " + destino.getEscNombre() : "";
+        viajeEspecialDTO.setDestino(destinoStr);
+
+        viajeEspecialDTO.setFechaHoraRegreso(viajeEspecial.getFechaHoraRegreso());
+        viajeEspecialDTO.setObservaciones(viajeEspecial.getObservaciones());
+        viajeEspecialDTO.setEmpCodigo(viajeEspecial.getEmpCodigo());
+
+        Set<ChoferMinDTO> choferes = new HashSet<>();
+        ChoferMinDTO unEstado;
+        String claveChofer = "";
+
+        final int HABILITADO = 0;
+        final int DESHABILITADO = 1;
+
+        for (ChoferViaje chViaje : viajeEspecial.getChoferViaje()) {
+
+            claveChofer = chViaje.getChofer().getChoferPK().getCho_emp_codigo() + chViaje.getChofer().getChoferPK().getCho_codigo();
+
+            int estado = (chViaje.getChofer().getCho_estado() == Chofer.DESHABILITADO
+                    || (listaConf.get(claveChofer) != null
+                    && listaConf.get(claveChofer).size() > 0)) ? DESHABILITADO : HABILITADO;
+
+            unEstado = new ChoferMinDTO();
+            unEstado.setChoferPK(chViaje.getChofer().getChoferPK());
+            unEstado.setCho_nombre(chViaje.getChofer().getCho_nombre());
+            unEstado.setCho_estado(estado);
+
+            choferes.add(unEstado);
+        }
+
+        viajeEspecialDTO.setChoferes(choferes);
+
+        if (viajeEspecial.getVehiculo() != null) {
+
+            String claveVehiculo = viajeEspecial.getVehiculo().getVehiculoPK().getVehEmpCodigo()
+                    + viajeEspecial.getVehiculo().getVehiculoPK().getVehInterno();
+
+            VehiculoMinDTO veh = new VehiculoMinDTO();
+            veh.setVehiculoPK(viajeEspecial.getVehiculo().getVehiculoPK());
+
+            int estado = (viajeEspecial.getVehiculo().getVehEstado() == Vehiculo.DESHABILITADO
+                    || (listaConfVehi.get(claveVehiculo) != null
+                    && listaConfVehi.get(claveVehiculo).size() > 0)) ? DESHABILITADO : HABILITADO;
+
+            veh.setVehEstado(estado);
+            viajeEspecialDTO.setVehiculo(veh);
+        }
+
+        return viajeEspecialDTO;
+    }
+
+    public VehiculoDTO toDTO(VehiculoDTO retorno, String mapaDesc) {
+        retorno.setVehMpaDesc(mapaDesc);
+        return retorno;
+    }
+
+    public VueltaDTO toDTO(Vuelta vuelta, Map<String, Set<String>> listaConf,
+            Map<String, Set<String>> listaConfVehi) {
+
+        if (vuelta == null) {
+            return null;
+        }
+
+        VueltaDTO vueltaDTO = new VueltaDTO();
+
+        vueltaDTO.setId(vuelta.getId());
+
+        vueltaDTO.setFechaHoraSalida(vuelta.getFechaHoraSalida());
+
+        vueltaDTO.setFechaHoraSalidaTaller(vuelta.getFechaHoraSalidaTaller());
+
+        vueltaDTO.setFechaHoraLlegada(vuelta.getFechaHoraLlegada());
+
+        vueltaDTO.setFechaHoraLlegadaTaller(vuelta.getFechaHoraLlegadaTaller());
+
+        vueltaDTO.setDuracionTotal(vuelta.getDuracionTotal());
+
+        vueltaDTO.setObservaciones(vuelta.getObservaciones());
+
+        vueltaDTO.setKmTotales(vuelta.getKmTotales());
+
+        //vueltaDTO.setIdDiagramacion(vuelta.getDiagramacion());
+        Set<ChoferMinDTO> choferes = new HashSet<>();
+        Set<VehiculoMinDTO> vehiculos = new HashSet<>();
+        ChoferMinDTO unEstado;
+        VehiculoMinDTO vehiculoMinDTO;
+        String claveChofer = "";
+        String claveVehiculo = "";
+
+        final int HABILITADO = 0;
+        final int DESHABILITADO = 1;
+
+        //choferes
+        for (ServiciosChoferes chViaje : vuelta.getServiciosChoferes()) {
+
+            claveChofer = chViaje.getChofer().getChoferPK().getCho_emp_codigo() + chViaje.getChofer().getChoferPK().getCho_codigo();
+
+            int estado = (chViaje.getChofer().getCho_estado() == Chofer.DESHABILITADO
+                    || (listaConf.get(claveChofer) != null
+                    && listaConf.get(claveChofer).size() > 0)) ? DESHABILITADO : HABILITADO;
+
+            unEstado = new ChoferMinDTO();
+            unEstado.setChoferPK(chViaje.getChofer().getChoferPK());
+            unEstado.setCho_nombre(chViaje.getChofer().getCho_nombre());
+            unEstado.setCho_estado(estado);
+
+            choferes.add(unEstado);
+        }
+
+        vueltaDTO.setChoferes(choferes);
+        //vehiculos
+        for (ServiciosVehiculos vehiculosSer : vuelta.getServiciosVehiculos()) {
+
+            claveVehiculo = vehiculosSer.getVehiculoPK().getVehEmpCodigo() + vehiculosSer.getVehiculoPK().getVehInterno();
+
+            vehiculoMinDTO = new VehiculoMinDTO();
+            vehiculoMinDTO.setVehiculoPK(vehiculosSer.getVehiculoPK());
+
+            ////estado veh
+            int estadoV = (vehiculosSer.encontrarVehiculoXPK().getVehEstado() == Vehiculo.DESHABILITADO
+                    || (listaConf.get(claveVehiculo) != null
+                    && listaConf.get(claveVehiculo).size() > 0)) ? DESHABILITADO : HABILITADO;
+
+            vehiculoMinDTO.setVehEstado(estadoV);
+
+            vehiculos.add(vehiculoMinDTO);
+        }
+
+        vueltaDTO.setVehiculos(vehiculos);
+        return vueltaDTO;
+    }
+
+}
