@@ -21,6 +21,7 @@ public class LineaPK implements Serializable{
     @Size( max = 4)
     String linEmpCodigo = "";
     @NotNull
+    @Size( max = 8)
     String linCodigo = "";
     
     
@@ -79,6 +80,13 @@ public class LineaPK implements Serializable{
 
     public void setLinCodigo(String linCodigo) {
         this.linCodigo = linCodigo;
-    }    
+    }  
+
+    @Override
+    public String toString() {
+        return "LineaPK{" + "linEmpCodigo=" + linEmpCodigo + ", linCodigo=" + linCodigo + '}';
+    }
+    
+    
     
 }

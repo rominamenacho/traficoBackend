@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.nuebus.service;
+package com.nuebus.service.impl;
 
 import com.nuebus.dto.VueltaDTO;
 import com.nuebus.erroresJson.WrapChoferPKError;
@@ -23,6 +23,7 @@ import com.nuebus.model.ServiciosVehiculos;
 import com.nuebus.repository.ChoferRepository;
 import com.nuebus.repository.VehiculoRepository;
 import com.nuebus.repository.VueltaRepository;
+import com.nuebus.service.VueltaService;
 import com.nuebus.utilidades.Utilities;
 import com.nuebus.vistas.MapperVistas;
 import com.nuebus.vistas.combos.ChoferesPKDet;

@@ -1,5 +1,5 @@
 
-package com.nuebus.service;
+package com.nuebus.service.impl;
 
 import com.nuebus.dto.ViajeEspecialDTO;
 import com.nuebus.erroresJson.WrapChoferPKError;
@@ -18,6 +18,7 @@ import com.nuebus.repository.ChoferRepository;
 import com.nuebus.repository.EscalaRepository;
 import com.nuebus.repository.VehiculoRepository;
 import com.nuebus.repository.ViajeEspecialRepository;
+import com.nuebus.service.ViajeEspecialService;
 import com.nuebus.utilidades.Utilities;
 import com.nuebus.vistas.MapperVistas;
 import com.nuebus.vistas.combos.ChoferesPKDet;

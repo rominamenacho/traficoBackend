@@ -38,5 +38,11 @@ public class Linea {
     public void setLineaPK(LineaPK lineaPK) {
         this.lineaPK = lineaPK;
     }    
+
+    @Override
+    public String toString() {
+        return "Linea{" + "lineaPK=" + lineaPK + ", linNombre=" + linNombre + '}';
+    }   
+    
     
 }

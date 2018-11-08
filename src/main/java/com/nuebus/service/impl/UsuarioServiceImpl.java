@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.nuebus.service;
+package com.nuebus.service.impl;
 
 import com.nuebus.dto.UsuarioDTO;
 import com.nuebus.mapper.UsuarioMapper;
 import com.nuebus.model.Usuario;
 import com.nuebus.model.UsuarioPK;
 import com.nuebus.repository.UsuarioRepository;
+import com.nuebus.service.UsuarioService;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

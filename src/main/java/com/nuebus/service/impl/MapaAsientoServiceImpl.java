@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.nuebus.service;
+package com.nuebus.service.impl;
 
 import com.nuebus.dto.CbMapaAsientoDTO;
 import com.nuebus.repository.MapaAsientoRepository;
+import com.nuebus.service.MapaAsientoService;
 import com.nuebus.vistas.MapperVistas;
 import java.util.ArrayList;
 import java.util.List;

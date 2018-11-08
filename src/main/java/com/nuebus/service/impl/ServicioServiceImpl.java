@@ -1,7 +1,8 @@
-package com.nuebus.service;
+package com.nuebus.service.impl;
 
 import com.nuebus.model.Servicio;
 import com.nuebus.repository.ServicioRepository;
+import com.nuebus.service.ServicioService;
 import com.nuebus.vistas.combos.ComboVehiculo;
 import java.util.ArrayList;
 import java.util.Date;

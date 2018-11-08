@@ -1,6 +1,7 @@
-package com.nuebus.service;
+package com.nuebus.service.impl;
 
 import com.nuebus.repository.EscalaRepository;
+import com.nuebus.service.EscalaService;
 import com.nuebus.vistas.combos.ComboStr;
 import java.util.ArrayList;
 import org.slf4j.Logger;

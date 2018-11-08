@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.nuebus.service;
+package com.nuebus.service.impl;
 
 import com.nuebus.dto.DiagramacionDTO;
 import com.nuebus.excepciones.ValidacionExcepcion;
@@ -12,6 +12,7 @@ import com.nuebus.model.Diagramacion;
 import com.nuebus.model.Vuelta;
 import com.nuebus.repository.DiagramacionRepository;
 import com.nuebus.repository.VueltaRepository;
+import com.nuebus.service.DiagramacionService;
 import com.nuebus.utilidades.Utilities;
 import java.util.Date;
 import java.util.List;

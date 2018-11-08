@@ -1,5 +1,5 @@
 
-package com.nuebus.service;
+package com.nuebus.service.impl;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import com.nuebus.model.VehiculoPK;
 import com.nuebus.repository.IncidenciaRepository;
 import com.nuebus.repository.MapaAsientoRepository;
 import com.nuebus.repository.VehiculoRepository;
+import com.nuebus.service.VehiculoService;
 import com.nuebus.vistas.MapperVistas;
 import java.util.stream.Collectors;
 import java.util.HashSet;

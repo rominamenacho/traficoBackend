@@ -1,4 +1,4 @@
-package com.nuebus.service;
+package com.nuebus.service.impl;
 
 import com.nuebus.dto.ComboDTO;
 import com.nuebus.dto.IncidenciaDTO;
@@ -7,6 +7,7 @@ import com.nuebus.excepciones.ValidacionExcepcion;
 import com.nuebus.mapper.IncidenciaMapper;
 import com.nuebus.model.Incidencia;
 import com.nuebus.repository.IncidenciaRepository;
+import com.nuebus.service.IncidenciaService;
 import com.nuebus.utilidades.Utilities;
 import com.nuebus.vistas.MapperVistas;
 import java.util.HashMap;

@@ -1,5 +1,5 @@
 
-package com.nuebus.service;
+package com.nuebus.service.impl;
 
 import com.nuebus.dto.CarnetDTO;
 import com.nuebus.dto.ChoferDTO;
@@ -12,6 +12,7 @@ import com.nuebus.model.ChoferIncidencia;
 import com.nuebus.model.ChoferPK;
 import com.nuebus.repository.ChoferRepository;
 import com.nuebus.repository.IncidenciaRepository;
+import com.nuebus.service.ChoferService;
 import com.nuebus.vistas.MapperVistas;
 import com.nuebus.vistas.combos.ComboChoferes;
 import java.util.ArrayList;

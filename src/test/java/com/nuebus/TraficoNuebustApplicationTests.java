@@ -1,17 +1,21 @@
 package com.nuebus;
 
+import com.nuebus.dto.EnlaceLineasDTO;
 import com.nuebus.dto.ViajeEspecialDTO;
 import com.nuebus.model.Chofer;
 import com.nuebus.model.ChoferIncidencia;
 import com.nuebus.model.ChoferPK;
 import com.nuebus.model.Incidencia;
+import com.nuebus.model.LineaPK;
 import com.nuebus.model.Servicio;
 import com.nuebus.model.Vehiculo;
 import com.nuebus.model.VehiculoIncidencia;
 import com.nuebus.model.VehiculoPK;
 import com.nuebus.model.ViajeEspecial;
 import com.nuebus.repository.ChoferRepository;
+import com.nuebus.repository.EnlaceLineasRepository;
 import com.nuebus.repository.IncidenciaRepository;
+import com.nuebus.repository.LineaRepository;
 import com.nuebus.repository.VehiculoRepository;
 import com.nuebus.service.LineaService;
 import com.nuebus.service.ServicioService;
@@ -50,70 +54,33 @@ public class TraficoNuebustApplicationTests {
         
         @Autowired
         ViajeEspecialService  viajeEspecialService ;
+        
+        @Autowired
+        LineaRepository lineaRepository;
+        
+        @Autowired
+        EnlaceLineasRepository  enlaceLineasRepository;
+        
 
 	@Test
         @Transactional
 	public void contextLoads() {
             
-            /*
+            lineaRepository.findAllLineasByEmpresa("IMQ").forEach(System.out::println);
             
-            long idIncidencia = 16100;
+            EnlaceLineasDTO enlaceDTO = new EnlaceLineasDTO();
             
-            Incidencia incid = incidenciaRepository.findOne(idIncidencia); 
+            LineaPK idaPk = new LineaPK( "IMQ", "800");
+            LineaPK vtaPk = new LineaPK( "IMQ", "URU");
             
-            System.out.println(incid.toString());
+            enlaceDTO.setIdaPK(idaPk);
+            enlaceDTO.setVueltaPK(vtaPk);
             
+            lineaService.saveEnlaceLineas(enlaceDTO);
             
-            ChoferPK idChofer = new ChoferPK();
-            idChofer.setCho_emp_codigo("IMQ");
-            idChofer.setCho_codigo(1);
-            
-            
-            Chofer unChofer =  choferRepository.findOne(idChofer);
+            enlaceLineasRepository.findAll().forEach( System.out::println );
             
             
-            System.out.println( unChofer.toString());
-            
-            
-            ChoferIncidencia chInc = new ChoferIncidencia();
-            
-            chInc.setChofer(unChofer);
-            chInc.setIncidencia(incid);
-            
-            chInc.setInicio(new java.util.Date());
-            chInc.setFin(new java.util.Date());
-            
-            
-            unChofer.getChoferIncidencias().add(chInc);
-            
-            
-            //incidenciaRepository.save(incid);            
-            choferRepository.save( unChofer );    
-            
-            /////            
-            
-            Chofer unChoferDOS =  choferRepository.findOne(idChofer);            
-            System.out.println("Numero de inci " +  unChoferDOS.getChoferIncidencias().size());           
-            
-            ////////////////////////////////////////////
-            
-            VehiculoPK veh = new VehiculoPK();
-            veh.setVehEmpCodigo("IMQ");
-            veh.setVehInterno(2);
-            
-            Vehiculo vehiculo = vehiculoRepository.findOne(veh);
-            
-            VehiculoIncidencia vehInc = new VehiculoIncidencia();
-            vehInc.setVehiculo(vehiculo);
-            vehInc.setIncidencia(incid);
-            vehInc.setInicio( new java.util.Date());
-            vehInc.setFin( new java.util.Date() );
-            
-            vehiculo.getVehiculoIncidencias().add( vehInc );
-            
-           
-                     
-              */
 	}
         
         

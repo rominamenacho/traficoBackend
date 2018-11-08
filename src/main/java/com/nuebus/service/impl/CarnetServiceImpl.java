@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.nuebus.service;
+package com.nuebus.service.impl;
 
 import com.nuebus.dto.CarnetDTO;
 import com.nuebus.model.Carnet;
 import com.nuebus.repository.CarnetRepository;
+import com.nuebus.service.CarnetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

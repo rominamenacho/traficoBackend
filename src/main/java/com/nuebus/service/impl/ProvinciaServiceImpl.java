@@ -1,7 +1,8 @@
 
-package com.nuebus.service;
+package com.nuebus.service.impl;
 
 import com.nuebus.repository.ProvinciaRepository;
+import com.nuebus.service.ProvinciaService;
 import com.nuebus.vistas.combos.ComboStr;
 import java.util.List;
 import java.util.stream.Collectors;
