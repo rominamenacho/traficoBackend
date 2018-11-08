@@ -51,6 +51,10 @@ public class ChoferDTO {
     private java.util.Date cho_fecha_nacimiento = null;    
     @Digits(integer = 1,fraction = 0)
     private int cho_estado = 0;
+    
+     @Digits(integer = 1,fraction = 0)
+    private int cho_chofer = 0; //0 si, 1 no (o sea, es auxiliar)
+     
     //private Set<CarnetDTO> carnets = new HashSet<>();
     
     //Set<ChoferIncidenciaDTO> choferIncidencias = new HashSet<>(); 
@@ -169,5 +173,12 @@ public class ChoferDTO {
     public void setChoferPK(ChoferPK choferPK) {
         this.choferPK = choferPK;
     }  
-    
+
+    public int getCho_chofer() {
+        return cho_chofer;
+    }
+
+    public void setCho_chofer(int cho_chofer) {
+        this.cho_chofer = cho_chofer;
+    }  
 }

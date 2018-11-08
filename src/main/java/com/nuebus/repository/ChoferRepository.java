@@ -19,7 +19,7 @@ import org.springframework.data.jpa.repository.Query;
  * @author Valeria
  */
 public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK>, ChoferRepositoryCustom {
-    
+    //aca habria q agregar al where q cho_chofer = 0 y hacer un met igual q cho_chofer=1 para los auxiliares
     @Query("select c from Chofer c where choferPK.cho_emp_codigo = ?1 ")
     public Page<Chofer> findChoferesByEmpresa(String cho_emp_codigo , Pageable pageable);
     

@@ -64,6 +64,8 @@ public class Chofer{
     private java.util.Date cho_fecha_nacimiento = null;    
     @Digits(integer = 1,fraction = 0)
     private int cho_estado = 0;
+    @Digits(integer = 1,fraction = 0)
+    private int cho_chofer = 0; /*0 es chofer, 1 es auxiliar*/
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "chofer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Carnet> carnets = new HashSet<Carnet>();  
@@ -214,7 +216,14 @@ public class Chofer{
     public void setChoferViaje(Set<ChoferViaje> ChoferViaje) {
         this.ChoferViaje = ChoferViaje;
     }  
-    
+
+    public int getCho_chofer() {
+        return cho_chofer;
+    }
+
+    public void setCho_chofer(int cho_chofer) {
+        this.cho_chofer = cho_chofer;
+    }   
 
     public String toString() {
         return  "cho_nombre= "  + cho_nombre +   "cho_documento= "  + cho_documento +  "cho_doc_codigo= " 
