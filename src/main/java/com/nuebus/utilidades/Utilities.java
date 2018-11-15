@@ -1,6 +1,7 @@
 package com.nuebus.utilidades;
 
 import java.text.*;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -233,5 +234,37 @@ public class Utilities {
         return error;    
     }
     
+    
+    public static String dateToString(java.util.Date fecha, String pattern){
+        SimpleDateFormat template;
+        //Creo el format de la fecha del sistema
+        if (pattern != null){
+            template = new SimpleDateFormat(pattern, formatSymbols);
+        }else{
+            template = new SimpleDateFormat(FORMAT_DATE, formatSymbols);
+        }
+        if (fecha != null) {
+            return template.format(fecha).toString();
+        } else {
+            return new String("");
+        }
+    }
+    
+    public static Date stringToDate( String fechaStr, String pattern ){
+        SimpleDateFormat template;
+        Date date = null;
+        if (pattern != null){
+            template = new SimpleDateFormat(pattern, formatSymbols);
+        }else{
+            template = new SimpleDateFormat(FORMAT_DATE, formatSymbols);
+        }
+        
+        try{             
+            date = template.parse( fechaStr );            
+        }catch(java.text.ParseException e){
+            date = null;
+        }
+        return date;
+    }
     
 }

@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,10 +59,21 @@ public class LineaServiceImpl implements LineaService{
         Linea ida = lineaRepository.findOne( enlaceDTO.getIdaPK() );
         Linea vta = lineaRepository.findOne( enlaceDTO.getVueltaPK() );
         
+        enlace.setEmpCodigo(enlaceDTO.getEmpCodigo());
         enlace.setIda(ida);
         enlace.setVuelta(vta);
         
         enlaceLineasRepository.save( enlace);        
+    }
+
+    @Override
+    public Page<EnlaceLineas> finAllEnlaceLineasByEmpresa(String empCodigo, Pageable pageable) {
+        return enlaceLineasRepository.findAllByEmpresa(empCodigo, pageable);
+    }
+
+    @Override
+    public void deleteEnlaceLineas(Long idEnlace) {
+        enlaceLineasRepository.delete(idEnlace);
     }
     
 }

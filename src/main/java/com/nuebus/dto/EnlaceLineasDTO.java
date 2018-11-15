@@ -12,6 +12,7 @@ import java.io.Serializable;
 
 public class EnlaceLineasDTO implements Serializable {
     
+    String empCodigo;
     LineaPK idaPK;     
     LineaPK vueltaPK;
 
@@ -33,5 +34,13 @@ public class EnlaceLineasDTO implements Serializable {
     public void setVueltaPK(LineaPK vueltaPK) {
         this.vueltaPK = vueltaPK;
     }     
+
+    public String getEmpCodigo() {
+        return empCodigo;
+    }
+
+    public void setEmpCodigo(String empCodigo) {
+        this.empCodigo = empCodigo;
+    }    
     
 }

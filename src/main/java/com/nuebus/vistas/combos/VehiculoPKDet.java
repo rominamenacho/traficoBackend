@@ -20,6 +20,12 @@ public class VehiculoPKDet {
     
     }    
 
+    public VehiculoPKDet(VehiculoPK vehiculoPK, int interno) {
+        this.vehiculoPK = vehiculoPK;
+        this.interno = interno;
+    }   
+    
+
     public VehiculoPK getVehiculoPK() {
         return vehiculoPK;
     }

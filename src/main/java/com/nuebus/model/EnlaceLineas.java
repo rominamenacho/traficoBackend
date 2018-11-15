@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -37,7 +39,11 @@ public class EnlaceLineas implements Serializable {
     )
     @Id
     @GeneratedValue(generator = "enlaceLineasSG")
-    Long id;    
+    Long id;   
+    
+    @NotNull
+    @Size( max = 4 )        
+    String empCodigo;
     
     @ManyToOne( fetch = FetchType.LAZY)
     @NotFound(
@@ -89,11 +95,18 @@ public class EnlaceLineas implements Serializable {
         this.vuelta = vuelta;
     }  
 
+    public String getEmpCodigo() {
+        return empCodigo;
+    }
+
+    public void setEmpCodigo(String empCodigo) {
+        this.empCodigo = empCodigo;
+    }
+
     @Override
     public String toString() {
-        return "EnlaceLineas{" + "id=" + id + ", ida=" + ida + ", vuelta=" + vuelta + '}';
-    } 
-    
+        return "EnlaceLineas{" + "id=" + id + ", empCodigo=" + empCodigo + ", ida=" + ida + ", vuelta=" + vuelta + '}';
+    }
     
     
 }

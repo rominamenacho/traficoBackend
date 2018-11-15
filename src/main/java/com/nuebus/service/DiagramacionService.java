@@ -38,5 +38,8 @@ public interface DiagramacionService {
   //  public List<DiagramacionDTO> findDiagramacionesByEmpresa(String empresa);
 
     public void setVueltas(Long diagramacion, List<Vuelta> vueltas) throws Exception;
+    
+    
+    //findVehiculosByEmpresa
 
 }

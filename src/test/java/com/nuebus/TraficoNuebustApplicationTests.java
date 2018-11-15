@@ -1,30 +1,17 @@
 package com.nuebus;
 
-import com.nuebus.dto.EnlaceLineasDTO;
-import com.nuebus.dto.ViajeEspecialDTO;
-import com.nuebus.model.Chofer;
-import com.nuebus.model.ChoferIncidencia;
-import com.nuebus.model.ChoferPK;
-import com.nuebus.model.Incidencia;
-import com.nuebus.model.LineaPK;
-import com.nuebus.model.Servicio;
-import com.nuebus.model.Vehiculo;
-import com.nuebus.model.VehiculoIncidencia;
-import com.nuebus.model.VehiculoPK;
-import com.nuebus.model.ViajeEspecial;
+import com.nuebus.builders.ServicioBuilder;
 import com.nuebus.repository.ChoferRepository;
 import com.nuebus.repository.EnlaceLineasRepository;
 import com.nuebus.repository.IncidenciaRepository;
 import com.nuebus.repository.LineaRepository;
+import com.nuebus.repository.ServicioRepository;
 import com.nuebus.repository.VehiculoRepository;
 import com.nuebus.service.LineaService;
 import com.nuebus.service.ServicioService;
-import com.nuebus.service.VehiculoService;
 import com.nuebus.service.ViajeEspecialService;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.List;
-import javax.inject.Inject;
+import com.nuebus.utilidades.Utilities;
+import java.util.Date;
 import javax.transaction.Transactional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,24 +48,27 @@ public class TraficoNuebustApplicationTests {
         @Autowired
         EnlaceLineasRepository  enlaceLineasRepository;
         
+        @Autowired
+        ServicioRepository servicioRepository;
 
 	@Test
         @Transactional
-	public void contextLoads() {
+	public void contextLoads() {         
+           
+            //enlaceLineasRepository.findConfServicios( "IMQ", "200R" ).forEach( System.out::println  );
             
-            lineaRepository.findAllLineasByEmpresa("IMQ").forEach(System.out::println);
+            java.util.Date inicio = Utilities.stringToDate( "12/10/2018", Utilities.FORMAT_DATE);
             
-            EnlaceLineasDTO enlaceDTO = new EnlaceLineasDTO();
+            java.util.Date fin =  Utilities.stringToDate( "12/10/2018", Utilities.FORMAT_DATE);
             
-            LineaPK idaPk = new LineaPK( "IMQ", "800");
-            LineaPK vtaPk = new LineaPK( "IMQ", "URU");
+            servicioRepository.findServiciosByLineaAndFechas("IMQ", "100", inicio, fin).
+                    forEach(  item -> 
+                    {
+                        System.out.println( new ServicioBuilder( item ).build().toString() );
+                    });
             
-            enlaceDTO.setIdaPK(idaPk);
-            enlaceDTO.setVueltaPK(vtaPk);
             
-            lineaService.saveEnlaceLineas(enlaceDTO);
             
-            enlaceLineasRepository.findAll().forEach( System.out::println );
             
             
 	}
