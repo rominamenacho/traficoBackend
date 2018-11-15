@@ -1,13 +1,17 @@
 package com.nuebus;
 
+import com.nuebus.builders.ServicioBuilder;
 import com.nuebus.repository.ChoferRepository;
 import com.nuebus.repository.EnlaceLineasRepository;
 import com.nuebus.repository.IncidenciaRepository;
 import com.nuebus.repository.LineaRepository;
+import com.nuebus.repository.ServicioRepository;
 import com.nuebus.repository.VehiculoRepository;
 import com.nuebus.service.LineaService;
 import com.nuebus.service.ServicioService;
 import com.nuebus.service.ViajeEspecialService;
+import com.nuebus.utilidades.Utilities;
+import java.util.Date;
 import javax.transaction.Transactional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,12 +48,27 @@ public class TraficoNuebustApplicationTests {
         @Autowired
         EnlaceLineasRepository  enlaceLineasRepository;
         
+        @Autowired
+        ServicioRepository servicioRepository;
 
 	@Test
         @Transactional
 	public void contextLoads() {         
            
-            enlaceLineasRepository.findConfServicios( "IMQ", "200R" ).forEach( System.out::println  );
+            //enlaceLineasRepository.findConfServicios( "IMQ", "200R" ).forEach( System.out::println  );
+            
+            java.util.Date inicio = Utilities.stringToDate( "12/10/2018", Utilities.FORMAT_DATE);
+            
+            java.util.Date fin =  Utilities.stringToDate( "12/10/2018", Utilities.FORMAT_DATE);
+            
+            servicioRepository.findServiciosByLineaAndFechas("IMQ", "100", inicio, fin).
+                    forEach(  item -> 
+                    {
+                        System.out.println( new ServicioBuilder( item ).build().toString() );
+                    });
+            
+            
+            
             
             
 	}

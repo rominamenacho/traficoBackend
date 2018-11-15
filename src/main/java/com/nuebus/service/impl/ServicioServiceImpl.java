@@ -1,11 +1,15 @@
 package com.nuebus.service.impl;
 
+import com.nuebus.builders.ServicioBuilder;
+import com.nuebus.dto.ServicioDTO;
 import com.nuebus.model.Servicio;
 import com.nuebus.repository.ServicioRepository;
 import com.nuebus.service.ServicioService;
 import com.nuebus.vistas.combos.ComboVehiculo;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +41,15 @@ public class ServicioServiceImpl implements ServicioService {
 
         return servicioRepository.findVehiculosLibresByFecha(empresa, inicio, fin);
 
+    }
+
+    @Override
+    public List<ServicioDTO> findServiciosConHorarisoByFecha(String empresa, String linea, Date inicioServ, Date finServ) {
+        
+         return servicioRepository.findServiciosByLineaAndFechas(empresa, linea, inicioServ, finServ)
+                    .stream().map( objeto -> new ServicioBuilder( objeto ).build() ).collect(Collectors.toList()); 
+                 
+        
     }
 
 }

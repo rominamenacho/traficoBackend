@@ -22,6 +22,13 @@ public class ChoferesPKDet {
         return choferPK;
     }
 
+    public ChoferesPKDet(ChoferPK choferPK, String nombreChofer) {
+        this.choferPK = choferPK;
+        this.nombreChofer = nombreChofer;
+    }
+    
+    
+
     public void setChoferPK(ChoferPK choferPK) {
         this.choferPK = choferPK;
     }

@@ -37,6 +37,13 @@ public class Servicio {
 
     public void setSerEsrCodigo(int serEsrCodigo) {
         this.serEsrCodigo = serEsrCodigo;
-    }       
+    } 
+
+    @Override
+    public String toString() {
+        return "Servicio{" + "servicioPK=" + servicioPK + ", serEsrCodigo=" + serEsrCodigo + '}';
+    }
+    
+    
     
 }

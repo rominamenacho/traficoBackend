@@ -19,7 +19,9 @@ public class ServicioPK implements Serializable{
     int serRefuerzo = 0;
 
     public ServicioPK() {
-    }
+    }   
+    
+    
 
     public String getSerEmpCodigo() {
         return serEmpCodigo;
@@ -27,9 +29,7 @@ public class ServicioPK implements Serializable{
 
     public void setSerEmpCodigo(String serEmpCodigo) {
         this.serEmpCodigo = serEmpCodigo;
-    }
-
-   
+    }   
 
     public Date getSerFechaHora() {
         return serFechaHora;
