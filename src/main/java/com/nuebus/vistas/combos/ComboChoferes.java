@@ -42,6 +42,6 @@ public class ComboChoferes implements Serializable{
     public void setNombreChofer(String nombreChofer) {
         this.nombreChofer = nombreChofer;
     }
-    
-    
-}
+
+
+    }

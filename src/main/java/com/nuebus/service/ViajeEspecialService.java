@@ -29,15 +29,21 @@ public interface ViajeEspecialService {
     
     public void setChoferes( long viaje, List<ChoferPK> choferesPK ) throws Exception;
     
+    public void setAuxiliares( long viaje, List<ChoferPK> auxiliaresPK ) throws Exception;
+    
     public void deleteViajeEspecial( long idViaje );
     
     /*public List<ChoferPK> finChoferesByViaje( long idViaje);*/
     
     public List<ChoferesPKDet> finChoferesByViaje( long idViaje);       
     
-    public List<ComboChoferes> findChoferesLibreByViaje( long idViaje );
+    public List<ChoferesPKDet> findAuxiliaresByViaje( long idViaje);       
     
-    public List<ComboVehiculo> findChoferesByEmpresa( long idViaje );
+    public List<ComboChoferes> findChoferesLibreByViaje( long idViaje );
+   
+    public List<ComboChoferes> findAuxiliaresLibreByViaje( long idViaje );
+    
+    public List<ComboVehiculo> findVehiculosByEmpresa( long idViaje );
     
     public List<ComboVehiculo> findVehiculosLibresByViaje( long idViaje );
     

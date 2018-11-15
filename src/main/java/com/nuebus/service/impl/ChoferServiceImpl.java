@@ -90,7 +90,7 @@ public class ChoferServiceImpl implements ChoferService{
     public void saveChofer(ChoferDTO choferDTO) throws Exception{   
        
         Chofer chofer = choferMapper.toEntity(choferDTO);    
-        int codigo = choferRepository.maxCodigoChoferesByEmpresa( choferDTO.getChoferPK().getCho_emp_codigo() );      
+        int codigo = choferRepository.maxCodigoPersonalByEmpresa( choferDTO.getChoferPK().getCho_emp_codigo(), choferDTO.getCho_chofer() );      
         choferDTO.getChoferPK().setCho_codigo( codigo + 1 );               
         choferRepository.save(chofer);                
 
@@ -117,8 +117,8 @@ public class ChoferServiceImpl implements ChoferService{
    
 
     @Override
-    public Page<ChoferDTO> findChoferesByEmpresa(Pageable pageable, String empresa) {
-         return choferRepository.findChoferesByEmpresa( empresa, pageable ).map(chofer -> choferMapper.toDTO(chofer));
+    public Page<ChoferDTO> findPersonalByEmpresa(Pageable pageable, String empresa) {
+         return choferRepository.findPersonalByEmpresa( empresa, pageable ).map(chofer -> choferMapper.toDTO(chofer));
     }
     
       
@@ -211,14 +211,14 @@ public class ChoferServiceImpl implements ChoferService{
     }
 
     @Override
-    public List<ComboChoferes> getChoferes( String empCodigo, int estado) {        
-        return  choferRepository.finChoferesByEstado( empCodigo, estado );        
+    public List<ComboChoferes> getPersonal( String empCodigo, int estado, int funcion) {        
+        return  choferRepository.finPersonalByEstado( empCodigo, estado, funcion );        
     }
 
     @Override
-    public void findChoferesByViaje( long idViaje ) {
+    public void findPersonalByViaje( long idViaje ) {
         
-        List<Object> listas = choferRepository.findChoferesByViaje();        
+        List<Object> listas = choferRepository.findPersonalByViaje();        
     }
     
      

@@ -112,10 +112,20 @@ public class ViajeEspecialController {
         final int HABILITADO = 0;
         final int DESHABILITADO = 1;
 
-        return new ResponseEntity<>( choferService.getChoferes( empCodigo , HABILITADO ), HttpStatus.OK ); 
+        return new ResponseEntity<>( choferService.getPersonal(empCodigo , HABILITADO, 0 ), HttpStatus.OK ); 
+    }
+    
+    @RequestMapping(value = "/ViajesEspeciales/empresa/{empCodigo}/auxiliares", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ComboChoferes>> findAuxiliaresByEmpresa( @PathVariable String empCodigo ) {        
+        //this.comboEstados.push({codigo:0, descripcion:'HABILITADO'});
+        //this.comboEstados.push({codigo:1, descripcion:'DESHABILITADO'});        
+        final int HABILITADO = 0;
+        final int DESHABILITADO = 1;
+
+        return new ResponseEntity<>( choferService.getPersonal(empCodigo , HABILITADO,1 ), HttpStatus.OK ); 
     }
 
-    
+    /*este*/
     @RequestMapping(value = "/ViajesEspeciales/{idViaje}/choferes",
             method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> setChoferes( @PathVariable long idViaje, @Valid @RequestBody ListaChoferPK listaChoferesPK, BindingResult result ) throws Exception {
@@ -125,6 +135,19 @@ public class ViajeEspecialController {
         }
 
         viajeEspecialService.setChoferes(idViaje, listaChoferesPK.getChoferesPK());
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+    /**este*/
+    @RequestMapping(value = "/ViajesEspeciales/{idViaje}/auxiliares",
+            method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> setAuxiliares( @PathVariable long idViaje, @Valid @RequestBody ListaChoferPK listaChoferesPK, BindingResult result ) throws Exception {
+
+        if( result.hasErrors() ){
+            return new ResponseEntity<>(validarChoferes(listaChoferesPK.getChoferesPK()), HttpStatus.CONFLICT);
+        }
+
+        viajeEspecialService.setAuxiliares(idViaje, listaChoferesPK.getChoferesPK());
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -156,12 +179,24 @@ public class ViajeEspecialController {
     public ResponseEntity<List<ChoferesPKDet>> findChoferesByViaje( @PathVariable long idViaje) {       
         return new ResponseEntity<>( viajeEspecialService.finChoferesByViaje( idViaje ), HttpStatus.OK ); 
     }
+    
+    @RequestMapping(value = "/ViajesEspeciales/{idViaje}/auxiliares", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ChoferesPKDet>> findAuxiliaresByViaje( @PathVariable long idViaje) {       
+        return new ResponseEntity<>( viajeEspecialService.findAuxiliaresByViaje( idViaje ), HttpStatus.OK ); 
+    }
 
     
     @RequestMapping(value = "/ViajesEspeciales/{idViaje}/choferesDisp", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ComboChoferes>> findChoferesByEmpresa( @PathVariable long idViaje ) {        
 
         return new ResponseEntity<>( viajeEspecialService.findChoferesLibreByViaje(idViaje), HttpStatus.OK ); 
+
+    }
+    
+    @RequestMapping(value = "/ViajesEspeciales/{idViaje}/auxiliaresDisp", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ComboChoferes>> findAuxiliaresByEmpresa( @PathVariable long idViaje ) {        
+
+        return new ResponseEntity<>( viajeEspecialService.findAuxiliaresLibreByViaje(idViaje), HttpStatus.OK ); 
 
     }
 
@@ -175,7 +210,7 @@ public class ViajeEspecialController {
     @RequestMapping(value = "/ViajesEspeciales/{idViaje}/vehiculos", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE )
     public ResponseEntity<List<ComboVehiculo>> findVehiculosByEmpresas( @PathVariable long idViaje ){
 
-        return new ResponseEntity<>( viajeEspecialService.findChoferesByEmpresa(idViaje), HttpStatus.OK ); 
+        return new ResponseEntity<>( viajeEspecialService.findVehiculosByEmpresa(idViaje), HttpStatus.OK ); 
 
     }
 

@@ -159,7 +159,31 @@ public class VueltaServiceImpl implements VueltaService {
             lista.add(choferVuelta);
         }
         controlarChoferesLibres(disponiblesByViaje(vuelta), lista);
+        
+        vuelta.getServiciosChoferes().clear();
+        vuelta.getServiciosChoferes().addAll(lista);
 
+        getVueltaRepository().save(vuelta);
+
+    }
+    
+    @Override
+    public void setAuxiliares(long v, List<ChoferPK> choferesPK) throws Exception {
+
+        Vuelta vuelta = getVueltaRepository().findOne(v);
+        //es estack para validar y respetar el orden del array de entrada
+        Stack<ServiciosChoferes> lista = new Stack<>();
+        ServiciosChoferes choferVuelta = null;
+        for (ChoferPK choferPk : choferesPK) {
+            choferVuelta = new ServiciosChoferes();
+            //  choferVuelta.setInicio( vuelta.getFechaHoraSalida() );
+            //choferVuelta.setFin( vuelta.getFechaHoraRegreso() );
+            choferVuelta.setVuelta(vuelta);
+            choferVuelta.setChofer(getChoferRepository().findOne(choferPk));
+            lista.add(choferVuelta);
+        }
+        controlarChoferesLibres(auxiliaresDisponiblesByViaje(vuelta), lista);
+        
         vuelta.getServiciosChoferes().clear();
         vuelta.getServiciosChoferes().addAll(lista);
 
@@ -187,22 +211,38 @@ public class VueltaServiceImpl implements VueltaService {
             throw new ValidacionGenerica(errores);
         }
     }
-
+//choferes
     private List<String> disponiblesByViaje(Vuelta v) {
 
         final int HABILITADO = 0;
         final int DESHABILITADO = 1;
 
-        List<String> disponibles = getChoferRepository().findChoferesByViaje(v.getEmpCodigo(),
+        List<String> disponibles = getChoferRepository().findPersonalByViaje(v.getEmpCodigo(),
                 v.getId(),
                 v.getFechaHoraSalida(),
                 v.getFechaHoraLlegada(),
-                HABILITADO).stream().map(choLibre -> {
+                HABILITADO, 0).stream().map(choLibre -> {
                     return (choLibre.getEmpresa() + choLibre.getCodigo());
                 }).collect(Collectors.toList());
         return disponibles;
     }
 
+    //auxiliares
+     private List<String> auxiliaresDisponiblesByViaje(Vuelta v) {
+
+        final int HABILITADO = 0;
+        final int DESHABILITADO = 1;
+
+        List<String> disponibles = getChoferRepository().findPersonalByViaje(v.getEmpCodigo(),
+                v.getId(),
+                v.getFechaHoraSalida(),
+                v.getFechaHoraLlegada(),
+                HABILITADO, 1).stream().map(choLibre -> {
+                    return (choLibre.getEmpresa() + choLibre.getCodigo());
+                }).collect(Collectors.toList());
+        return disponibles;
+    }
+    
     private List<String> vehiculoDisponiblesByViaje(Vuelta v) {
 
         final int HABILITADO = 0;
@@ -315,11 +355,11 @@ public class VueltaServiceImpl implements VueltaService {
 
         Vuelta v = getVueltaRepository().getOne(idViaje);
 
-        List<ChoferRepository.ChoferLibre> libres = getChoferRepository().findChoferesByViaje(v.getEmpCodigo(),
+        List<ChoferRepository.ChoferLibre> libres = getChoferRepository().findPersonalByViaje(v.getEmpCodigo(),
                 v.getId(),
                 v.getFechaHoraSalida(),
                 v.getFechaHoraLlegada(),
-                HABILITADO);
+                HABILITADO,0);
 
         List<ComboChoferes> combo = new ArrayList<>();
         ComboChoferes unCombo;
@@ -333,6 +373,32 @@ public class VueltaServiceImpl implements VueltaService {
 
     }
 
+    @Override
+    public List<ComboChoferes> findAuxiliaresLibreByVuelta(long idViaje) {
+
+        final int HABILITADO = 0;
+        final int DESHABILITADO = 1;
+
+        Vuelta v = getVueltaRepository().getOne(idViaje);
+
+        List<ChoferRepository.ChoferLibre> libres = getChoferRepository().findPersonalByViaje(v.getEmpCodigo(),
+                v.getId(),
+                v.getFechaHoraSalida(),
+                v.getFechaHoraLlegada(),
+                HABILITADO, 1);
+
+        List<ComboChoferes> combo = new ArrayList<>();
+        ComboChoferes unCombo;
+
+        for (ChoferRepository.ChoferLibre choLibre : libres) {
+            unCombo = new ComboChoferes(choLibre.getEmpresa(), choLibre.getCodigo(), choLibre.getNombre());
+            combo.add(unCombo);
+        }
+
+        return combo;
+
+    }
+    
     @Override
     public List<ComboVehiculo> findVehiculosLibresByVuelta(long idViaje) {
         //por ahora solo de las empresa    
@@ -390,7 +456,7 @@ public class VueltaServiceImpl implements VueltaService {
     }
 
     @Override
-    public List<ComboVehiculo> findChoferesByEmpresa(long idViaje) {
+    public List<ComboVehiculo> findVehiculosByEmpresa(long idViaje) {
         //por ahora solo de las empresa        
         Vuelta v = getVueltaRepository().getOne(idViaje);
         return getVehiculoRepository().findVehiculosByEmpresa(v.getEmpCodigo());

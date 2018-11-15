@@ -20,6 +20,8 @@ public class ViajeEspecialDTO extends AbstractDTO{
     
     Set<ChoferMinDTO> choferes;
     
+    Set<ChoferMinDTO>auxiliares;
+    
     VehiculoMinDTO vehiculo;
     
     public ViajeEspecialDTO(){
@@ -97,6 +99,14 @@ public class ViajeEspecialDTO extends AbstractDTO{
     public void setVehiculo(VehiculoMinDTO vehiculo) {
         this.vehiculo = vehiculo;
     }   
+
+    public Set<ChoferMinDTO> getAuxiliares() {
+        return auxiliares;
+    }
+
+    public void setAuxiliares(Set<ChoferMinDTO> auxiliares) {
+        this.auxiliares = auxiliares;
+    }
    
    
     

@@ -81,6 +81,9 @@ public class ViajeEspecial implements Serializable {
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "viajeEspecial", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<ChoferViaje> ChoferViaje = new HashSet<>(); 
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "viajeEspecial", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<AuxiliarViaje> AuxiliarViaje = new HashSet<>(); 
 
     public Long getId() {
         return id;
@@ -161,8 +164,16 @@ public class ViajeEspecial implements Serializable {
     public void setChoferViaje(Set<ChoferViaje> ChoferViaje) {
         this.ChoferViaje = ChoferViaje;
     }   
-    
 
+    public Set<AuxiliarViaje> getAuxiliarViaje() {
+        return AuxiliarViaje;
+    }
+
+    public void setAuxiliarViaje(Set<AuxiliarViaje> AuxiliarViaje) {
+        this.AuxiliarViaje = AuxiliarViaje;
+    }
+    
+    
     @Override
     public String toString() {
         return  "id= " + id + ";empCodigo= " + empCodigo + ";agenciaContratante= " + agenciaContratante

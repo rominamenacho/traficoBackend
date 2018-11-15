@@ -112,7 +112,15 @@ public class VueltaController {
         final int HABILITADO = 0;
         final int DESHABILITADO = 1;
 
-        return new ResponseEntity<>(getChoferService().getChoferes(empCodigo, HABILITADO), HttpStatus.OK);
+        return new ResponseEntity<>(getChoferService().getPersonal(empCodigo, HABILITADO,0), HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/Vueltas/empresa/{empCodigo}/auxiliares", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ComboChoferes>> findAuxiliaresByEmpresa(@PathVariable String empCodigo) {
+        final int HABILITADO = 0;
+        final int DESHABILITADO = 1;
+
+        return new ResponseEntity<>(getChoferService().getPersonal(empCodigo, HABILITADO,1), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/Vueltas/{idVuelta}/choferes",
@@ -124,6 +132,19 @@ public class VueltaController {
         }
 
         getVueltaService().setChoferes(idVuelta, listaChoferesPK.getChoferesPK());
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+    
+    @RequestMapping(value = "/Vueltas/{idVuelta}/auxiliares",
+            method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> setAuxiliares(@PathVariable long idVuelta, @Valid @RequestBody ListaChoferPK listaChoferesPK, BindingResult result) throws Exception {
+
+        if (result.hasErrors()) {
+            return new ResponseEntity<>(validarChoferes(listaChoferesPK.getChoferesPK()), HttpStatus.CONFLICT);
+        }
+
+        getVueltaService().setAuxiliares(idVuelta, listaChoferesPK.getChoferesPK());
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -161,6 +182,13 @@ public class VueltaController {
         return new ResponseEntity<>(getVueltaService().findChoferesLibreByVuelta(idVuelta), HttpStatus.OK);
 
     }
+    
+    @RequestMapping(value = "/Vueltas/{idVuelta}/auxiliaresDisp", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ComboChoferes>> findAuxiliaresByEmpresa(@PathVariable long idVuelta) {
+
+        return new ResponseEntity<>(getVueltaService().findAuxiliaresLibreByVuelta(idVuelta), HttpStatus.OK);
+
+    }
 
     @RequestMapping(value = "/Vueltas/{idVuelta}/vehiculosDisp", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ComboVehiculo>> findVehiculosLibresByVuelta(@PathVariable long idVuelta) {
@@ -172,7 +200,7 @@ public class VueltaController {
     @RequestMapping(value = "/Vueltas/{idVuelta}/vehiculos", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ComboVehiculo>> findVehiculosByEmpresas(@PathVariable long idVuelta) {
 
-        return new ResponseEntity<>(getVueltaService().findChoferesByEmpresa(idVuelta), HttpStatus.OK);
+        return new ResponseEntity<>(getVueltaService().findVehiculosByEmpresa(idVuelta), HttpStatus.OK);
 
     }
 

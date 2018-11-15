@@ -8,6 +8,7 @@ import com.nuebus.excepciones.ValidacionAtributoException;
 import com.nuebus.excepciones.ValidacionExcepcion;
 import com.nuebus.excepciones.ValidacionGenerica;
 import com.nuebus.mapper.ViajeEspecialMapper;
+import com.nuebus.model.AuxiliarViaje;
 import com.nuebus.model.Chofer;
 import com.nuebus.model.ChoferPK;
 import com.nuebus.model.ChoferViaje;
@@ -154,6 +155,30 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
         viajeEspecialRepository.save(viajeEsp);    
      
     }
+    //idem para aux
+     @Override
+    public void setAuxiliares(long viaje,  List<ChoferPK> auxiliaresPK) throws Exception {        
+        
+        ViajeEspecial viajeEsp =  viajeEspecialRepository.findOne(viaje);                        
+        //es estack para validar y respetar el orden del array de entrada
+        Stack <AuxiliarViaje > lista = new Stack<>();        
+        AuxiliarViaje auxiliarViaje = null;
+        for( ChoferPK choferPk : auxiliaresPK ){        
+            auxiliarViaje = new AuxiliarViaje();
+            auxiliarViaje.setInicio( viajeEsp.getFechaHoraSalida() );
+            auxiliarViaje.setFin( viajeEsp.getFechaHoraRegreso() );
+            auxiliarViaje.setViajeEspecial(viajeEsp);            
+            auxiliarViaje.setAuxiliar(choferRepository.findOne(choferPk));
+            lista.add(auxiliarViaje);
+        }        
+        controlarAuxiliaresLibres( auxiliaresDisponiblesByViaje( viajeEsp ), lista);   
+        
+        viajeEsp.getAuxiliarViaje().clear();
+        viajeEsp.getAuxiliarViaje().addAll( lista );
+        
+        viajeEspecialRepository.save(viajeEsp);    
+     
+    }
     
     private void controlarChoferesLibres( List<String> disponibles, Stack <ChoferViaje > lista ) throws Exception{
 
@@ -175,22 +200,58 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
            throw new ValidacionGenerica( errores );  
         }
     }
+     private void controlarAuxiliaresLibres( List<String> disponibles, Stack <AuxiliarViaje > lista ) throws Exception{
+
+        WrapChoferPKError errores = new WrapChoferPKError(); 
+        String claveChofer  = ""; 
+        boolean tieneErrores = false;
+        for( AuxiliarViaje unChoViaje: lista  ){
+            WrapChoferPKError.ChoferPKError choErr = (new WrapChoferPKError()).new ChoferPKError();
+            claveChofer =  unChoViaje.getAuxiliar().getChoferPK().getCho_emp_codigo() + unChoViaje.getAuxiliar().getChoferPK().getCho_codigo();            
+            if( !disponibles.contains( claveChofer ) || claveChofer == null ){
+                choErr.getCho_codigo().add("No se encuentra disponible " +  claveChofer);
+                tieneErrores = true;
+                System.out.println("**No se encuentra disponible " +  claveChofer);
+            }             
+            errores.getChoferes().add( choErr );
+        } 
+        
+        if( tieneErrores ){
+           throw new ValidacionGenerica( errores );  
+        }
+    }
     
+    //para choferes
     private List<String>  disponiblesByViaje( ViajeEspecial viajeEsp ){
         
         final int HABILITADO = 0;
         final int DESHABILITADO = 1;     
         
-        List<String> disponibles = choferRepository.findChoferesByViaje( viajeEsp.getEmpCodigo(), 
+        List<String> disponibles = choferRepository.findPersonalByViaje( viajeEsp.getEmpCodigo(), 
                                               viajeEsp.getId(),
                                               viajeEsp.getFechaHoraSalida(),
                                               viajeEsp.getFechaHoraRegreso(), 
-                                              HABILITADO ).stream().map( choLibre  -> {
+                                              HABILITADO, 0).stream().map( choLibre  -> {
                                                                              return ( choLibre.getEmpresa()+ choLibre.getCodigo());                                                                            
                                                                           } ).collect(Collectors.toList());              
         return disponibles;
     }
     
+    //para aux
+     private List<String>  auxiliaresDisponiblesByViaje( ViajeEspecial viajeEsp ){
+        
+        final int HABILITADO = 0;
+        final int DESHABILITADO = 1;     
+        
+        List<String> disponibles = choferRepository.findPersonalByViaje( viajeEsp.getEmpCodigo(), 
+                                              viajeEsp.getId(),
+                                              viajeEsp.getFechaHoraSalida(),
+                                              viajeEsp.getFechaHoraRegreso(), 
+                                              HABILITADO, 1).stream().map( choLibre  -> {
+                                                                             return ( choLibre.getEmpresa()+ choLibre.getCodigo());                                                                            
+                                                                          } ).collect(Collectors.toList());              
+        return disponibles;
+    }
     
     private List<String>  vehiculoDisponiblesByViaje( ViajeEspecial viajeEsp ){
         
@@ -220,14 +281,14 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
     
     @Override
     public List<ChoferesPKDet> finChoferesByViaje(long idViaje) {        
-        
+        ///////////hay q validar q sea chofer y no aux
         ViajeEspecial viajeEsp = viajeEspecialRepository.getOne(idViaje);         
         
         List<ChoferesPKDet> lista = new ArrayList<>();
         ChoferesPKDet unChofer;
         String nombreChofer;  
         String claveChofer;
-        
+        int esChofer;
         Map<String, Set<String>> listaConf = getDetalleConflictos( viajeEsp );
         
         for( ChoferViaje choferVieja: viajeEsp.getChoferViaje() ){           
@@ -237,16 +298,54 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
             nombreChofer = choferVieja.getChofer().getChoferPK().getCho_codigo() + " - " + choferVieja.getChofer().getCho_nombre();
             unChofer.setNombreChofer(nombreChofer);
             claveChofer = choferVieja.getChofer().getChoferPK().getCho_emp_codigo() + choferVieja.getChofer().getChoferPK().getCho_codigo();
+            esChofer=choferVieja.getChofer().getCho_chofer();
             
             if( choferVieja.getChofer().getCho_estado() != Chofer.HABILITADO ){
-                unChofer.getDetalles().add( "El chofer se encuentra deshabilitado."  );
+                unChofer.getDetalles().add( "El conductor se encuentra deshabilitado."  );
             }
             
             if( listaConf.get(claveChofer) != null ){
                 unChofer.getDetalles().addAll( listaConf.get(claveChofer) );
             }      
-            
+            if(esChofer == 0){
             lista.add(unChofer);
+            }
+        }
+        
+        return lista;         
+    }
+    
+     @Override
+    public List<ChoferesPKDet> findAuxiliaresByViaje(long idViaje) {        
+        ///////////hay q validar q sea chofer y no aux
+        ViajeEspecial viajeEsp = viajeEspecialRepository.getOne(idViaje);         
+        
+        List<ChoferesPKDet> lista = new ArrayList<>();
+        ChoferesPKDet unChofer;
+        String nombreChofer;  
+        String claveChofer;
+        int esChofer;
+        Map<String, Set<String>> listaConf = getDetalleConflictos( viajeEsp );
+        
+        for( AuxiliarViaje auxViaje: viajeEsp.getAuxiliarViaje() ){           
+            
+            unChofer =  new ChoferesPKDet();            
+            unChofer.setChoferPK(auxViaje.getAuxiliar().getChoferPK() );
+            nombreChofer = auxViaje.getAuxiliar().getChoferPK().getCho_codigo() + " - " + auxViaje.getAuxiliar().getCho_nombre();
+            unChofer.setNombreChofer(nombreChofer);
+            claveChofer = auxViaje.getAuxiliar().getChoferPK().getCho_emp_codigo() + auxViaje.getAuxiliar().getChoferPK().getCho_codigo();
+            esChofer=auxViaje.getAuxiliar().getCho_chofer();
+            
+            if( auxViaje.getAuxiliar().getCho_estado() != Chofer.HABILITADO ){
+                unChofer.getDetalles().add( "El auxiliar se encuentra deshabilitado."  );
+            }
+            
+            if( listaConf.get(claveChofer) != null ){
+                unChofer.getDetalles().addAll( listaConf.get(claveChofer) );
+            }      
+            if(esChofer == 1){
+            lista.add(unChofer);
+            }
         }
         
         return lista;         
@@ -303,11 +402,11 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
         
         ViajeEspecial viajeEsp = viajeEspecialRepository.getOne(idViaje);        
         
-        List<ChoferRepository.ChoferLibre> libres = choferRepository.findChoferesByViaje( viajeEsp.getEmpCodigo(), 
+        List<ChoferRepository.ChoferLibre> libres = choferRepository.findPersonalByViaje( viajeEsp.getEmpCodigo(), 
                                                                       viajeEsp.getId(),
                                                                       viajeEsp.getFechaHoraSalida(),
                                                                       viajeEsp.getFechaHoraRegreso(), 
-                                                                      HABILITADO );       
+                                                                      HABILITADO, 0 );       
         
         List<ComboChoferes> combo = new ArrayList<>();
         ComboChoferes unCombo;
@@ -319,7 +418,34 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
         
         return  combo;       
        
-    }  
+    } 
+    
+    //aux
+    @Override
+    public List<ComboChoferes> findAuxiliaresLibreByViaje( long idViaje ) {    
+       
+        final int HABILITADO = 0;
+        final int DESHABILITADO = 1;
+        
+        ViajeEspecial viajeEsp = viajeEspecialRepository.getOne(idViaje);        
+        
+        List<ChoferRepository.ChoferLibre> libres = choferRepository.findPersonalByViaje( viajeEsp.getEmpCodigo(), 
+                                                                      viajeEsp.getId(),
+                                                                      viajeEsp.getFechaHoraSalida(),
+                                                                      viajeEsp.getFechaHoraRegreso(), 
+                                                                      HABILITADO, 1 );       
+        
+        List<ComboChoferes> combo = new ArrayList<>();
+        ComboChoferes unCombo;
+                
+        for( ChoferRepository.ChoferLibre choLibre: libres ){            
+            unCombo = new ComboChoferes( choLibre.getEmpresa(), choLibre.getCodigo(), choLibre.getNombre());
+            combo.add(unCombo);
+        }
+        
+        return  combo;       
+       
+    } 
     
 
     @Override
@@ -377,7 +503,7 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
     }
 
     @Override
-    public List<ComboVehiculo> findChoferesByEmpresa(long idViaje) {
+    public List<ComboVehiculo> findVehiculosByEmpresa(long idViaje) {
           //por ahora solo de las empresa        
         ViajeEspecial viajeEsp = viajeEspecialRepository.getOne(idViaje);                 
         return vehiculoRepository.findVehiculosByEmpresa( viajeEsp.getEmpCodigo() ); 

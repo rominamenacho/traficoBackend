@@ -26,7 +26,7 @@ public interface ChoferService {
     public void updateChofer( String cho_emp_codigo, Long cho_codigo, ChoferDTO choferDTO )throws Exception;    
     public void deleteChofer( String cho_emp_codigo, Long cho_codigo );
     public void saveChofer( ChoferDTO choferDTO )throws Exception;
-    public Page<ChoferDTO> findChoferesByEmpresa( Pageable pageable, String empresa );
+    public Page<ChoferDTO> findPersonalByEmpresa( Pageable pageable, String empresa );
     
     public void salvarIncidenciasByChofer( String cho_emp_codigo, Long cho_codigo,
                                         Set<ChoferIncidenciaDTO>  choferIncidencias )throws Exception;   
@@ -38,8 +38,8 @@ public interface ChoferService {
     
     public  List<CarnetDTO> getCarnetsByChofer( String cho_emp_codigo,  long cho_codigo );
     
-    public List<ComboChoferes> getChoferes( String empCodigo, int estado );
+    public List<ComboChoferes> getPersonal( String empCodigo, int estado, int funcion );
     
-    public void findChoferesByViaje(long idViaje);
+    public void findPersonalByViaje(long idViaje);//?? empCodigo, long idViaje, java.util.Date inicio, java.util.Date fin, int estadoChofer, int funcion
     
 }

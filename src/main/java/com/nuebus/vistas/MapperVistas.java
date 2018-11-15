@@ -12,6 +12,7 @@ import com.nuebus.dto.ViajeEspecialDTO;
 import com.nuebus.dto.VueltaDTO;
 import com.nuebus.mapper.VehiculoMapper;
 import com.nuebus.mapper.ViajeEspecialMapper;
+import com.nuebus.model.AuxiliarViaje;
 import com.nuebus.model.Chofer;
 import com.nuebus.model.ChoferIncidencia;
 import com.nuebus.model.ChoferViaje;
@@ -119,6 +120,7 @@ public class MapperVistas {
         final int DESHABILITADO = 1;
 
         for (ChoferViaje chViaje : viajeEspecial.getChoferViaje()) {
+            if(chViaje != null && chViaje.getChofer() != null && chViaje.getChofer().getCho_chofer()== 0){
 
             claveChofer = chViaje.getChofer().getChoferPK().getCho_emp_codigo() + chViaje.getChofer().getChoferPK().getCho_codigo();
 
@@ -133,9 +135,33 @@ public class MapperVistas {
 
             choferes.add(unEstado);
         }
-
+        }
         viajeEspecialDTO.setChoferes(choferes);
+        
+        Set<ChoferMinDTO> auxiliares = new HashSet<>();
+        ChoferMinDTO unEstado2;
+        String claveAux = "";
 
+
+        for (AuxiliarViaje auxViaje : viajeEspecial.getAuxiliarViaje()) {
+            if( auxViaje!= null && auxViaje.getAuxiliar() != null  && auxViaje.getAuxiliar().getCho_chofer()== 1){
+            claveAux = auxViaje.getAuxiliar().getChoferPK().getCho_emp_codigo() + auxViaje.getAuxiliar().getChoferPK().getCho_codigo();
+
+            int estado2 = (auxViaje.getAuxiliar().getCho_estado() == Chofer.DESHABILITADO
+                    || (listaConf.get(claveAux) != null
+                    && listaConf.get(claveAux).size() > 0)) ? DESHABILITADO : HABILITADO;
+
+            unEstado2 = new ChoferMinDTO();
+            unEstado2.setChoferPK(auxViaje.getAuxiliar().getChoferPK());
+            unEstado2.setCho_nombre(auxViaje.getAuxiliar().getCho_nombre());
+            unEstado2.setCho_estado(estado2);
+
+            auxiliares.add(unEstado2);
+        }
+        }
+        
+        viajeEspecialDTO.setAuxiliares(auxiliares);
+        
         if (viajeEspecial.getVehiculo() != null) {
 
             String claveVehiculo = viajeEspecial.getVehiculo().getVehiculoPK().getVehEmpCodigo()

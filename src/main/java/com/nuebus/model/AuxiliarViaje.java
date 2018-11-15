@@ -1,4 +1,8 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.nuebus.model;
 
 import java.util.Date;
@@ -17,17 +21,15 @@ import org.hibernate.annotations.NotFoundAction;
 
 /**
  *
- * @author Valeria
+ * @author Usuario
  */
-
 @Entity
-@Table(name="chofer_viaje_esp")
-public class ChoferViaje {
-    
-      
+@Table(name="auxiliar_viaje_esp")
+public class AuxiliarViaje {
+          
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CHOFER_VIAJE_ID_SEQ")
-    @SequenceGenerator(name="CHOFER_VIAJE_ID_SEQ", sequenceName = "CHOFER_VIAJE_ID_SEQ", allocationSize = 100)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "AUXILIAR_VIAJE_ID_SEQ")
+    @SequenceGenerator(name="AUXILIAR_VIAJE_ID_SEQ", sequenceName = "AUXILIAR_VIAJE_ID_SEQ", allocationSize = 100)
     private Long id;
        
         
@@ -35,19 +37,21 @@ public class ChoferViaje {
     java.util.Date fin;
     
     
+    
+   
     @ManyToOne( fetch = FetchType.LAZY)
     @NotFound(
         action = NotFoundAction.IGNORE)
     @JoinColumns({
         @JoinColumn(
-            name = "id_cho_emp_codigo",
+            name = "id_cho_emp_codigo_aux",
             referencedColumnName = "cho_emp_codigo"),
         @JoinColumn(
-            name = "id_cho_codigo",
+            name = "id_cho_codigo_aux",
             referencedColumnName = "cho_codigo")
     })
-    Chofer chofer;
-   
+    Chofer auxiliar;
+    
     
     @ManyToOne
     @JoinColumn( name = "ID_VIAJE" )
@@ -76,14 +80,7 @@ public class ChoferViaje {
     public void setFin(Date fin) {
         this.fin = fin;
     }
-
-    public Chofer getChofer() {
-        return chofer;
-    }
-
-    public void setChofer(Chofer chofer) {
-        this.chofer = chofer;
-    }
+   
 
     public ViajeEspecial getViajeEspecial() {
         return viajeEspecial;
@@ -93,5 +90,13 @@ public class ChoferViaje {
         this.viajeEspecial = viajeEspecial;
     }
 
+    public Chofer getAuxiliar() {
+        return auxiliar;
+    }
+
+    public void setAuxiliar(Chofer auxiliar) {
+        this.auxiliar = auxiliar;
+    }
+    
     
 }

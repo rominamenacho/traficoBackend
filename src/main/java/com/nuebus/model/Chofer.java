@@ -78,6 +78,9 @@ public class Chofer{
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "chofer", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<ChoferViaje> ChoferViaje = new HashSet<>(); 
     
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "chofer", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<ChoferViaje> AuxiliarViaje = new HashSet<>(); 
+    
     public Chofer(){}
     
     public Set<ChoferIncidencia> getChoferIncidencias() {
@@ -225,9 +228,18 @@ public class Chofer{
         this.cho_chofer = cho_chofer;
     }   
 
+    public Set<ChoferViaje> getAuxiliarViaje() {
+        return AuxiliarViaje;
+    }
+
+    public void setAuxiliarViaje(Set<ChoferViaje> AuxiliarViaje) {
+        this.AuxiliarViaje = AuxiliarViaje;
+    }
+
+    
+    @Override
     public String toString() {
-        return  "cho_nombre= "  + cho_nombre +   "cho_documento= "  + cho_documento +  "cho_doc_codigo= " 
-               + cho_doc_codigo +  "cho_legajo= "  +  cho_legajo ;       
+        return "Chofer{" + "choferPK=" + choferPK + ", cho_nombre=" + cho_nombre + ", cho_funcion=" + cho_funcion + ", cho_telefono=" + cho_telefono + ", cho_documento=" + cho_documento + ", cho_direccion=" + cho_direccion + ", cho_codigo_postal=" + cho_codigo_postal + ", cho_observaciones=" + cho_observaciones + ", cho_grupo_sanguineo=" + cho_grupo_sanguineo + ", cho_telefono_emergencia=" + cho_telefono_emergencia + ", cho_doc_codigo=" + cho_doc_codigo + ", cho_legajo=" + cho_legajo + ", cho_fecha_nacimiento=" + cho_fecha_nacimiento + ", cho_estado=" + cho_estado + ", cho_chofer=" + cho_chofer + ", carnets=" + carnets + ", choferIncidencias=" + choferIncidencias + ", ChoferViaje=" + ChoferViaje + '}';
     }
     
 }

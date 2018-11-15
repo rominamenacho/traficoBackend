@@ -23,18 +23,22 @@ public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK>, Chofe
     @Query("select c from Chofer c where choferPK.cho_emp_codigo = ?1 ")
     public Page<Chofer> findChoferesByEmpresa(String cho_emp_codigo , Pageable pageable);
     
-    @Query("select max( choferPK.cho_codigo ) from Chofer c where choferPK.cho_emp_codigo = ?1 ")
-    public Integer maxCodigoChoferesByEmpresa(String cho_emp_codigo );
+    @Query("select c from Chofer c where choferPK.cho_emp_codigo = ?1  ")
+    public Page<Chofer> findPersonalByEmpresa(String cho_emp_codigo , Pageable pageable);
+    
+    @Query("select max( choferPK.cho_codigo ) from Chofer c where choferPK.cho_emp_codigo = ?1  and c.cho_chofer=?2")
+    public Integer maxCodigoPersonalByEmpresa(String cho_emp_codigo, int funcion );
 
     //Ver cdo comprobar las incidencias y los servicios asignados        
     @Query("select new com.nuebus.vistas.combos.ComboChoferes( c.choferPK, c.cho_nombre  ) from Chofer c "
            + " where c.choferPK.cho_emp_codigo = ?1 "
-           + "   and c.cho_estado =?2 "  )
-    public List<ComboChoferes> finChoferesByEstado(String cho_emp_codigo, int estado  );
+           + "   and c.cho_estado =?2 " 
+            + "and c.cho_chofer=?3")
+    public List<ComboChoferes> finPersonalByEstado(String cho_emp_codigo, int estado, int funcion  );
     
      
-    @Query( value = " Select c.cho_nombre from choferes c " + "    where c.cho_emp_codigo = 'IMQ' ", nativeQuery = true )
-    public List<Object> findChoferesByViaje();
+    @Query( value = " Select c.cho_nombre from choferes c " + "    where c.cho_emp_codigo = 'IMQ' and c.CHO_CHOFER=0 ", nativeQuery = true )
+    public List<Object> findPersonalByViaje();
     
      
     public interface ChoferLibre {                
@@ -48,6 +52,7 @@ public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK>, Chofe
     @Query( value = " Select  ch.cho_codigo as codigo, ch.cho_emp_codigo as empresa , ch.cho_nombre as nombre "
             + " from choferes ch "
             + "  where ch.cho_emp_codigo = ?1 "
+            + "  and ch.CHO_CHOFER=?6 " //q sea chofer
             + "   and ch.cho_estado = ?5 "     
             + "   and ch.cho_codigo not in ( " 
             + "         Select chv.id_cho_codigo from CHOFER_VIAJE_ESP chv "
@@ -62,7 +67,7 @@ public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK>, Chofe
             + "                 and chi.ID_CHO_CODIGO = ch.cho_codigo "
             + "                 and ?3 <=  chi.fin "
             + "                 and ?4 >=  chi.inicio  ) " , nativeQuery = true )
-    public List<ChoferLibre> findChoferesByViaje( String empCodigo, long idViaje, java.util.Date inicio, java.util.Date fin, int estadoChofer );
+    public List<ChoferLibre> findPersonalByViaje( String empCodigo, long idViaje, java.util.Date inicio, java.util.Date fin, int estadoChofer, int funcion );
     
     
     public interface DetConflictoChoferes { 

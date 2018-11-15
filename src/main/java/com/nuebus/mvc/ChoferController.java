@@ -49,10 +49,10 @@ public class ChoferController {
         Page<ChoferDTO> page = choferService.findChoferesByEmpresa(pageable, user.getEmpresa());
         return new ResponseEntity<>(page, HttpStatus.OK);
     }*/    
-   
+   /*Debera mandar 0 si quiere choferes y 1 si quiere auxiliares*/
     @RequestMapping(value = "/choferes/empresa/{cho_emp_codigo}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<ChoferDTO>> findAllChofer(Pageable pageable, @PathVariable String cho_emp_codigo ) {       
-        Page<ChoferDTO> page = choferService.findChoferesByEmpresa(pageable, cho_emp_codigo);
+    public ResponseEntity<Page<ChoferDTO>> findAllPersonal(Pageable pageable, @PathVariable String cho_emp_codigo ) {       
+        Page<ChoferDTO> page = choferService.findPersonalByEmpresa(pageable, cho_emp_codigo);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
       

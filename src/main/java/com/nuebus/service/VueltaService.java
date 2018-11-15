@@ -35,6 +35,8 @@ public interface VueltaService {
     public void setVehiculos(long vuelta, List<VehiculoPK> vehiculoPK) throws Exception;
 
     public void setChoferes(long vuelta, List<ChoferPK> choferesPK) throws Exception;
+   
+    public void setAuxiliares(long vuelta, List<ChoferPK> choferesPK) throws Exception;
 
     public void deleteVuelta(long idVuelta);
 
@@ -42,8 +44,10 @@ public interface VueltaService {
     public List<ChoferesPKDet> finChoferesByVuelta(long idViaje);
 
     public List<ComboChoferes> findChoferesLibreByVuelta(long idViaje);
+    
+    public List<ComboChoferes> findAuxiliaresLibreByVuelta(long idViaje);
 
-    public List<ComboVehiculo> findChoferesByEmpresa(long idViaje);
+    public List<ComboVehiculo> findVehiculosByEmpresa(long idViaje);
 
     public List<ComboVehiculo> findVehiculosLibresByVuelta(long idViaje);
 
