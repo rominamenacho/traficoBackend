@@ -119,7 +119,7 @@ public class DiagramacionController {
     @RequestMapping(value = "/diagr/empresa/{idEmpresa}/choferes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ChoferesPKDet>> finAllChoferes( @PathVariable String idEmpresa ) {             
         
-        Page<ChoferDTO> lista = choferService.findChoferesByEmpresa( null, idEmpresa );
+        Page<ChoferDTO> lista = choferService.findPersonalByEmpresa( null, idEmpresa );
         List<ChoferesPKDet> listaCho = lista.getContent().stream().map( cho -> new ChoferesPKDet( cho.getChoferPK(), cho.getCho_nombre() ) )
                 .collect( Collectors.toList() );     
         return new ResponseEntity<>(listaCho, HttpStatus.OK);
