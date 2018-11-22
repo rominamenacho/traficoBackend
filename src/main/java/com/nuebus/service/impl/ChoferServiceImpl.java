@@ -1,9 +1,11 @@
 
 package com.nuebus.service.impl;
 
+import com.nuebus.builders.ChoferOcupacionBuilder;
 import com.nuebus.dto.CarnetDTO;
 import com.nuebus.dto.ChoferDTO;
 import com.nuebus.dto.ChoferIncidenciaDTO;
+import com.nuebus.dto.ChoferOcupacionDTO;
 import com.nuebus.excepciones.ResourceNotFoundException;
 import com.nuebus.mapper.ChoferMapper;
 import com.nuebus.model.Carnet;
@@ -16,6 +18,7 @@ import com.nuebus.service.ChoferService;
 import com.nuebus.vistas.MapperVistas;
 import com.nuebus.vistas.combos.ComboChoferes;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -219,6 +222,13 @@ public class ChoferServiceImpl implements ChoferService{
     public void findPersonalByViaje( long idViaje ) {
         
         List<Object> listas = choferRepository.findPersonalByViaje();        
+    }
+
+    @Override
+    public List<ChoferOcupacionDTO> findPersonalOcupacionByEmpresa(String empresa, Date inicio, Date fin) {
+        
+        return   new ChoferOcupacionBuilder( choferRepository.ocupacionChoferes( empresa, inicio, fin ) ).build();
+        
     }
     
      

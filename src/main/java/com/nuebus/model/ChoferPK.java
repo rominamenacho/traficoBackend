@@ -82,6 +82,11 @@ public class ChoferPK implements Serializable{
     public void setCho_codigo(long cho_codigo) {
         this.cho_codigo = cho_codigo;
     }
+
+    @Override
+    public String toString() {
+        return "ChoferPK{" + "cho_emp_codigo=" + cho_emp_codigo + ", cho_codigo=" + cho_codigo + '}';
+    }
     
     
 }

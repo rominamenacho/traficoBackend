@@ -133,4 +133,29 @@ public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK>, Chofe
     
     
     
+      
+    @Query( value = "  Select   cho.cho_emp_codigo, cho.cho_codigo, cho.cho_nombre, ocup.tipo, ocup.id, ocup.emp_codigo, ocup.ser_emp_codigo,"
+                  + " ocup.ser_lin_codigo, ocup.ser_fecha_hora, ocup.ser_refuerzo, ocup.inicio, ocup.fin "
+                  + " from choferes cho left join "
+                  + "        ( Select * from ( "
+                  + "      Select 1 as tipo, 0 as id, ser_emp_codigo as emp_codigo, ser_emp_codigo, ser_lin_codigo, ser_fecha_hora, "
+                  + "                ser_refuerzo, cho_codigo,  inicio, fin  "
+                  + "                 from choferes_servicios  "     
+                  + "      union "              
+                  + "      Select 2 as tipo, id_incidencia as idObj, id_cho_emp_codigo as emp_codigo,  '' as ser_emp_codigo, "
+                  + "           '' as ser_lin_codigo, sysdate as ser_fecha_hora, 0 as ser_refuerzo, id_cho_codigo as cho_codigo,  inicio, fin  "
+                  + "                 from chofer_incidencia "
+                  + "      union  "         
+                  + "      Select 3 as tipo, id_viaje as idObj, id_cho_emp_codigo as emp_codigo, '' as ser_emp_codigo, "
+                  + "             '' as ser_lin_codigo, sysdate as ser_fecha_hora, 0 as ser_refuerzo, id_cho_codigo as cho_codigo,  inicio, fin "
+                  + "               from CHOFER_VIAJE_ESP ) "
+                  + "          where emp_codigo = ?1  "      
+                  + "                          and ?2 <= fin "
+                  + "                          and ?3 >= inicio) ocup "
+                  + "  on ( cho.cho_emp_codigo = ocup.emp_codigo "
+                  + "  and cho.cho_codigo = ocup.cho_codigo  ) "    
+                  + "       where cho.cho_emp_codigo = ?1 " , nativeQuery = true)    
+    public List<Object[]> ocupacionChoferes( String empCodigo, java.util.Date inicio, java.util.Date fin );
+    
+    
 }
