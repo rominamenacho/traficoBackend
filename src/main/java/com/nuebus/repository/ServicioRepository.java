@@ -61,5 +61,14 @@ public interface ServicioRepository extends JpaRepository< Servicio, ServicioPK>
             + "       and trunc( ser_fecha_hora ) between   ?3 and ?4 ", nativeQuery = true)  
     public List< Object[] > findServiciosByLineaAndFechas(String empresa, String linea,
             java.util.Date inicioServ, java.util.Date finServ);
+    
+    
+    
+    /*public void updateChoferesAServicios(){
+    
+    
+    }*/
+    
+    
 
 }

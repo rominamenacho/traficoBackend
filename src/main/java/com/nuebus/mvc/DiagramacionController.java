@@ -2,6 +2,7 @@
 package com.nuebus.mvc;
 
 import com.nuebus.dto.ChoferDTO;
+import com.nuebus.dto.ChoferOcupacionDTO;
 import com.nuebus.dto.ComboStrDTO;
 import com.nuebus.dto.ListaVuelta;
 import com.nuebus.dto.ServicioDTO;
@@ -116,15 +117,31 @@ public class DiagramacionController {
     }
     
     
+    /////////////////////////////////////Diagramacion de Choferes/////////////////////////////////////////////////////////////
+    
+    @RequestMapping(value = "/diagr/empresa/{idEmpresa}/fechaInicio/{inicio}/fechaFin/{fin}/choferesOcupacion", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> finAllChoferes( @PathVariable String idEmpresa, 
+            @PathVariable("inicio") @DateTimeFormat(pattern = "yyyy-MM-dd") Date inicio,
+            @PathVariable("fin") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fin ) {             
+        
+        List<ChoferOcupacionDTO> lista = choferService.findPersonalOcupacionByEmpresa( idEmpresa, inicio, fin )    ;
+        return new ResponseEntity<>(lista, HttpStatus.OK);
+        
+    }
+    
+    
+    ///Revissar luego y sacar
     @RequestMapping(value = "/diagr/empresa/{idEmpresa}/choferes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ChoferesPKDet>> finAllChoferes( @PathVariable String idEmpresa ) {             
         
-        Page<ChoferDTO> lista = choferService.findChoferesByEmpresa( null, idEmpresa );
+        Page<ChoferDTO> lista = choferService.findPersonalByEmpresa( null, idEmpresa );
         List<ChoferesPKDet> listaCho = lista.getContent().stream().map( cho -> new ChoferesPKDet( cho.getChoferPK(), cho.getCho_nombre() ) )
                 .collect( Collectors.toList() );     
         return new ResponseEntity<>(listaCho, HttpStatus.OK);
         
     }
+    
+    
     
     
     @RequestMapping(value = "/diagr/empresa/{idEmpresa}/internos", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -139,6 +156,10 @@ public class DiagramacionController {
         return new ResponseEntity<>(internos, HttpStatus.OK);
         
     }
+    
+    
+    
+    
     
 
 

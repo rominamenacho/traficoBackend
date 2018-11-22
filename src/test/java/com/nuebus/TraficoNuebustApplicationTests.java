@@ -1,6 +1,6 @@
 package com.nuebus;
 
-import com.nuebus.builders.ServicioBuilder;
+import com.nuebus.builders.ChoferOcupacionBuilder;
 import com.nuebus.repository.ChoferRepository;
 import com.nuebus.repository.EnlaceLineasRepository;
 import com.nuebus.repository.IncidenciaRepository;
@@ -11,7 +11,6 @@ import com.nuebus.service.LineaService;
 import com.nuebus.service.ServicioService;
 import com.nuebus.service.ViajeEspecialService;
 import com.nuebus.utilidades.Utilities;
-import java.util.Date;
 import javax.transaction.Transactional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,16 +56,23 @@ public class TraficoNuebustApplicationTests {
            
             //enlaceLineasRepository.findConfServicios( "IMQ", "200R" ).forEach( System.out::println  );
             
-            java.util.Date inicio = Utilities.stringToDate( "12/10/2018", Utilities.FORMAT_DATE);
+            java.util.Date inicio = Utilities.stringToDate( "21/11/2018", Utilities.FORMAT_DATE);
             
-            java.util.Date fin =  Utilities.stringToDate( "12/10/2018", Utilities.FORMAT_DATE);
+            java.util.Date fin =  Utilities.stringToDate( "22/11/2018", Utilities.FORMAT_DATE);
             
-            servicioRepository.findServiciosByLineaAndFechas("IMQ", "100", inicio, fin).
+            /*servicioRepository.findServiciosByLineaAndFechas("IMQ", "100", inicio, fin).
                     forEach(  item -> 
                     {
                         System.out.println( new ServicioBuilder( item ).build().toString() );
-                    });
+                    });*/
             
+            
+            new ChoferOcupacionBuilder( choferRepository.ocupacionChoferes( "IMQ", inicio, fin ) )
+                    .build().forEach( System.out::println);
+            
+            /*choferRepository.ocupacionChoferes( "IMQ", inicio, fin ).forEach( item ->{
+                System.out.println( item[0] + " - " +  item[1] + " - " +  item[2] );
+            });*/
             
             
             

@@ -8,6 +8,7 @@ package com.nuebus.service;
 import com.nuebus.dto.CarnetDTO;
 import com.nuebus.dto.ChoferDTO;
 import com.nuebus.dto.ChoferIncidenciaDTO;
+import com.nuebus.dto.ChoferOcupacionDTO;
 import com.nuebus.model.ChoferPK;
 import com.nuebus.vistas.combos.ComboChoferes;
 import java.util.List;
@@ -41,5 +42,7 @@ public interface ChoferService {
     public List<ComboChoferes> getPersonal( String empCodigo, int estado, int funcion );
     
     public void findPersonalByViaje(long idViaje);//?? empCodigo, long idViaje, java.util.Date inicio, java.util.Date fin, int estadoChofer, int funcion
+    
+     public  List<ChoferOcupacionDTO> findPersonalOcupacionByEmpresa( String empresa,  java.util.Date inicio, java.util.Date fin );
     
 }
