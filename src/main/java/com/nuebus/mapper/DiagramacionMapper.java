@@ -8,7 +8,6 @@ package com.nuebus.mapper;
 import com.nuebus.dto.DiagramacionDTO;
 import com.nuebus.dto.VueltaDTO;
 import com.nuebus.model.Diagramacion;
-import com.nuebus.model.Vuelta;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
@@ -26,8 +25,5 @@ public interface DiagramacionMapper {
 
     public void mapToEntity(DiagramacionDTO diagDTO, @MappingTarget Diagramacion diagramacion);
 
-    //relaciones
-    public VueltaDTO toDTO(Vuelta vuelta);
-
-    public Vuelta toEntity(VueltaDTO vueltaDTO);
+  
 }

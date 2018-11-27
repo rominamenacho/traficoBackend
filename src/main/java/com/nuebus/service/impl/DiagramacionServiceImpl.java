@@ -9,9 +9,7 @@ import com.nuebus.dto.DiagramacionDTO;
 import com.nuebus.excepciones.ValidacionExcepcion;
 import com.nuebus.mapper.DiagramacionMapper;
 import com.nuebus.model.Diagramacion;
-import com.nuebus.model.Vuelta;
 import com.nuebus.repository.DiagramacionRepository;
-import com.nuebus.repository.VueltaRepository;
 import com.nuebus.service.DiagramacionService;
 import com.nuebus.utilidades.Utilities;
 import java.util.Date;
@@ -40,9 +38,7 @@ public class DiagramacionServiceImpl implements DiagramacionService {
     @Autowired
      DiagramacionMapper diagramacionMapper;
  
-    @Autowired
-     VueltaRepository vueltaRepository;
-  
+    
     
     
     @Override
@@ -86,19 +82,7 @@ public class DiagramacionServiceImpl implements DiagramacionService {
     
     
     
-    @Override
-    public void setVueltas(Long diagramacion, List<Vuelta> vueltas) throws Exception {
-        Diagramacion d = diagramacionRepository.findOne(diagramacion);
-        Stack<Vuelta> vuletasStack = new Stack<>();
-        Vuelta v = null;
-        for (Vuelta vu : vueltas) {
-            v = new Vuelta();
-            v.setDiagramacion(diagramacionRepository.findOne(diagramacion));
-            vuletasStack.add(v);
-        }
-
-       diagramacionRepository.save(d);
-    }
+   
 
     @Override
     public void deleteDiagramacion(Long idDiagramacion) {

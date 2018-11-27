@@ -47,10 +47,7 @@ public class ServiciosVehiculos implements Serializable{
     @NotNull
     private int refuerzo;
 
-    @ManyToOne
-    @JoinColumn(name = "ID_VUELTA")
-    private Vuelta vuelta;
-
+  
     @Valid
     @EmbeddedId
      @JoinColumns({
@@ -115,13 +112,7 @@ public class ServiciosVehiculos implements Serializable{
         this.refuerzo = refuerzo;
     }
 
-    public Vuelta getVuelta() {
-        return vuelta;
-    }
-
-    public void setVuelta(Vuelta vuelta) {
-        this.vuelta = vuelta;
-    }
+  
 
     public VehiculoPK getVehiculoPK() {
         return vehiculoPK;

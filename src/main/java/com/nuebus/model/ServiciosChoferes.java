@@ -57,10 +57,7 @@ public class ServiciosChoferes {
     })
     private Chofer chofer;
 
-    @ManyToOne
-    @JoinColumn(name = "ID_VUELTA")
-    private Vuelta vuelta;
-
+ 
     public ServiciosChoferes() {
     }
 
@@ -112,12 +109,6 @@ public class ServiciosChoferes {
         this.chofer = chofer;
     }
 
-    public Vuelta getVuelta() {
-        return vuelta;
-    }
-
-    public void setVuelta(Vuelta vuelta) {
-        this.vuelta = vuelta;
-    }
+  
 
 }

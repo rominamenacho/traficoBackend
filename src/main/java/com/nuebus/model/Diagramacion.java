@@ -59,8 +59,7 @@ public class Diagramacion implements Serializable {
     @NotNull
     private String observaciones;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "diagramacion", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Vuelta> vueltasArr = new HashSet<Vuelta>();
+  
 
     public Diagramacion() {
     }
@@ -105,14 +104,7 @@ public class Diagramacion implements Serializable {
         this.observaciones = observaciones;
     }
 
-    public Set<Vuelta> getVueltasArr() {
-        return vueltasArr;
-    }
-
-    public void setVueltasArr(Set<Vuelta> vueltasArr) {
-        this.vueltasArr = vueltasArr;
-    }
-
+  
     /**
      * @return the fechaDesde
      */
