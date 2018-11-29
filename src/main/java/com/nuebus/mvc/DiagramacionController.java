@@ -4,7 +4,6 @@ package com.nuebus.mvc;
 import com.nuebus.dto.ChoferDTO;
 import com.nuebus.dto.ChoferOcupacionDTO;
 import com.nuebus.dto.ComboStrDTO;
-import com.nuebus.dto.ListaVuelta;
 import com.nuebus.dto.ServicioDTO;
 import com.nuebus.dto.VehiculoDTO;
 import com.nuebus.dto.VueltaDTO;
@@ -15,7 +14,6 @@ import com.nuebus.service.DiagramacionService;
 import com.nuebus.service.LineaService;
 import com.nuebus.service.ServicioService;
 import com.nuebus.service.VehiculoService;
-import com.nuebus.service.VueltaService;
 import com.nuebus.vistas.combos.ChoferesPKDet;
 import com.nuebus.vistas.combos.VehiculoPKDet;
 import java.util.Date;
@@ -57,8 +55,7 @@ public class DiagramacionController {
     @Inject
      LineaService lineaService;
     
-    @Inject
-    VueltaService vueltaService;
+  
     
     
     @Inject
@@ -91,20 +88,8 @@ public class DiagramacionController {
         return new ResponseEntity<>(lista, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/diagr/{idDiagramacion}/empresa/{idEmpresa}/vueltas", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<VueltaDTO>> findAllVueltas(@PathVariable int idDiagramacion, @PathVariable String idEmpresa) {
-        List<VueltaDTO> lista = vueltaService.findViajesByDiagramacion(idEmpresa, idDiagramacion);
-        return new ResponseEntity<>(lista, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/diagr/{idDiagramacion}/vueltas",
-            method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> setVueltas(@PathVariable long idViaje, @Valid @RequestBody ListaVuelta listaVueltas, BindingResult result) throws Exception {
-
-        diagramacionService.setVueltas(idViaje, listaVueltas.getVueltas());
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+   
+    
 
     @RequestMapping(value = "/diagr", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public void saveDiagramacion(@RequestBody Diagramacion diagramacionDTO) throws Exception {

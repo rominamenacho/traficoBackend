@@ -7,7 +7,6 @@ package com.nuebus.service;
 
 import com.nuebus.dto.DiagramacionDTO;
 import com.nuebus.model.Diagramacion;
-import com.nuebus.model.Vuelta;
 
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -37,8 +36,6 @@ public interface DiagramacionService {
 
   //  public List<DiagramacionDTO> findDiagramacionesByEmpresa(String empresa);
 
-    public void setVueltas(Long diagramacion, List<Vuelta> vueltas) throws Exception;
-    
     
     //findVehiculosByEmpresa
 

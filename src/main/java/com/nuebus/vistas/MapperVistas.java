@@ -22,7 +22,6 @@ import com.nuebus.model.ServiciosVehiculos;
 import com.nuebus.model.Vehiculo;
 import com.nuebus.model.VehiculoIncidencia;
 import com.nuebus.model.ViajeEspecial;
-import com.nuebus.model.Vuelta;
 import com.nuebus.vistas.combos.CbMapaAsiento;
 import com.nuebus.vistas.combos.Combo;
 import com.nuebus.vistas.combos.ComboStr;
@@ -186,80 +185,6 @@ public class MapperVistas {
         return retorno;
     }
 
-    public VueltaDTO toDTO(Vuelta vuelta, Map<String, Set<String>> listaConf,
-            Map<String, Set<String>> listaConfVehi) {
-
-        if (vuelta == null) {
-            return null;
-        }
-
-        VueltaDTO vueltaDTO = new VueltaDTO();
-
-        vueltaDTO.setId(vuelta.getId());
-
-        vueltaDTO.setFechaHoraSalida(vuelta.getFechaHoraSalida());
-
-        vueltaDTO.setFechaHoraSalidaTaller(vuelta.getFechaHoraSalidaTaller());
-
-        vueltaDTO.setFechaHoraLlegada(vuelta.getFechaHoraLlegada());
-
-        vueltaDTO.setFechaHoraLlegadaTaller(vuelta.getFechaHoraLlegadaTaller());
-
-        vueltaDTO.setDuracionTotal(vuelta.getDuracionTotal());
-
-        vueltaDTO.setObservaciones(vuelta.getObservaciones());
-
-        vueltaDTO.setKmTotales(vuelta.getKmTotales());
-
-        //vueltaDTO.setIdDiagramacion(vuelta.getDiagramacion());
-        Set<ChoferMinDTO> choferes = new HashSet<>();
-        Set<VehiculoMinDTO> vehiculos = new HashSet<>();
-        ChoferMinDTO unEstado;
-        VehiculoMinDTO vehiculoMinDTO;
-        String claveChofer = "";
-        String claveVehiculo = "";
-
-        final int HABILITADO = 0;
-        final int DESHABILITADO = 1;
-
-        //choferes
-        for (ServiciosChoferes chViaje : vuelta.getServiciosChoferes()) {
-
-            claveChofer = chViaje.getChofer().getChoferPK().getCho_emp_codigo() + chViaje.getChofer().getChoferPK().getCho_codigo();
-
-            int estado = (chViaje.getChofer().getCho_estado() == Chofer.DESHABILITADO
-                    || (listaConf.get(claveChofer) != null
-                    && listaConf.get(claveChofer).size() > 0)) ? DESHABILITADO : HABILITADO;
-
-            unEstado = new ChoferMinDTO();
-            unEstado.setChoferPK(chViaje.getChofer().getChoferPK());
-            unEstado.setCho_nombre(chViaje.getChofer().getCho_nombre());
-            unEstado.setCho_estado(estado);
-
-            choferes.add(unEstado);
-        }
-
-        vueltaDTO.setChoferes(choferes);
-        //vehiculos
-        for (ServiciosVehiculos vehiculosSer : vuelta.getServiciosVehiculos()) {
-
-            claveVehiculo = vehiculosSer.getVehiculoPK().getVehEmpCodigo() + vehiculosSer.getVehiculoPK().getVehInterno();
-
-            vehiculoMinDTO = new VehiculoMinDTO();
-            vehiculoMinDTO.setVehiculoPK(vehiculosSer.getVehiculoPK());
-
-            ////estado veh
-            int estadoV = (vehiculosSer.encontrarVehiculoXPK().getVehEstado() == Vehiculo.DESHABILITADO
-                    || (listaConf.get(claveVehiculo) != null
-                    && listaConf.get(claveVehiculo).size() > 0)) ? DESHABILITADO : HABILITADO;
-
-            vehiculoMinDTO.setVehEstado(estadoV);
-
-            vehiculos.add(vehiculoMinDTO);
-        }
-
-        vueltaDTO.setVehiculos(vehiculos);
-        return vueltaDTO;
-    }
+ 
 
 }
