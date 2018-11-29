@@ -6,7 +6,10 @@ import com.nuebus.vistas.combos.ComboVehiculo;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -44,7 +47,8 @@ public interface ServicioRepository extends JpaRepository< Servicio, ServicioPK>
             + " ( Select eta_esc_codigo from etapas  "
             + "        where eta_emp_codigo = ser_emp_codigo  "
             + "        and eta_lin_codigo = ser_lin_codigo  "
-            + "        and eta_codigo = hlleg.hrs_eta_codigo  ) as escala_llegada "      
+            + "        and eta_codigo = hlleg.hrs_eta_codigo  ) as escala_llegada, "      
+            + "    hida.hrs_eta_codigo as eta_inicio, hlleg.hrs_eta_codigo as eta_fin "
             + "    from servicios, horarios_servicios hida, horarios_servicios hlleg "
             + "   where ser_emp_codigo = ?1 "
             + "       and ser_lin_codigo =  ?2 "
@@ -64,11 +68,87 @@ public interface ServicioRepository extends JpaRepository< Servicio, ServicioPK>
     
     
     
-    /*public void updateChoferesAServicios(){
+    @Query( value = "Select ser_emp_codigo, ser_lin_codigo, ser_fecha_hora, ser_refuerzo, cho_uni_codigo, " 
+            +  " inicio, fin, istipochofer, eta_inicio, eta_fin    "
+            + "     from CHOFERES_UNIDAD_SERVICIOS "
+            + "         where ser_emp_codigo = :empresa " 
+            + "             and ser_lin_codigo = :linea " 
+            + "             and trunc( ser_fecha_hora ) between :inicioServ and :finServ "            
+            + "             and cho_uni_codigo is not null ", nativeQuery = true )
+    public List< Object[] > findChoferesYVehiculosByServiciosAndLineaAndFechas( @Param("empresa") String empresa,
+                            @Param("linea") String linea, @Param("inicioServ") java.util.Date inicioServ, 
+                            @Param("finServ") java.util.Date finServ );
     
     
-    }*/
+    
+        
+    @Modifying
+    @Query ( value = " update horarios_servicios h set h.HRS_CHOFER1 = :chofer1 "
+                     + "    where h.hrs_ser_emp_codigo = :empresa "
+                     + "       and h.hrs_ser_lin_codigo = :linea "
+                     + "       and h.hrs_ser_fecha_hora =  :fechaServ "
+                     + "       and h.hrs_ser_refuerzo = :refuerzo "       
+                     + "       and h.hrs_eta_codigo >= :etaInicio "
+                     + "       and h.hrs_eta_codigo <= :etaFin ", nativeQuery = true )    
+    public int updateChofer1( @Param("chofer1") Long  chofer1, @Param("empresa") String empresa, @Param("linea") String linea,
+                              @Param("fechaServ") java.util.Date fechaServ, @Param("refuerzo") Integer refuerzo, 
+                              @Param("etaInicio") Integer etaInicio, @Param("etaFin") Integer etaFin );
     
     
+    @Modifying
+    @Query ( value = " update horarios_servicios h set h.hrs_chofer2 = :chofer2 "
+                     + "    where h.hrs_ser_emp_codigo = :empresa "
+                     + "       and h.hrs_ser_lin_codigo = :linea "
+                     + "       and h.hrs_ser_fecha_hora =  :fechaServ "
+                     + "       and h.hrs_ser_refuerzo = :refuerzo "       
+                     + "       and h.hrs_eta_codigo >= :etaInicio "
+                     + "       and h.hrs_eta_codigo <= :etaFin ", nativeQuery = true )    
+    public int updateChofer2( @Param("chofer2") Long  chofer2, @Param("empresa") String empresa, @Param("linea") String linea,
+                              @Param("fechaServ") java.util.Date fechaServ, @Param("refuerzo") Integer refuerzo, 
+                              @Param("etaInicio") Integer etaInicio, @Param("etaFin") Integer etaFin );
+    
+    
+    @Modifying
+    @Query ( value = " update horarios_servicios h set h.hrs_auxiliar1 = :auxiliar1 "
+                     + "    where h.hrs_ser_emp_codigo = :empresa "
+                     + "       and h.hrs_ser_lin_codigo = :linea "
+                     + "       and h.hrs_ser_fecha_hora =  :fechaServ "
+                     + "       and h.hrs_ser_refuerzo = :refuerzo "       
+                     + "       and h.hrs_eta_codigo >= :etaInicio "
+                     + "       and h.hrs_eta_codigo <= :etaFin ", nativeQuery = true )    
+    public int updateAuxiliar1( @Param("auxiliar1") Long  auxiliar1, @Param("empresa") String empresa, @Param("linea") String linea,
+                              @Param("fechaServ") java.util.Date fechaServ, @Param("refuerzo") Integer refuerzo, 
+                              @Param("etaInicio") Integer etaInicio, @Param("etaFin") Integer etaFin );
+    
+    
+    @Query ( value = " update horarios_servicios h set h.hrs_auxiliar2 = :auxiliar2 "
+                     + "    where h.hrs_ser_emp_codigo = :empresa "
+                     + "       and h.hrs_ser_lin_codigo = :linea "
+                     + "       and h.hrs_ser_fecha_hora =  :fechaServ "
+                     + "       and h.hrs_ser_refuerzo = :refuerzo "       
+                     + "       and h.hrs_eta_codigo >= :etaInicio "
+                     + "       and h.hrs_eta_codigo <= :etaFin ", nativeQuery = true )    
+    public int updateAuxiliar2( @Param("auxiliar2") Long  auxiliar2, @Param("empresa") String empresa, @Param("linea") String linea,
+                              @Param("fechaServ") java.util.Date fechaServ, @Param("refuerzo") Integer refuerzo, 
+                              @Param("etaInicio") Integer etaInicio, @Param("etaFin") Integer etaFin );
+    
+    
+    @Query ( value = " update horarios_servicios h set h.hrs_interno = :unidad "
+                     + "    where h.hrs_ser_emp_codigo = :empresa "
+                     + "       and h.hrs_ser_lin_codigo = :linea "
+                     + "       and h.hrs_ser_fecha_hora =  :fechaServ "
+                     + "       and h.hrs_ser_refuerzo = :refuerzo "       
+                     + "       and h.hrs_eta_codigo >= :etaInicio "
+                     + "       and h.hrs_eta_codigo <= :etaFin ", nativeQuery = true )    
+    public int updateUnidad( @Param("unidad") Long  unidad, @Param("empresa") String empresa, @Param("linea") String linea,
+                              @Param("fechaServ") java.util.Date fechaServ, @Param("refuerzo") Integer refuerzo, 
+                              @Param("etaInicio") Integer etaInicio, @Param("etaFin") Integer etaFin );
+    
+    
+    
+    /*@Modifying
+    @Query( value =   " update empresas e set e.emp_nombre = :nombre "
+                    + "  where e.emp_codigo = :empresa ", nativeQuery = true)
+    public int updateEmpresa( @Param("empresa") String empresa, @Param("nombre") String nombre );*/
 
 }

@@ -29,8 +29,7 @@ public class ChoferOcupacionBuilder {
 
     public ChoferOcupacionBuilder( List<Object[]> listaObj ) {        
         this.listaObj = listaObj;        
-    } 
-    
+    }    
     
     public List<ChoferOcupacionDTO>  build( ){
         
@@ -46,17 +45,19 @@ public class ChoferOcupacionBuilder {
            choferOcup = new ChoferOcupacionDTO();
            choferOcup.setChoferPK(  choferPK  );
            choferOcup.setNombre( ((String) obj[2]).trim() );
+           choferOcup.setTipo( ((BigDecimal)obj[3]).intValue() );
+           choferOcup.setEstado( ((BigDecimal)obj[13]).intValue() );
            
            if( !mapaCho.containsKey(choferPKStr) ){ mapaCho.put( choferPKStr, choferOcup ); }          
            
-           if( obj[3] != null ){               
-               if( ((BigDecimal) obj[3]).intValue() == SERVICIOS ){ //servicios
+           if( obj[4] != null ){               
+               if( ((BigDecimal) obj[4]).intValue() == SERVICIOS ){ //servicios
                    ServicioDTO servicio =   buildServicio( obj );               
                    mapaCho.computeIfPresent( choferPKStr, ( key , value )  -> { value.getServicios().add(servicio); return value; } );                
-               }else if( ((BigDecimal) obj[3]).intValue() == INCIDENCIAS ) {
+               }else if( ((BigDecimal) obj[4]).intValue() == INCIDENCIAS ) {
                    IncidenciaOcupacionDTO inc =  buildIncidencia( obj );
                    mapaCho.computeIfPresent( choferPKStr, ( key , value )  -> { value.getIncidencias().add(inc); return value; } );                
-               }else if( ((BigDecimal) obj[3]).intValue() == VIAJES ) {
+               }else if( ((BigDecimal) obj[4]).intValue() == VIAJES ) {
                    ViajeOcupacionDTO viaje = buildViaje( obj );
                    mapaCho.computeIfPresent( choferPKStr, ( key , value )  -> { value.getViajes().add(viaje); return value; } );                
                }
@@ -76,9 +77,9 @@ public class ChoferOcupacionBuilder {
     
     private IncidenciaOcupacionDTO buildIncidencia( Object[] obj ){        
         IncidenciaOcupacionDTO inci = new IncidenciaOcupacionDTO();
-        inci.setIdIncidencia( ((BigDecimal)obj[4]).longValue()  );
-        inci.setInicio((java.util.Date) obj[10] );
-        inci.setFin((java.util.Date) obj[11] );
+        inci.setIdIncidencia(  ((BigDecimal)obj[5]).longValue()  );
+        inci.setInicio((java.util.Date) obj[11] );
+        inci.setFin((java.util.Date) obj[12] );
         return inci;
     }
     
@@ -88,9 +89,9 @@ public class ChoferOcupacionBuilder {
                   + " ocup.ser_lin_codigo, ocup.ser_fecha_hora, ocup.ser_refuerzo, ocup.inicio, ocup.fin "*/
           
           ViajeOcupacionDTO viaje = new ViajeOcupacionDTO();
-          viaje.setIdViaje(((BigDecimal)obj[4]).longValue() );
-          viaje.setInicio((java.util.Date) obj[10] );
-          viaje.setFin((java.util.Date) obj[11] ); 
+          viaje.setIdViaje(((BigDecimal)obj[5]).longValue() );
+          viaje.setInicio((java.util.Date) obj[11] );
+          viaje.setFin((java.util.Date) obj[12] ); 
           
           return viaje;    
     }
@@ -103,14 +104,14 @@ public class ChoferOcupacionBuilder {
         ServicioDTO servicio = new ServicioDTO();       
         
         ServicioPK servicioPK = new ServicioPK();
-        servicioPK.setSerEmpCodigo( (String)obj[6] );
-        servicioPK.setSerLinCodigo( (String) obj[7] );
-        servicioPK.setSerFechaHora( (java.util.Date) obj[8] );   
-        servicioPK.setSerRefuerzo( ((BigDecimal) obj[9]).intValue() );
+        servicioPK.setSerEmpCodigo( (String)obj[7] );
+        servicioPK.setSerLinCodigo( (String) obj[8] );
+        servicioPK.setSerFechaHora( (java.util.Date) obj[9] );   
+        servicioPK.setSerRefuerzo( ((BigDecimal) obj[10]).intValue() );
         
         servicio.setServicioPK(servicioPK);
-        servicio.setFechaHoraSalida( (java.util.Date) obj[10] );
-        servicio.setFechaHoraLlegada((java.util.Date) obj[11] );
+        servicio.setFechaHoraSalida( (java.util.Date) obj[11] );
+        servicio.setFechaHoraLlegada((java.util.Date) obj[12] );
         
         return   servicio;        
     

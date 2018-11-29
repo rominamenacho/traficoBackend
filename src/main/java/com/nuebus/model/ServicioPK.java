@@ -4,6 +4,7 @@ package com.nuebus.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -13,7 +14,9 @@ public class ServicioPK implements Serializable{
     
     private static final long serialVersionUID = 1L;
     
+    @Size( max=4 )
     String serEmpCodigo = "";
+    @Size( max=8 )
     String serLinCodigo = "";    
     java.util.Date serFechaHora;
     int serRefuerzo = 0;

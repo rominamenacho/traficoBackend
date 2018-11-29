@@ -134,13 +134,14 @@ public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK>, Chofe
     
     
       
-    @Query( value = "  Select   cho.cho_emp_codigo, cho.cho_codigo, cho.cho_nombre, ocup.tipo, ocup.id, ocup.emp_codigo, ocup.ser_emp_codigo,"
-                  + " ocup.ser_lin_codigo, ocup.ser_fecha_hora, ocup.ser_refuerzo, ocup.inicio, ocup.fin "
+    @Query( value = "  Select   cho.cho_emp_codigo, cho.cho_codigo, cho.cho_nombre, cho.cho_chofer,  ocup.tipo, ocup.id, ocup.emp_codigo, "
+                  + " ocup.ser_emp_codigo, ocup.ser_lin_codigo, ocup.ser_fecha_hora, ocup.ser_refuerzo, ocup.inicio, ocup.fin, cho.cho_estado "
                   + " from choferes cho left join "
                   + "        ( Select * from ( "
                   + "      Select 1 as tipo, 0 as id, ser_emp_codigo as emp_codigo, ser_emp_codigo, ser_lin_codigo, ser_fecha_hora, "
-                  + "                ser_refuerzo, cho_codigo,  inicio, fin  "
-                  + "                 from choferes_servicios  "     
+                  + "                ser_refuerzo, CHO_UNI_CODIGO as cho_codigo,  inicio, fin  "
+                  + "                 from CHOFERES_UNIDAD_SERVICIOS"
+                  + "                   where ISTIPOCHOFER = 1 "     
                   + "      union "              
                   + "      Select 2 as tipo, id_incidencia as idObj, id_cho_emp_codigo as emp_codigo,  '' as ser_emp_codigo, "
                   + "           '' as ser_lin_codigo, sysdate as ser_fecha_hora, 0 as ser_refuerzo, id_cho_codigo as cho_codigo,  inicio, fin  "

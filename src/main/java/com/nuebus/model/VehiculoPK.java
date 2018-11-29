@@ -87,6 +87,10 @@ public class VehiculoPK  implements Serializable{
     public void setVehInterno(int vehInterno) {
         this.vehInterno = vehInterno;
     }
-    
+
+    @Override
+    public String toString() {
+        return "VehiculoPK{" + "vehEmpCodigo=" + vehEmpCodigo + ", vehInterno=" + vehInterno + '}';
+    }   
     
 }

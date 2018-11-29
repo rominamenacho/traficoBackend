@@ -29,6 +29,11 @@ public class ChoferPKDTO {
     public void setCho_codigo(long cho_codigo) {
         this.cho_codigo = cho_codigo;
     }    
+
+    @Override
+    public String toString() {
+        return "ChoferPKDTO{" + "cho_emp_codigo=" + cho_emp_codigo + ", cho_codigo=" + cho_codigo + '}';
+    }
     
     
 }

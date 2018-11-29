@@ -46,8 +46,10 @@ public class ServicioServiceImpl implements ServicioService {
     @Override
     public List<ServicioDTO> findServiciosConHorarisoByFecha(String empresa, String linea, Date inicioServ, Date finServ) {
         
-         return servicioRepository.findServiciosByLineaAndFechas(empresa, linea, inicioServ, finServ)
-                    .stream().map( objeto -> new ServicioBuilder( objeto ).build() ).collect(Collectors.toList()); 
+        List<Object[]> serviciosObj = servicioRepository.findServiciosByLineaAndFechas(empresa, linea, inicioServ, finServ);
+         List<Object[]> choferesVehiculosObj = servicioRepository.findChoferesYVehiculosByServiciosAndLineaAndFechas(empresa, linea, inicioServ, finServ);
+        
+         return  new ServicioBuilder( serviciosObj, choferesVehiculosObj ).build();
                  
         
     }
