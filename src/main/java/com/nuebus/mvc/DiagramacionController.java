@@ -3,6 +3,7 @@ package com.nuebus.mvc;
 
 import com.nuebus.dto.ChoferDTO;
 import com.nuebus.dto.ChoferOcupacionDTO;
+import com.nuebus.dto.ChoferUnidadDTO;
 import com.nuebus.dto.ComboStrDTO;
 import com.nuebus.dto.ServicioDTO;
 import com.nuebus.dto.VehiculoDTO;
@@ -124,8 +125,7 @@ public class DiagramacionController {
                 .collect( Collectors.toList() );     
         return new ResponseEntity<>(listaCho, HttpStatus.OK);
         
-    }
-    
+    }  
     
     
     
@@ -138,13 +138,16 @@ public class DiagramacionController {
                                             .map( v -> new VehiculoPKDet( v.getVehiculoPK(), v.getVehiculoPK().getVehInterno()) )
                                             .collect( Collectors.toList() );
          
-        return new ResponseEntity<>(internos, HttpStatus.OK);
+        return new ResponseEntity<>(internos, HttpStatus.OK);        
+    }  
+    
+    
+    @RequestMapping(value = "/diagr/vuelta",  method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public void saveVuelta( @RequestBody ChoferUnidadDTO  choferUnidadDTO ){
+        
+        System.out.println( choferUnidadDTO );
         
     }
-    
-    
-    
-    
     
 
 
