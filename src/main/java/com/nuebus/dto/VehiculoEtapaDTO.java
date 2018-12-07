@@ -11,6 +11,7 @@ public class VehiculoEtapaDTO {
     VehiculoPK  vehiculoPK;    
     Integer etaDesde;
     Integer etaHasta; 
+    String nombre;
 
     public VehiculoEtapaDTO() {
     }   

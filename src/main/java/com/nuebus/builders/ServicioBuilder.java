@@ -5,6 +5,7 @@ import com.nuebus.dto.ChoferEtapasDTO;
 import com.nuebus.dto.ChoferPKDTO;
 import com.nuebus.dto.ServicioDTO;
 import com.nuebus.dto.VehiculoEtapaDTO;
+import static com.nuebus.model.Chofer.CHOFER;
 import com.nuebus.model.ServicioPK;
 import com.nuebus.model.VehiculoPK;
 import java.math.BigDecimal;
@@ -21,8 +22,8 @@ import java.util.Set;
  */
 public class ServicioBuilder {
     
-    static final int CHOFER = 1;
-    static final int VEHICULO = 0;
+   public static int VISTA_CHOFER = 1;
+   public static int VISTA_UNIDAD = 0;
     
     
     private List<Object[]> serviciosObj;
@@ -82,7 +83,7 @@ public class ServicioBuilder {
          ServicioPK servicioPK;
          for( Object[] obj: this.choferesVehiculosObj ){
              
-            if( ((BigDecimal) obj[7]).intValue() == CHOFER  ){                
+            if( ((BigDecimal) obj[7]).intValue() == VISTA_CHOFER  ){                
                 servicioPK =  buildServicioPk( obj );   
                 ChoferEtapasDTO cho = builUnChofer( obj );
                 choferes.computeIfPresent( servicioPK,( key, value ) -> { value.add( cho ); return value; } );
@@ -104,6 +105,10 @@ public class ServicioBuilder {
          
          chofer.setEtaDesde( ((BigDecimal) obj[8]).intValue() );
          chofer.setEtaHasta( ((BigDecimal) obj[9]).intValue() );
+         chofer.setNombre(((String) obj[10]));
+         chofer.setTipoChofer(((BigDecimal) obj[11]).intValue());         
+         String descTipo = ( chofer.getTipoChofer() == CHOFER )? "(CHO)":"(AUX)";
+         chofer.setNombreConTipo( descTipo + chofer.getNombre() );          
          
          return chofer;                      
     }
@@ -114,7 +119,7 @@ public class ServicioBuilder {
          ServicioPK servicioPK;
          for( Object[] obj: this.choferesVehiculosObj ){
              
-            if( ((BigDecimal) obj[7]).intValue() == VEHICULO  ){                
+            if( ((BigDecimal) obj[7]).intValue() == VISTA_UNIDAD  ){                
                 servicioPK =  buildServicioPk( obj );   
                 VehiculoEtapaDTO vehi = builUnVehiculo( obj );
                 vehiculos.computeIfPresent( servicioPK,( key, value ) -> { value.add( vehi ); return value; } );

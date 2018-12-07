@@ -11,8 +11,17 @@ package com.nuebus.dto;
  */
 public class ChoferPKDTO {
     
-    private String cho_emp_codigo = new String();    
+    private String cho_emp_codigo; 
     private long cho_codigo;
+
+    public ChoferPKDTO() {
+    }   
+    
+    public ChoferPKDTO(String cho_emp_codigo, long cho_codigo) {
+        this.cho_emp_codigo = cho_emp_codigo;
+        this.cho_codigo = cho_codigo;
+    }   
+    
 
     public String getCho_emp_codigo() {
         return cho_emp_codigo;

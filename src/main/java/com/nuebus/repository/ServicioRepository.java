@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
+
 
 /**
  *
@@ -69,7 +69,24 @@ public interface ServicioRepository extends JpaRepository< Servicio, ServicioPK>
     
     
     @Query( value = "Select ser_emp_codigo, ser_lin_codigo, ser_fecha_hora, ser_refuerzo, cho_uni_codigo, " 
-            +  " inicio, fin, istipochofer, eta_inicio, eta_fin    "
+            +  " inicio, fin, is_chofer, eta_inicio, eta_fin,    "
+            +  "   ( case when is_chofer = 1 then ch.cho_nombre else '' end ) as cho_nombre, "
+            +  "   ( case when is_chofer = 1 then ch.CHO_CHOFER else -1 end ) as CHO_CHOFER  "
+            +  "      from CHOFERES_UNIDAD_SERVICIOS  left outer join choferes ch "
+            +  "                    on (  ser_emp_codigo  =  ch.cho_emp_codigo "
+            +  "                          and cho_uni_codigo = ch.cho_codigo ) "
+            +  "         where ser_emp_codigo = :empresa " 
+            +  "             and ser_lin_codigo = :linea " 
+            +  "             and trunc( ser_fecha_hora ) between :inicioServ and :finServ "            
+            +  "             and cho_uni_codigo is not null ", nativeQuery = true )
+    public List< Object[] > findChoferesYVehiculosByServiciosAndLineaAndFechas( @Param("empresa") String empresa,
+                            @Param("linea") String linea, @Param("inicioServ") java.util.Date inicioServ, 
+                            @Param("finServ") java.util.Date finServ );
+    
+    /*
+    
+      @Query( value = "Select ser_emp_codigo, ser_lin_codigo, ser_fecha_hora, ser_refuerzo, cho_uni_codigo, " 
+            +  " inicio, fin, is_chofer, eta_inicio, eta_fin    "
             + "     from CHOFERES_UNIDAD_SERVICIOS "
             + "         where ser_emp_codigo = :empresa " 
             + "             and ser_lin_codigo = :linea " 
@@ -79,6 +96,22 @@ public interface ServicioRepository extends JpaRepository< Servicio, ServicioPK>
                             @Param("linea") String linea, @Param("inicioServ") java.util.Date inicioServ, 
                             @Param("finServ") java.util.Date finServ );
     
+    */
+    
+    
+    @Modifying
+    @Query ( value = " update horarios_servicios h set h.HRS_CHOFER1 =null,"
+                     + "  h.hrs_chofer2 =null, h.hrs_auxiliar1=null,   "
+                     + "  h.hrs_auxiliar2 = null, h.hrs_interno= null   "
+                     + "    where h.hrs_ser_emp_codigo = :empresa "
+                     + "       and h.hrs_ser_lin_codigo = :linea "
+                     + "       and h.hrs_ser_fecha_hora =  :fechaServ "
+                     + "       and h.hrs_ser_refuerzo = :refuerzo "       
+                     + "       and h.hrs_eta_codigo >= :etaInicio "
+                     + "       and h.hrs_eta_codigo <= :etaFin ", nativeQuery = true )    
+    public int limpiarChoferesYUnidad( @Param("empresa") String empresa, @Param("linea") String linea,
+                              @Param("fechaServ") java.util.Date fechaServ, @Param("refuerzo") Integer refuerzo, 
+                              @Param("etaInicio") Integer etaInicio, @Param("etaFin") Integer etaFin );
     
     
         
@@ -120,7 +153,7 @@ public interface ServicioRepository extends JpaRepository< Servicio, ServicioPK>
                               @Param("fechaServ") java.util.Date fechaServ, @Param("refuerzo") Integer refuerzo, 
                               @Param("etaInicio") Integer etaInicio, @Param("etaFin") Integer etaFin );
     
-    
+    @Modifying
     @Query ( value = " update horarios_servicios h set h.hrs_auxiliar2 = :auxiliar2 "
                      + "    where h.hrs_ser_emp_codigo = :empresa "
                      + "       and h.hrs_ser_lin_codigo = :linea "
@@ -132,7 +165,7 @@ public interface ServicioRepository extends JpaRepository< Servicio, ServicioPK>
                               @Param("fechaServ") java.util.Date fechaServ, @Param("refuerzo") Integer refuerzo, 
                               @Param("etaInicio") Integer etaInicio, @Param("etaFin") Integer etaFin );
     
-    
+    @Modifying
     @Query ( value = " update horarios_servicios h set h.hrs_interno = :unidad "
                      + "    where h.hrs_ser_emp_codigo = :empresa "
                      + "       and h.hrs_ser_lin_codigo = :linea "
@@ -140,7 +173,7 @@ public interface ServicioRepository extends JpaRepository< Servicio, ServicioPK>
                      + "       and h.hrs_ser_refuerzo = :refuerzo "       
                      + "       and h.hrs_eta_codigo >= :etaInicio "
                      + "       and h.hrs_eta_codigo <= :etaFin ", nativeQuery = true )    
-    public int updateUnidad( @Param("unidad") Long  unidad, @Param("empresa") String empresa, @Param("linea") String linea,
+    public int updateUnidad( @Param("unidad") Integer unidad, @Param("empresa") String empresa, @Param("linea") String linea,
                               @Param("fechaServ") java.util.Date fechaServ, @Param("refuerzo") Integer refuerzo, 
                               @Param("etaInicio") Integer etaInicio, @Param("etaFin") Integer etaFin );
     

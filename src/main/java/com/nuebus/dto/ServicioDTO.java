@@ -129,6 +129,8 @@ public class ServicioDTO {
     @Override
     public String toString() {
         return "ServicioDTO{" + "servicioPK=" + servicioPK + ", estado=" + estado + ", fechaHoraSalida=" + fechaHoraSalida + ", escSalida=" + escSalida + ", fechaHoraLlegada=" + fechaHoraLlegada + ", escLlegada=" + escLlegada + ", etaInicio=" + etaInicio + ", etaFin=" + etaFin + ", choferes=" + choferes + ", vehiculos=" + vehiculos + '}';
-    }  
+    }
+
+    
        
 }

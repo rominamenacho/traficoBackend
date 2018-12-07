@@ -4,6 +4,7 @@ import com.nuebus.dto.ChoferOcupacionDTO;
 import com.nuebus.dto.IncidenciaOcupacionDTO;
 import com.nuebus.dto.ServicioDTO;
 import com.nuebus.dto.ViajeOcupacionDTO;
+import static com.nuebus.model.Chofer.CHOFER;
 import com.nuebus.model.ChoferPK;
 import com.nuebus.model.ServicioPK;
 import java.math.BigDecimal;
@@ -37,7 +38,7 @@ public class ChoferOcupacionBuilder {
        String  choferPKStr;     
        ChoferOcupacionDTO choferOcup;     
        Map< String, ChoferOcupacionDTO > mapaCho = new HashMap<>();
-        
+       String descTipo; 
        for( Object[] obj: listaObj  ){
            choferPK =  buildChoferPK( ((String) obj[0]).trim(),( (BigDecimal) obj[1]).intValue() ); 
            choferPKStr = choferPK.getCho_emp_codigo() + String.valueOf( choferPK.getCho_codigo() ) ;
@@ -45,8 +46,11 @@ public class ChoferOcupacionBuilder {
            choferOcup = new ChoferOcupacionDTO();
            choferOcup.setChoferPK(  choferPK  );
            choferOcup.setNombre( ((String) obj[2]).trim() );
-           choferOcup.setTipo( ((BigDecimal)obj[3]).intValue() );
+           choferOcup.setTipoChofer(((BigDecimal)obj[3]).intValue() );
            choferOcup.setEstado( ((BigDecimal)obj[13]).intValue() );
+           descTipo = ( choferOcup.getTipoChofer() == CHOFER )? "(CHO)":"(AUX)";
+           choferOcup.setNombreConTipo( descTipo + choferOcup.getNombre() );
+           
            
            if( !mapaCho.containsKey(choferPKStr) ){ mapaCho.put( choferPKStr, choferOcup ); }          
            

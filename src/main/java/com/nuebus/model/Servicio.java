@@ -1,6 +1,7 @@
 
 package com.nuebus.model;
 
+import java.io.Serializable;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -14,7 +15,7 @@ import javax.validation.Valid;
 
 @Entity
 @Table(name="Servicios")
-public class Servicio {
+public class Servicio implements Serializable{
     @Valid
     @EmbeddedId
     ServicioPK servicioPK;        

@@ -141,7 +141,7 @@ public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK>, Chofe
                   + "      Select 1 as tipo, 0 as id, ser_emp_codigo as emp_codigo, ser_emp_codigo, ser_lin_codigo, ser_fecha_hora, "
                   + "                ser_refuerzo, CHO_UNI_CODIGO as cho_codigo,  inicio, fin  "
                   + "                 from CHOFERES_UNIDAD_SERVICIOS"
-                  + "                   where ISTIPOCHOFER = 1 "     
+                  + "                   where IS_CHOFER = 1 "     
                   + "      union "              
                   + "      Select 2 as tipo, id_incidencia as idObj, id_cho_emp_codigo as emp_codigo,  '' as ser_emp_codigo, "
                   + "           '' as ser_lin_codigo, sysdate as ser_fecha_hora, 0 as ser_refuerzo, id_cho_codigo as cho_codigo,  inicio, fin  "

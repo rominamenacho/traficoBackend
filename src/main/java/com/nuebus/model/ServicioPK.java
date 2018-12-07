@@ -1,10 +1,12 @@
 
 package com.nuebus.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import javax.validation.constraints.Size;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *
@@ -17,8 +19,13 @@ public class ServicioPK implements Serializable{
     @Size( max=4 )
     String serEmpCodigo = "";
     @Size( max=8 )
-    String serLinCodigo = "";    
+    String serLinCodigo = "";  
+           
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+            
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone="GMT")	        
     java.util.Date serFechaHora;
+    
     int serRefuerzo = 0;
 
     public ServicioPK() {

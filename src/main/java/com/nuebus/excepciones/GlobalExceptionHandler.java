@@ -192,7 +192,9 @@ public class GlobalExceptionHandler {
             response.setErrorCode("Sql Erroneo");
             response.setErrorMessage( mensaje ); 
             
-            loguearError(response, request);               
+            loguearError(response, request);   
+
+            ex.printStackTrace();             
             
             return new ResponseEntity<ExceptionResponse>(response, HttpStatus.CONFLICT);
             

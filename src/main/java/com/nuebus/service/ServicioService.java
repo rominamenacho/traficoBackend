@@ -2,6 +2,7 @@ package com.nuebus.service;
 
 import com.nuebus.dto.ServicioDTO;
 import com.nuebus.model.Servicio;
+import com.nuebus.model.ServicioPK;
 import com.nuebus.vistas.combos.ComboVehiculo;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,4 +21,6 @@ public interface ServicioService {
 
     public ArrayList<ComboVehiculo> findVehiculosLibresByFecha(String empresa,
             java.util.Date inicio, java.util.Date fin);
+    
+    public Servicio findServicioById( ServicioPK  servPK);
 }

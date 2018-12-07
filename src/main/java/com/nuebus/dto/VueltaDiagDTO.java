@@ -5,7 +5,9 @@ package com.nuebus.dto;
  *
  * @author Valeria
  */
-public class ChoferUnidadDTO {
+public class VueltaDiagDTO {
+    
+    String empresa;  
     
     String peliIda;
     String peliVta;
@@ -16,7 +18,7 @@ public class ChoferUnidadDTO {
     String videoIda;
     String videoVta;
 
-    public ChoferUnidadDTO() {
+    public VueltaDiagDTO() {
         
     }   
 
@@ -66,6 +68,19 @@ public class ChoferUnidadDTO {
 
     public void setVideoVta(String videoVta) {
         this.videoVta = videoVta;
+    }   
+
+    public String getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(String empresa) {
+        this.empresa = empresa;
+    }
+
+    @Override
+    public String toString() {
+        return "VueltaDiagDTO{" + "empresa=" + empresa + ", peliIda=" + peliIda + ", peliVta=" + peliVta + ", servIda=" + servIda + ", servRet=" + servRet + ", videoIda=" + videoIda + ", videoVta=" + videoVta + '}';
     }   
     
 }

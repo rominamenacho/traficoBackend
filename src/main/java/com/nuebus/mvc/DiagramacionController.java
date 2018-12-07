@@ -3,18 +3,19 @@ package com.nuebus.mvc;
 
 import com.nuebus.dto.ChoferDTO;
 import com.nuebus.dto.ChoferOcupacionDTO;
-import com.nuebus.dto.ChoferUnidadDTO;
+import com.nuebus.dto.VueltaDiagDTO;
 import com.nuebus.dto.ComboStrDTO;
 import com.nuebus.dto.ServicioDTO;
 import com.nuebus.dto.VehiculoDTO;
-import com.nuebus.dto.VueltaDTO;
 import com.nuebus.model.Diagramacion;
 import com.nuebus.model.Servicio;
+import com.nuebus.model.VueltaDiag;
 import com.nuebus.service.ChoferService;
 import com.nuebus.service.DiagramacionService;
 import com.nuebus.service.LineaService;
 import com.nuebus.service.ServicioService;
 import com.nuebus.service.VehiculoService;
+import com.nuebus.service.VueltaDiagService;
 import com.nuebus.vistas.combos.ChoferesPKDet;
 import com.nuebus.vistas.combos.VehiculoPKDet;
 import java.util.Date;
@@ -22,13 +23,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,7 +55,8 @@ public class DiagramacionController {
     @Inject
      LineaService lineaService;
     
-  
+    @Autowired
+    VueltaDiagService vueltaDiagService;  
     
     
     @Inject
@@ -143,10 +143,23 @@ public class DiagramacionController {
     
     
     @RequestMapping(value = "/diagr/vuelta",  method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void saveVuelta( @RequestBody ChoferUnidadDTO  choferUnidadDTO ){
+    public ResponseEntity<Object> saveVuelta( @RequestBody VueltaDiagDTO  vueltaDiagDTO ){   
         
-        System.out.println( choferUnidadDTO );
+        System.out.println( vueltaDiagDTO );
         
+        vueltaDiagService.saveVueltaDiag(vueltaDiagDTO );
+        return new ResponseEntity<>( HttpStatus.CREATED );
+    }
+    
+    
+    @RequestMapping(value = "/diagr/empresa/{idEmpresa}/linea/{idLinea}/fechaInicio/{inicio}/fechaFin/{fin}/vueltas",  method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getVueltas( @PathVariable String idEmpresa, @PathVariable String idLinea,
+            @PathVariable("inicio") @DateTimeFormat(pattern = "yyyy-MM-dd") Date inicio,
+            @PathVariable("fin") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fin ){         
+               
+        List<VueltaDiag> vueltas = vueltaDiagService.getVueltas(idEmpresa, idLinea, inicio, fin);
+        
+        return new ResponseEntity<>( vueltas, HttpStatus.OK );
     }
     
 

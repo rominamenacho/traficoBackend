@@ -1,9 +1,5 @@
 package com.nuebus;
 
-import com.nuebus.builders.ChoferOcupacionBuilder;
-import com.nuebus.builders.ChoferesByServicioBuilder;
-import com.nuebus.dto.ChoferEtapasDTO;
-import com.nuebus.model.ServicioPK;
 
 import com.nuebus.repository.ChoferRepository;
 import com.nuebus.repository.EnlaceLineasRepository;
@@ -16,16 +12,11 @@ import com.nuebus.service.LineaService;
 import com.nuebus.service.ServicioService;
 import com.nuebus.service.ViajeEspecialService;
 import com.nuebus.utilidades.Utilities;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import javax.transaction.Transactional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.repository.query.Param;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -68,11 +59,14 @@ public class TraficoNuebustApplicationTests {
 	public void contextLoads() {                   
           
             java.util.Date inicio = Utilities.stringToDate( "29/11/2018", Utilities.FORMAT_DATE ); 
-            java.util.Date fin = Utilities.stringToDate( "01/12/2018", Utilities.FORMAT_DATE );            
+            java.util.Date fin = Utilities.stringToDate( "01/12/2018", Utilities.FORMAT_DATE );         
            
             
-            servicioService.findServiciosConHorarisoByFecha( "IMQ", "100", inicio, fin ).forEach(System.out :: println);
-          
+            vueltaDiagRepository.
+                    findByFechaServiciosIda("IMQ", "100", inicio, fin)
+                    .stream()
+                    .forEach( System.out::println);
+            
             
 	}
         

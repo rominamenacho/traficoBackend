@@ -7,11 +7,14 @@ package com.nuebus.dto;
  */
 public class ChoferEtapasDTO {
     
-    ChoferPKDTO choferPK;    
+    ChoferPKDTO choferPK;  
+    Integer tipoChofer;
     Integer etaDesde;
-    Integer etaHasta;  
+    Integer etaHasta; 
+    String nombre;
+    String nombreConTipo;
 
-    public ChoferEtapasDTO() {
+     public ChoferEtapasDTO() {
     }   
 
     public ChoferPKDTO getChoferPK() {
@@ -38,11 +41,35 @@ public class ChoferEtapasDTO {
         this.etaHasta = etaHasta;
     }  
 
+   public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Integer getTipoChofer() {
+        return tipoChofer;
+    }
+
+    public void setTipoChofer(Integer tipoChofer) {
+        this.tipoChofer = tipoChofer;
+    }
+
+    public String getNombreConTipo() {
+        return nombreConTipo;
+    }
+
+    public void setNombreConTipo(String nombreConTipo) {
+        this.nombreConTipo = nombreConTipo;
+    }
+
     @Override
     public String toString() {
-        return "ChoferEtapasDTO{" + "choferPK=" + choferPK + ", etaDesde=" + etaDesde + ", etaHasta=" + etaHasta + '}';
+        return "ChoferEtapasDTO{" + "choferPK=" + choferPK + ", tipoChofer=" + tipoChofer + ", etaDesde=" + etaDesde + ", etaHasta=" + etaHasta + ", nombre=" + nombre + ", nombreConTipo=" + nombreConTipo + '}';
     }
-    
-    
+
+   
     
 }

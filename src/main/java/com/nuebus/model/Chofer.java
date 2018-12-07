@@ -24,6 +24,10 @@ import org.hibernate.validator.constraints.NotBlank;
 @Table(name="choferes")
 public class Chofer{
     
+    public static final int CHOFER = 0;
+    public static final int AUXILIAR = 1;   
+
+    
     public static final int HABILITADO = 0;
     public static final int DESHABILITADO = 1;   
     private static final long serialVersionUID = 1L;        

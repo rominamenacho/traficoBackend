@@ -19,7 +19,7 @@ import org.hibernate.annotations.Parameter;
  */
 
 @Entity()
-@Table( name = "VueltaDiag" )
+@Table( name = "Vuelta_Diag" )
 public class VueltaDiag implements Serializable{
      
     private static long serialVersionUID = 1L;
@@ -39,6 +39,9 @@ public class VueltaDiag implements Serializable{
     @GeneratedValue(generator = "vueltasSequenceGenerator")
     private Long id;
     
+    @Size(max = 4)
+    String empresa;
+    
     @Size( max = 40 )
     private String peliIda;
     
@@ -52,7 +55,7 @@ public class VueltaDiag implements Serializable{
     private String videoVta;
     
     
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumns({
         @JoinColumn( name = "ser_emp_codigo_ida", referencedColumnName = "serEmpCodigo"),
         @JoinColumn( name = "ser_lin_codigo_ida",  referencedColumnName = "serLinCodigo"),
@@ -62,7 +65,7 @@ public class VueltaDiag implements Serializable{
     Servicio servicio; 
             
             
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumns({
         @JoinColumn( name = "ser_emp_codigo_vta", referencedColumnName = "serEmpCodigo"),
         @JoinColumn( name = "ser_lin_codigo_vta",  referencedColumnName = "serLinCodigo"),
@@ -130,9 +133,17 @@ public class VueltaDiag implements Serializable{
         this.servicioRet = servicioRet;
     }
 
+    public String getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(String empresa) {
+        this.empresa = empresa;
+    }
+
     @Override
     public String toString() {
-        return "VueltaDiag{" + "id=" + id + ", peliIda=" + peliIda + ", videoIda=" + videoIda + ", peliVta=" + peliVta + ", videoVta=" + videoVta + ", servicio=" + servicio + ", servicioRet=" + servicioRet + '}';
-    } 
+        return "VueltaDiag{" + "id=" + id + ", empresa=" + empresa + ", peliIda=" + peliIda + ", videoIda=" + videoIda + ", peliVta=" + peliVta + ", videoVta=" + videoVta + ", servicio=" + servicio + ", servicioRet=" + servicioRet + '}';
+    }    
     
 }
