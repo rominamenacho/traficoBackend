@@ -151,6 +151,14 @@ public class DiagramacionController {
         return new ResponseEntity<>( HttpStatus.CREATED );
     }
     
+    @RequestMapping(value = "/diagr/vuelta/{idVuelta}",  method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> modificarVuelta(@PathVariable("idVuelta") Long idVuelta,
+            @RequestBody VueltaDiagDTO  vueltaDiagDTO ){
+        
+        vueltaDiagService.saveVueltaDiag(vueltaDiagDTO );
+        return new ResponseEntity<>( HttpStatus.CREATED );
+    }
+    
     
     @RequestMapping(value = "/diagr/empresa/{idEmpresa}/linea/{idLinea}/fechaInicio/{inicio}/fechaFin/{fin}/vueltas",  method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVueltas( @PathVariable String idEmpresa, @PathVariable String idLinea,

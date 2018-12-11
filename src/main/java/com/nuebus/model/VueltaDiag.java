@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -19,7 +20,11 @@ import org.hibernate.annotations.Parameter;
  */
 
 @Entity()
-@Table( name = "Vuelta_Diag" )
+@Table( name = "Vuelta_Diag",
+        uniqueConstraints={@UniqueConstraint(columnNames = { "ser_emp_codigo_ida",
+                                                             "ser_fecha_hora_ida",
+                                                             "ser_lin_codigo_ida",
+                                                             "ser_refuerzo_ida" }) } )
 public class VueltaDiag implements Serializable{
      
     private static long serialVersionUID = 1L;
@@ -61,7 +66,7 @@ public class VueltaDiag implements Serializable{
         @JoinColumn( name = "ser_lin_codigo_ida",  referencedColumnName = "serLinCodigo"),
         @JoinColumn( name = "ser_fecha_hora_ida",  referencedColumnName = "serFechaHora"),
         @JoinColumn( name = "ser_refuerzo_ida",  referencedColumnName = "serRefuerzo") 
-    })
+    })    
     Servicio servicio; 
             
             
@@ -71,7 +76,7 @@ public class VueltaDiag implements Serializable{
         @JoinColumn( name = "ser_lin_codigo_vta",  referencedColumnName = "serLinCodigo"),
         @JoinColumn( name = "ser_fecha_hora_vta",  referencedColumnName = "serFechaHora"),
         @JoinColumn( name = "ser_refuerzo_vta",  referencedColumnName = "serRefuerzo") 
-    })          
+    })      
     Servicio servicioRet;
 
     public VueltaDiag() {
