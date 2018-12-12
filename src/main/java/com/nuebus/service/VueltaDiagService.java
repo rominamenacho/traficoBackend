@@ -13,7 +13,11 @@ import java.util.List;
 
 public interface VueltaDiagService {
     
-    void saveVueltaDiag( VueltaDiagDTO  vueltaDiagDTO);   
-    List<VueltaDiag> getVueltas( String empresa, String linea, Date inicio, Date fin);      
+    VueltaDiag deleteVueltaDiag( Long id );             
+    VueltaDiag modificarVueltaDiag( Long id, VueltaDiagDTO  vueltaDiagDTO ); 
+    VueltaDiag saveVueltaDiag( VueltaDiagDTO  vueltaDiagDTO);   
+    List<VueltaDiag> getVueltas( String empresa, String linea, Date inicio, Date fin);    
+    
+    
     
 }

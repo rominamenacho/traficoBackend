@@ -147,16 +147,22 @@ public class DiagramacionController {
         
         System.out.println( vueltaDiagDTO );
         
-        vueltaDiagService.saveVueltaDiag(vueltaDiagDTO );
-        return new ResponseEntity<>( HttpStatus.CREATED );
+        VueltaDiag vuelta = vueltaDiagService.saveVueltaDiag(vueltaDiagDTO );
+        return new ResponseEntity<>( vuelta, HttpStatus.CREATED );
     }
     
     @RequestMapping(value = "/diagr/vuelta/{idVuelta}",  method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modificarVuelta(@PathVariable("idVuelta") Long idVuelta,
             @RequestBody VueltaDiagDTO  vueltaDiagDTO ){
         
-        vueltaDiagService.saveVueltaDiag(vueltaDiagDTO );
-        return new ResponseEntity<>( HttpStatus.CREATED );
+        VueltaDiag vuelta = vueltaDiagService.modificarVueltaDiag( idVuelta, vueltaDiagDTO );
+        return new ResponseEntity<>( vuelta, HttpStatus.OK );
+    }
+    
+    @RequestMapping( value="/diagr/vuelta/{idVuelta}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE )
+    public ResponseEntity<Object> deleteVuelta( @PathVariable("idVuelta") Long idVuelta  ){        
+        VueltaDiag vuelta = vueltaDiagService.deleteVueltaDiag( idVuelta );
+        return new ResponseEntity<>( vuelta, HttpStatus.OK );        
     }
     
     

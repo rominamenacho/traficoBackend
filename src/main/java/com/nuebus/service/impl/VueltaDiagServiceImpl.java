@@ -4,6 +4,7 @@ import com.nuebus.dto.ChoferEtapasDTO;
 import com.nuebus.dto.ServicioDTO;
 import com.nuebus.dto.VehiculoEtapaDTO;
 import com.nuebus.dto.VueltaDiagDTO;
+import com.nuebus.excepciones.ResourceNotFoundException;
 import static com.nuebus.model.Chofer.AUXILIAR;
 import com.nuebus.model.Servicio;
 import com.nuebus.model.ServicioPK;
@@ -42,7 +43,7 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
     
     @Transactional( readOnly = false)
     @Override    
-    public void saveVueltaDiag( VueltaDiagDTO vueltaDiagDTO ) {        
+    public VueltaDiag saveVueltaDiag( VueltaDiagDTO vueltaDiagDTO ) {        
         
         Servicio servIda = servicioService.findServicioById( vueltaDiagDTO
                                                              .getServIda()
@@ -81,8 +82,71 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
         vuelta.setServicio(servIda);
         vuelta.setServicioRet(serVt);
         
-        vueltaDiagRepository.save( vuelta );
+        vueltaDiagRepository.save( vuelta );    
+        
+        return vuelta;
     }
+    
+    
+    @Transactional( readOnly = false)    
+    @Override
+    public VueltaDiag modificarVueltaDiag(Long id, VueltaDiagDTO vueltaDiagDTO) {
+        
+        VueltaDiag vuelta = vueltaDiagRepository.findOne( id );  
+        
+        if( vuelta == null  ){
+            throw new ResourceNotFoundException(id,"Vuelta No encontrada"); 
+        }   
+        
+         
+        Servicio serVt = servicioService.findServicioById( vueltaDiagDTO
+                                                           .getServRet()
+                                                           .getServicioPK() );  
+        
+         
+        System.out.println("Choferes Ida");        
+        //Actualizo Choferes Ida        
+        updateChoferesYAuxiliares( vueltaDiagDTO.getServIda(), vueltaDiagDTO.getServIda().getChoferes() );
+        
+        System.out.println("Choferes Vta");
+        
+        //Actualizo Choferes Vta        
+        updateChoferesYAuxiliares( vueltaDiagDTO.getServRet(), vueltaDiagDTO.getServRet().getChoferes() );
+        
+        System.out.println("Unidad Ida");
+        
+        //Actualizo Vehiculo Ida        
+        updateUnidad( vueltaDiagDTO.getServIda().getServicioPK(), new ArrayList<>( vueltaDiagDTO.getServIda().getVehiculos()) );
+        
+         System.out.println("Unidad Vta");
+        
+        //Actualizo Vehiculo Vta        
+        updateUnidad( vueltaDiagDTO.getServRet().getServicioPK(), new ArrayList<>( vueltaDiagDTO.getServRet().getVehiculos()) );
+        
+        
+        vuelta.setEmpresa( vueltaDiagDTO.getEmpresa() );
+        vuelta.setPeliIda( vueltaDiagDTO.getPeliIda() );
+        vuelta.setVideoIda(vueltaDiagDTO.getVideoIda());
+        vuelta.setPeliVta( vueltaDiagDTO.getPeliVta());
+        vuelta.setVideoVta(vueltaDiagDTO.getVideoVta());
+        vuelta.setServicioRet(serVt);        
+        vueltaDiagRepository.save( vuelta );
+     
+        return vuelta;       
+    }
+    
+    @Transactional( readOnly = false)    
+    @Override
+    public VueltaDiag deleteVueltaDiag(Long id) {
+        VueltaDiag vuelta = vueltaDiagRepository.findOne(id);
+        
+        if( vuelta == null  ){
+            throw new ResourceNotFoundException(id,"Vuelta No encontrada"); 
+        }        
+        vueltaDiagRepository.delete(id);        
+        return vuelta;
+    }
+
     
     
     private void limpiarChoferesYUnidad( ServicioDTO serv ){
@@ -196,5 +260,7 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
         return vueltaDiagRepository.findByFechaServiciosIda(empresa, linea, inicio, fin);
         
     }
+   
+   
     
 }
