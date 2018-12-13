@@ -52,8 +52,8 @@ public class LineaController {
     }
     
     @RequestMapping( value="/enlaceLineas/{idEnlace}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE )
-    public ResponseEntity<Object> deleteEnlaceLineas( @PathVariable Long idEmpresa ){
-        lineaService.deleteEnlaceLineas(idEmpresa);
+    public ResponseEntity<Object> deleteEnlaceLineas( @PathVariable Long idEnlace ){
+        lineaService.deleteEnlaceLineas(idEnlace);
         return new ResponseEntity<>( HttpStatus.NO_CONTENT );
     }
     

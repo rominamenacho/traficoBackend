@@ -72,6 +72,7 @@ public class LineaServiceImpl implements LineaService{
     }
 
     @Override
+    @Transactional( readOnly = false )
     public void deleteEnlaceLineas(Long idEnlace) {
         enlaceLineasRepository.delete(idEnlace);
     }
