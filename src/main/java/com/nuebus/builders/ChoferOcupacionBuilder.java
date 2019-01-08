@@ -2,7 +2,7 @@ package com.nuebus.builders;
 
 import com.nuebus.dto.ChoferOcupacionDTO;
 import com.nuebus.dto.IncidenciaOcupacionDTO;
-import com.nuebus.dto.ServicioDTO;
+import com.nuebus.dto.ServicioOcupacionDTO;
 import com.nuebus.dto.ViajeOcupacionDTO;
 import static com.nuebus.model.Chofer.CHOFER;
 import com.nuebus.model.ChoferPK;
@@ -56,7 +56,7 @@ public class ChoferOcupacionBuilder {
            
            if( obj[4] != null ){               
                if( ((BigDecimal) obj[4]).intValue() == SERVICIOS ){ //servicios
-                   ServicioDTO servicio =   buildServicio( obj );               
+                   ServicioOcupacionDTO servicio =   buildServicio( obj );               
                    mapaCho.computeIfPresent( choferPKStr, ( key , value )  -> { value.getServicios().add(servicio); return value; } );                
                }else if( ((BigDecimal) obj[4]).intValue() == INCIDENCIAS ) {
                    IncidenciaOcupacionDTO inc =  buildIncidencia( obj );
@@ -100,12 +100,12 @@ public class ChoferOcupacionBuilder {
           return viaje;    
     }
     
-    private ServicioDTO buildServicio(  Object[] obj ){
+    private ServicioOcupacionDTO buildServicio(  Object[] obj ){
         
         /* "  cho.cho_emp_codigo, cho.cho_codigo, cho.cho_nombre, ocup.tipo, ocup.id, ocup.emp_codigo, ocup.ser_emp_codigo,"
                   + " ocup.ser_lin_codigo, ocup.ser_fecha_hora, ocup.ser_refuerzo, ocup.inicio, ocup.fin "*/
         
-        ServicioDTO servicio = new ServicioDTO();       
+        ServicioOcupacionDTO servicio = new ServicioOcupacionDTO();       
         
         ServicioPK servicioPK = new ServicioPK();
         servicioPK.setSerEmpCodigo( (String)obj[7] );

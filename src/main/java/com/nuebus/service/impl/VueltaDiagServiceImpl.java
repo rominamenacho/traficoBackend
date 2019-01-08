@@ -3,6 +3,7 @@ package com.nuebus.service.impl;
 import com.nuebus.dto.ChoferEtapasDTO;
 import com.nuebus.dto.ServicioDTO;
 import com.nuebus.dto.VehiculoEtapaDTO;
+import com.nuebus.dto.VehiculoOcupacionDTO;
 import com.nuebus.dto.VueltaDiagDTO;
 import com.nuebus.excepciones.ResourceNotFoundException;
 import static com.nuebus.model.Chofer.AUXILIAR;
@@ -12,6 +13,7 @@ import com.nuebus.model.VueltaDiag;
 import com.nuebus.repository.ServicioRepository;
 import com.nuebus.repository.VueltaDiagRepository;
 import com.nuebus.service.ServicioService;
+import com.nuebus.service.VehiculoService;
 import com.nuebus.service.VueltaDiagService;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,6 +42,8 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
     @Autowired
     ServicioRepository servicioRepository;
     
+    @Autowired
+    VehiculoService vehiculoService;
     
     @Transactional( readOnly = false)
     @Override    
@@ -54,21 +58,15 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
                                                            .getServicioPK() );  
         
         
-        System.out.println("Choferes Ida");        
+        
         //Actualizo Choferes Ida        
         updateChoferesYAuxiliares( vueltaDiagDTO.getServIda(), vueltaDiagDTO.getServIda().getChoferes() );
-        
-        System.out.println("Choferes Vta");
         
         //Actualizo Choferes Vta        
         updateChoferesYAuxiliares( vueltaDiagDTO.getServRet(), vueltaDiagDTO.getServRet().getChoferes() );
         
-        System.out.println("Unidad Ida");
-        
         //Actualizo Vehiculo Ida        
         updateUnidad( vueltaDiagDTO.getServIda().getServicioPK(), new ArrayList<>( vueltaDiagDTO.getServIda().getVehiculos()) );
-        
-         System.out.println("Unidad Vta");
         
         //Actualizo Vehiculo Vta        
         updateUnidad( vueltaDiagDTO.getServRet().getServicioPK(), new ArrayList<>( vueltaDiagDTO.getServRet().getVehiculos()) );
@@ -103,22 +101,14 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
                                                            .getServRet()
                                                            .getServicioPK() );  
         
-         
-        System.out.println("Choferes Ida");        
-        //Actualizo Choferes Ida        
+                //Actualizo Choferes Ida        
         updateChoferesYAuxiliares( vueltaDiagDTO.getServIda(), vueltaDiagDTO.getServIda().getChoferes() );
-        
-        System.out.println("Choferes Vta");
         
         //Actualizo Choferes Vta        
         updateChoferesYAuxiliares( vueltaDiagDTO.getServRet(), vueltaDiagDTO.getServRet().getChoferes() );
         
-        System.out.println("Unidad Ida");
-        
         //Actualizo Vehiculo Ida        
         updateUnidad( vueltaDiagDTO.getServIda().getServicioPK(), new ArrayList<>( vueltaDiagDTO.getServIda().getVehiculos()) );
-        
-         System.out.println("Unidad Vta");
         
         //Actualizo Vehiculo Vta        
         updateUnidad( vueltaDiagDTO.getServRet().getServicioPK(), new ArrayList<>( vueltaDiagDTO.getServRet().getVehiculos()) );
@@ -157,8 +147,7 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
                                                    servPk.getSerFechaHora(), 
                                                    servPk.getSerRefuerzo(), 
                                                    serv.getEtaInicio(), 
-                                                   serv.getEtaFin() );
-        System.out.println( "total limpias " + total );
+                                                   serv.getEtaFin() );        
     }
     
     private void updateUnidad( ServicioPK servPk , List<VehiculoEtapaDTO> vehiculos ){
@@ -172,8 +161,7 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
                                               servPk.getSerFechaHora(), 
                                               servPk.getSerRefuerzo(), 
                                               vehUno.getEtaDesde(), 
-                                              vehUno.getEtaHasta() );
-            System.out.println( "vehi " + veh1 + " " + vehUno.getVehiculoPK().getVehInterno() );
+                                              vehUno.getEtaHasta() );            
         }
     
     }
@@ -202,8 +190,7 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
                                               servPk.getSerFechaHora(), 
                                               servPk.getSerRefuerzo(), 
                                               choUno.getEtaDesde(), 
-                                              choUno.getEtaHasta() );
-            System.out.println( "cho1 " + cho1 + " " + choUno.getChoferPK().getCho_codigo());
+                                              choUno.getEtaHasta() );            
         }        
         
         if( soloChoferes != null && soloChoferes.size() >= 2 && soloChoferes.get(1) != null  ){ 
@@ -214,8 +201,7 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
                                               servPk.getSerFechaHora(), 
                                               servPk.getSerRefuerzo(), 
                                               choDos.getEtaDesde(), 
-                                              choDos.getEtaHasta() );
-             System.out.println( "cho2 " + cho2 + " " + choDos.getChoferPK().getCho_codigo() );
+                                              choDos.getEtaHasta() );             
         }         
         
     }
@@ -236,8 +222,7 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
                                               servPk.getSerFechaHora(), 
                                               servPk.getSerRefuerzo(), 
                                               auxUno.getEtaDesde(), 
-                                              auxUno.getEtaHasta() );
-             System.out.println( "aux1 " + aux1 + " " + auxUno.getChoferPK().getCho_codigo());
+                                              auxUno.getEtaHasta() );             
         }    
         
         if( soloAux !=  null && soloAux.size() >= 2 && soloAux.get(1) != null  ){ 
@@ -248,8 +233,7 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
                                               servPk.getSerFechaHora(), 
                                               servPk.getSerRefuerzo(), 
                                               auxDos.getEtaDesde(), 
-                                              auxDos.getEtaHasta() );
-            System.out.println( "aux2" + aux2 + " " + auxDos.getChoferPK().getCho_codigo() );
+                                              auxDos.getEtaHasta() );            
         }    
     
     }
@@ -259,6 +243,20 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
         
         return vueltaDiagRepository.findByFechaServiciosIda(empresa, linea, inicio, fin);
         
+    }
+
+    @Override
+    public void checkVueltaDiag( VueltaDiagDTO vueltaDiagDTO ) {
+                
+        Date inicio = vueltaDiagDTO.getServIda().getFechaHoraSalida();
+        Date fin = vueltaDiagDTO.getServRet().getFechaHoraLlegada();
+        
+        List<VehiculoOcupacionDTO> vehiOcupacion 
+                =  vehiculoService.findVehiculosOcupacionByEmpresa( vueltaDiagDTO.getEmpresa(),
+                                                                    inicio, 
+                                                                    fin );
+        //vehiOcupacion.stream().filter( veh ->  )
+     
     }
    
    

@@ -7,6 +7,8 @@ import com.nuebus.dto.VueltaDiagDTO;
 import com.nuebus.dto.ComboStrDTO;
 import com.nuebus.dto.ServicioDTO;
 import com.nuebus.dto.VehiculoDTO;
+import com.nuebus.dto.VehiculoOcupacionDTO;
+import com.nuebus.helpers.CtrlCheckVuelta;
 import com.nuebus.model.Diagramacion;
 import com.nuebus.model.Servicio;
 import com.nuebus.model.VueltaDiag;
@@ -19,8 +21,11 @@ import com.nuebus.service.VueltaDiagService;
 import com.nuebus.vistas.combos.ChoferesPKDet;
 import com.nuebus.vistas.combos.VehiculoPKDet;
 import java.util.Date;
+import java.util.HashMap;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +49,6 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @RequestMapping(value = "api")
 public class DiagramacionController {
-
    
     @Inject
     private DiagramacionService diagramacionService;
@@ -64,6 +68,10 @@ public class DiagramacionController {
     
     @Autowired
     VehiculoService vehiculoService;
+    
+    @Autowired
+    CtrlCheckVuelta ctrlCheckVuelta;
+    
 
     @RequestMapping(value = "/diagr/empresa/{idEmpresa}/lineas", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ComboStrDTO>> finAllLinea( @PathVariable String idEmpresa ) {             
@@ -128,7 +136,19 @@ public class DiagramacionController {
     }  
     
     
+    /////////////////////////////////////Diagramacion de Vehiculos/////////////////////////////////////////////////////////////
     
+    @RequestMapping(value = "/diagr/empresa/{idEmpresa}/fechaInicio/{inicio}/fechaFin/{fin}/vehiculosOcupacion", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> finVehiculosOcupacion( @PathVariable String idEmpresa, 
+            @PathVariable("inicio") @DateTimeFormat(pattern = "yyyy-MM-dd") Date inicio,
+            @PathVariable("fin") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fin ) {             
+        
+        List<VehiculoOcupacionDTO> lista =  vehiculoService.findVehiculosOcupacionByEmpresa(idEmpresa, inicio, fin);
+        return new ResponseEntity<>(lista, HttpStatus.OK);
+        
+    }    
+    
+    ///Revisar luego y sacar
     @RequestMapping(value = "/diagr/empresa/{idEmpresa}/internos", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> finAllInternos( @PathVariable String idEmpresa ) {             
         
@@ -141,12 +161,18 @@ public class DiagramacionController {
         return new ResponseEntity<>(internos, HttpStatus.OK);        
     }  
     
+    @RequestMapping( value = "/diagr/vuelta/check",  method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE )
+    public ResponseEntity<Object> checkVuelta( @RequestBody VueltaDiagDTO  vueltaDiagDTO ){                  
+        Map< String, Set<String>> errores = new HashMap<>();
+        errores = ctrlCheckVuelta.checkVuelta( vueltaDiagDTO );        
+        return new ResponseEntity<>( errores, HttpStatus.CREATED );
+    }
+    
     
     @RequestMapping(value = "/diagr/vuelta",  method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> saveVuelta( @RequestBody VueltaDiagDTO  vueltaDiagDTO ){   
         
-        System.out.println( vueltaDiagDTO );
-        
+        //System.out.println( vueltaDiagDTO );        
         VueltaDiag vuelta = vueltaDiagService.saveVueltaDiag(vueltaDiagDTO );
         return new ResponseEntity<>( vuelta, HttpStatus.CREATED );
     }

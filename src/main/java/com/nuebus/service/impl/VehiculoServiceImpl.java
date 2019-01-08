@@ -1,10 +1,12 @@
 
 package com.nuebus.service.impl;
 
+import com.nuebus.builders.VehiculoOcupacionBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import com.nuebus.dto.VehiculoDTO;
 import com.nuebus.dto.VehiculoIncidenciaDTO;
+import com.nuebus.dto.VehiculoOcupacionDTO;
 import com.nuebus.excepciones.ResourceNotFoundException;
 import com.nuebus.model.VehiculoIncidencia;
 import com.nuebus.excepciones.ValidacionExcepcion;
@@ -29,6 +31,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.nuebus.vistas.combos.ComboStr;
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -166,6 +169,13 @@ public class VehiculoServiceImpl implements VehiculoService{
     public List<ComboStr> vehiculosByEmpresa(String vehEmpCodigo) {
         //return vehiculoRepository.vehiculosByEmpresa(vehEmpCodigo);
         return new ArrayList<ComboStr>();
+    }
+
+    @Override
+    public List<VehiculoOcupacionDTO> findVehiculosOcupacionByEmpresa(String empresa, Date inicio, Date fin) {
+        
+        List<Object[]> objVehiculos = vehiculoRepository.ocupacionVehiculos(empresa, inicio, fin);        
+        return  new VehiculoOcupacionBuilder( objVehiculos ).build();       
     }
 
    

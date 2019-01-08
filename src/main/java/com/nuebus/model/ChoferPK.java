@@ -6,6 +6,7 @@
 package com.nuebus.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.Digits;
@@ -36,30 +37,27 @@ public class ChoferPK implements Serializable{
        this.cho_emp_codigo = cho_emp_codigo;
        this.cho_codigo = cho_codigo;
     }
-    
-   /* public ChoferPK( String cho_emp_codigo, long cho_codigo ){
-        this.cho_emp_codigo = cho_emp_codigo;
-        this.cho_codigo = cho_codigo;
-    }  */  
-    
+
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof ChoferPK){
-            ChoferPK choferPK = (ChoferPK) obj;
- 
-            if(!choferPK.getCho_emp_codigo().equals(cho_emp_codigo)){
-                return false;
-            }
- 
-            if( choferPK.getCho_codigo() == cho_codigo ){
-                return false;
-            }
- 
+        if (this == obj) {
             return true;
         }
- 
-        return false;
-    }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ChoferPK other = (ChoferPK) obj;
+        if (this.cho_codigo != other.cho_codigo) {
+            return false;
+        }
+        if (!Objects.equals(this.cho_emp_codigo, other.cho_emp_codigo)) {
+            return false;
+        }
+        return true;
+    }    
  
     @Override
     public int hashCode() {

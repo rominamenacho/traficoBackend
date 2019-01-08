@@ -18,6 +18,7 @@ public interface VueltaDiagService {
     VueltaDiag saveVueltaDiag( VueltaDiagDTO  vueltaDiagDTO);   
     List<VueltaDiag> getVueltas( String empresa, String linea, Date inicio, Date fin);    
     
+    void checkVueltaDiag( VueltaDiagDTO  vueltaDiagDTO);
     
     
 }

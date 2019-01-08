@@ -2,6 +2,7 @@ package com.nuebus.service;
 
 import com.nuebus.dto.VehiculoDTO;
 import com.nuebus.dto.VehiculoIncidenciaDTO;
+import com.nuebus.dto.VehiculoOcupacionDTO;
 import com.nuebus.model.VehiculoIncidencia;
 import com.nuebus.model.VehiculoPK;
 import com.nuebus.vistas.combos.ComboStr;
@@ -28,5 +29,6 @@ public interface VehiculoService {
     public void  salvarIncidenciasByVehiculo( String vehEmpCodigo, int vehInterno, Set<VehiculoIncidenciaDTO> incidencias );
     
     public List<ComboStr> vehiculosByEmpresa( String vehEmpCodigo );
+    public List<VehiculoOcupacionDTO> findVehiculosOcupacionByEmpresa( String empresa,  java.util.Date inicio, java.util.Date fin );
     
 }

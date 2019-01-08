@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  *
@@ -86,5 +87,38 @@ public interface VehiculoRepository extends JpaRepository< Vehiculo, VehiculoPK>
 
     
     
+    
+    @Query( value = "Select  veh.veh_emp_codigo, veh.veh_interno, veh.veh_patente, veh.veh_estado,  "
+            + " ocup.tipo, ocup.id, ocup.emp_codigo, ocup.ser_emp_codigo, ocup.ser_lin_codigo, "
+            + " ocup.ser_fecha_hora, ocup.ser_refuerzo, ocup.inicio, ocup.fin "
+            + "        from VEHICULOS veh left join " 
+            + " ( Select * from (    " 
+            + "        Select 1 as tipo, 0 as id, ser_emp_codigo as emp_codigo, ser_emp_codigo, "
+            + "               ser_lin_codigo, ser_fecha_hora, ser_refuerzo, CHO_UNI_CODIGO as veh_codigo, "
+            + "               inicio, fin  " 
+            + "         from CHOFERES_UNIDAD_SERVICIOS " 
+            + "            where  IS_CHOFER = 0 "
+            + "                  and cho_uni_codigo is not null " 
+            + "        union      "
+            + "        Select 2 as tipo, id_incidencia as idObj, id_veh_emp_codigo as emp_codigo, "
+            + "               '' as ser_emp_codigo, '' as ser_lin_codigo, null as ser_fecha_hora, "
+            + "               0 as ser_refuerzo, id_veh_interno as veh_codigo, inicio, fin "
+            + "        from vehiculo_incidencia  " 
+            + "        union "
+            + "        Select  3 as tipo, id as idObj, emp_codigo, '' as ser_emp_codigo, "
+            + "                '' as ser_lin_codigo, null as ser_fecha_hora, 0 as ser_refuerzo, "
+            + "                veh_interno as veh_codigo, fecha_hora_salida as inicio, " 
+            + "                fecha_hora_regreso as fin   "
+            + "        from VIAJES_ESPECIALES      "
+            + "                  where veh_interno is not null "
+            + "        ) "
+            + "   where emp_codigo = :empCodigo  "
+            + "          and :inicio <= fin "
+            + "          and :fin >= inicio ) ocup "
+            + "  on ( veh.VEH_EMP_CODIGO = ocup.emp_codigo "
+            + "       and veh.VEH_INTERNO = ocup.veh_codigo  )"
+            + " where    veh.VEH_EMP_CODIGO = :empCodigo   ", nativeQuery = true)    
+    public List<Object[]> ocupacionVehiculos( @Param("empCodigo") String empCodigo, 
+            @Param("inicio") java.util.Date inicio, @Param("fin") java.util.Date fin );
     
 }

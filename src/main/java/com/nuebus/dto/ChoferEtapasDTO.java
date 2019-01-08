@@ -1,13 +1,15 @@
 
 package com.nuebus.dto;
 
+import com.nuebus.model.ChoferPK;
+
 /**
  *
  * @author Valeria
  */
 public class ChoferEtapasDTO {
     
-    ChoferPKDTO choferPK;  
+    ChoferPK choferPK;  
     Integer tipoChofer;
     Integer etaDesde;
     Integer etaHasta; 
@@ -17,13 +19,13 @@ public class ChoferEtapasDTO {
      public ChoferEtapasDTO() {
     }   
 
-    public ChoferPKDTO getChoferPK() {
+    public ChoferPK getChoferPK() {
         return choferPK;
     }
 
-    public void setChoferPK(ChoferPKDTO choferPK) {
+    public void setChoferPK(ChoferPK choferPK) {
         this.choferPK = choferPK;
-    }
+    }    
 
     public Integer getEtaDesde() {
         return etaDesde;
@@ -68,8 +70,7 @@ public class ChoferEtapasDTO {
     @Override
     public String toString() {
         return "ChoferEtapasDTO{" + "choferPK=" + choferPK + ", tipoChofer=" + tipoChofer + ", etaDesde=" + etaDesde + ", etaHasta=" + etaHasta + ", nombre=" + nombre + ", nombreConTipo=" + nombreConTipo + '}';
-    }
-
+    }  
    
     
 }

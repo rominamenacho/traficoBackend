@@ -2,10 +2,10 @@ package com.nuebus.builders;
 
 
 import com.nuebus.dto.ChoferEtapasDTO;
-import com.nuebus.dto.ChoferPKDTO;
 import com.nuebus.dto.ServicioDTO;
 import com.nuebus.dto.VehiculoEtapaDTO;
 import static com.nuebus.model.Chofer.CHOFER;
+import com.nuebus.model.ChoferPK;
 import com.nuebus.model.ServicioPK;
 import com.nuebus.model.VehiculoPK;
 import java.math.BigDecimal;
@@ -98,7 +98,7 @@ public class ServicioBuilder {
          
          ChoferEtapasDTO chofer = new ChoferEtapasDTO();         
          
-         ChoferPKDTO choferPK = new ChoferPKDTO();
+         ChoferPK choferPK = new ChoferPK();
          choferPK.setCho_emp_codigo( (String)obj[0]  );
          choferPK.setCho_codigo(((BigDecimal) obj[4]).intValue());       
          chofer.setChoferPK(choferPK);
