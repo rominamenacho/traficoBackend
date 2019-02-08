@@ -3,6 +3,7 @@ package com.nuebus.repository;
 import com.nuebus.model.Vehiculo;
 import com.nuebus.model.VehiculoPK;
 import com.nuebus.vistas.combos.ComboVehiculo;
+import java.util.Date;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +15,7 @@ import org.springframework.data.repository.query.Param;
  *
  * @author Valeria
  */
-public interface VehiculoRepository extends JpaRepository< Vehiculo, VehiculoPK>, VehiculoRepositoryCustom {
+public interface VehiculoRepository extends JpaRepository< Vehiculo, VehiculoPK> {
 
     @Query("select v from Vehiculo v where v.vehiculoPK.vehEmpCodigo = ?1 ")
     public Page<Vehiculo> findVehiculosByEmpresa(String vehEmpCodigo , Pageable pageable);    
@@ -120,5 +121,16 @@ public interface VehiculoRepository extends JpaRepository< Vehiculo, VehiculoPK>
             + " where    veh.VEH_EMP_CODIGO = :empCodigo   ", nativeQuery = true)    
     public List<Object[]> ocupacionVehiculos( @Param("empCodigo") String empCodigo, 
             @Param("inicio") java.util.Date inicio, @Param("fin") java.util.Date fin );
+    
+    @Query( "  Select v from Vehiculo v "
+            + "  where v.vehiculoPK.vehEmpCodigo = ?1 "
+            + "    and v.vehEstado =?2 "
+            + "    and vehVerificacionTecnicaVto <= ?3 ")
+    public List<Vehiculo> getVencimientos( @Param("empresa") String empresa, 
+                                           @Param("estado") Integer estado,
+                                           @Param("fecha") Date fechaControl );
+    
+    
+    
     
 }

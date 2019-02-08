@@ -5,6 +5,7 @@ import com.nuebus.dto.ChoferDTO;
 import com.nuebus.dto.ChoferIncidenciaDTO;
 import com.nuebus.dto.ListaCarnetDTO;
 import com.nuebus.dto.ListaChoferIncidencia;
+import com.nuebus.dto.VencimientosVehiculoDTO;
 import com.nuebus.erroresJson.WrapCarnetError;
 import com.nuebus.erroresJson.WrapChoferIncidenciaError;
 import com.nuebus.service.ChoferService;
@@ -134,5 +135,15 @@ public class ChoferController {
         List<CarnetDTO> carnets = choferService.getCarnetsByChofer( cho_emp_codigo,  cho_codigo );        
         return new ResponseEntity<>(carnets, HttpStatus.OK);
     }
+    
+    
+    /*@RequestMapping(value = "/choferes/empresa/{cho_emp_codigo}/estado/{cho_estado}/vencimientos", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<VencimientosVehiculoDTO>> getChoferesConVencimientos(@PathVariable String cho_emp_codigo,  @PathVariable int cho_estado ) {       
+
+    	List<VencimientosVehiculoDTO> vencVehiculo = vencimientosVehiculo.calcularAllVencimientosVehiculos( vehEmpCodigo, 
+    																										vehEstado);
+        return new ResponseEntity<>( vencVehiculo, HttpStatus.OK );
+    }*/
+    
     
 }

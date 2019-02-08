@@ -17,7 +17,7 @@ import org.springframework.data.jpa.repository.Query;
  *
  * @author Valeria
  */
-public interface  MapaAsientoRepository  extends JpaRepository<MapaAsiento, MapaAsientoPK>, MapaAsientoRepositoryCustom{
+public interface  MapaAsientoRepository  extends JpaRepository<MapaAsiento, MapaAsientoPK>{
     
     @Query( " Select new com.nuebus.vistas.combos.CbMapaAsiento(a.mapaAsientoPK.codigo, a.descripcion) from MapaAsiento a "
             + " where a.mapaAsientoPK.empresa  =?1 "    )

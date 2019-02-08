@@ -10,17 +10,20 @@ package com.nuebus.repository;
 import com.nuebus.model.Chofer;
 import com.nuebus.model.ChoferPK;
 import com.nuebus.vistas.combos.ComboChoferes;
+
+import java.util.Date;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  *
  * @author Valeria
  */
-public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK>, ChoferRepositoryCustom {
+public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK> {
     //aca habria q agregar al where q cho_chofer = 0 y hacer un met igual q cho_chofer=1 para los auxiliares
     @Query("select c from Chofer c where choferPK.cho_emp_codigo = ?1 ")
     public Page<Chofer> findChoferesByEmpresa(String cho_emp_codigo , Pageable pageable);
@@ -159,4 +162,10 @@ public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK>, Chofe
     public List<Object[]> ocupacionChoferes( String empCodigo, java.util.Date inicio, java.util.Date fin );
     
     
+    @Query( " Select * from Chofer ch where ch.choferPK = :empresa "	
+    	 	+ " and ch.cho_estado = :estadoChofer "
+    		+ " and ch.carnets.fechaVenc <= :fechaControl ")
+    public List<Chofer> getChoferesConCarnetsVencidos( @Param("empresa") String empresa,
+    											       @Param("estadoChofer") Integer estadoChofer,
+    											       @Param("fechaControl") Date fechaControl ); 
 }

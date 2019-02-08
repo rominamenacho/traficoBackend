@@ -18,7 +18,7 @@ import org.springframework.data.jpa.repository.Query;
  *
  * @author Usuario
  */
-public interface DiagramacionRepository extends JpaRepository<Diagramacion, Long>, DiagramacionRepositoryCustom {
+public interface DiagramacionRepository extends JpaRepository<Diagramacion, Long> {
 
   /*  @Query("Select d from diagramacion d where d.emp_codigo = ?1 ")
     public List<Diagramacion> findDiagramacionesByEmpresa(String empresa);*/
