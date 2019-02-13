@@ -201,6 +201,16 @@ public class DiagramacionController {
         
         return new ResponseEntity<>( vueltas, HttpStatus.OK );
     }
+   
+    @RequestMapping(value = "/diagr/empresa/{idEmpresa}/fechaInicio/{inicio}/fechaFin/{fin}/fullVueltas",  method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getFullVueltas( @PathVariable String idEmpresa, 
+            @PathVariable("inicio") @DateTimeFormat(pattern = "yyyy-MM-dd") Date inicio,
+            @PathVariable("fin") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fin ){         
+               
+        List<Object[]> vueltas = vueltaDiagService.getFullVueltas(idEmpresa, inicio, fin);
+        
+        return new ResponseEntity<>( vueltas, HttpStatus.OK );
+    }
     
 
 

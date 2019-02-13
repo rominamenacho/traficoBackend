@@ -82,6 +82,7 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
         
         vueltaDiagRepository.save( vuelta );    
         
+        //ACA DEBERIA ACTUALIZAR EL SERVICIO CON EL ID DE VUELTA?
         return vuelta;
     }
     
@@ -242,6 +243,13 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
     public List<VueltaDiag> getVueltas(String empresa, String linea, Date inicio, Date fin) {
         
         return vueltaDiagRepository.findByFechaServiciosIda(empresa, linea, inicio, fin);
+        
+    }
+    
+    @Override
+    public List<Object[]> getFullVueltas(String empresa, Date inicio, Date fin) {
+        
+        return vueltaDiagRepository.findAll(empresa, inicio, fin);
         
     }
 
