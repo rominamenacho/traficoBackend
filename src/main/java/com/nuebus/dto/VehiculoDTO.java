@@ -32,11 +32,14 @@ public class VehiculoDTO{
     private long vehMovilGps = 0;   
     @Digits(integer=3, fraction=0)
     private int vehMpaCodigo = 0;    
-    private java.util.Date vehVerificacionTecnica = null;      
+    private java.util.Date vehVerificacionTecnicaVto = null;      
     private int vehEstado = 0;
     
     private String vehMpaDesc = "";    
     
+    private int diasVencerFechaVerificacion;
+    
+    private boolean mostrarDias;
     
     public VehiculoDTO(){
         
@@ -90,15 +93,16 @@ public class VehiculoDTO{
         this.vehMpaCodigo = vehMpaCodigo;
     }
 
-    public Date getVehVerificacionTecnica() {
-        return vehVerificacionTecnica;
-    }
+  
+    public java.util.Date getVehVerificacionTecnicaVto() {
+		return vehVerificacionTecnicaVto;
+	}
 
-    public void setVehVerificacionTecnica(Date vehVerificacionTecnica) {
-        this.vehVerificacionTecnica = vehVerificacionTecnica;
-    }    
+	public void setVehVerificacionTecnicaVto(java.util.Date vehVerificacionTecnicaVto) {
+		this.vehVerificacionTecnicaVto = vehVerificacionTecnicaVto;
+	}
 
-    public VehiculoPK getVehiculoPK() {
+	public VehiculoPK getVehiculoPK() {
         return vehiculoPK;
     }
 
@@ -120,7 +124,31 @@ public class VehiculoDTO{
 
     public void setVehMpaDesc(String vehMpaDesc) {
         this.vehMpaDesc = vehMpaDesc;
-    }
-    
+    }	
+
+	public int getDiasVencerFechaVerificacion() {
+		return diasVencerFechaVerificacion;
+	}
+
+	public void setDiasVencerFechaVerificacion(int diasVencerFechaVerificacion) {
+		this.diasVencerFechaVerificacion = diasVencerFechaVerificacion;
+	}
+
+	public boolean isMostrarDias() {
+		return mostrarDias;
+	}
+
+	public void setMostrarDias(boolean mostrarDias) {
+		this.mostrarDias = mostrarDias;
+	}
+
+	@Override
+	public String toString() {
+		return "VehiculoDTO [vehiculoPK=" + vehiculoPK + ", vehMotor=" + vehMotor + ", vehChasis=" + vehChasis
+				+ ", vehPatente=" + vehPatente + ", vehCarroceria=" + vehCarroceria + ", vehMovilGps=" + vehMovilGps
+				+ ", vehMpaCodigo=" + vehMpaCodigo + ", vehVerificacionTecnicaVto=" + vehVerificacionTecnicaVto
+				+ ", vehEstado=" + vehEstado + ", vehMpaDesc=" + vehMpaDesc + ", diasVencerFechaVerificacion="
+				+ diasVencerFechaVerificacion + ", mostrarDias=" + mostrarDias + "]";
+	}	
     
 }

@@ -3,9 +3,12 @@ package com.nuebus.service;
 import com.nuebus.dto.VehiculoDTO;
 import com.nuebus.dto.VehiculoIncidenciaDTO;
 import com.nuebus.dto.VehiculoOcupacionDTO;
+import com.nuebus.model.Vehiculo;
 import com.nuebus.model.VehiculoIncidencia;
 import com.nuebus.model.VehiculoPK;
 import com.nuebus.vistas.combos.ComboStr;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import org.springframework.data.domain.Page;
@@ -30,5 +33,10 @@ public interface VehiculoService {
     
     public List<ComboStr> vehiculosByEmpresa( String vehEmpCodigo );
     public List<VehiculoOcupacionDTO> findVehiculosOcupacionByEmpresa( String empresa,  java.util.Date inicio, java.util.Date fin );
+    
+    public List<VehiculoDTO> getVehiculosConVencimientos( String empresa, int estado);
+    
+    public List<VehiculoDTO> getVehiculosConVencimientosByFechaVerificacion( String empresa,
+    																		 int estadoVehiculo, Date fechaControl );
     
 }

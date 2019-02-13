@@ -2,6 +2,7 @@ package com.nuebus.mapper;
 
 import java.util.Set;
 import com.nuebus.dto.CarnetDTO;
+import com.nuebus.dto.ChoferConCarnetsDTO;
 import com.nuebus.dto.ChoferDTO;
 import com.nuebus.dto.ChoferIncidenciaDTO;
 import com.nuebus.dto.ChoferPKDTO;
@@ -12,6 +13,8 @@ import com.nuebus.model.ChoferIncidencia;
 import com.nuebus.model.ChoferPK;
 import com.nuebus.model.Incidencia;
 import java.util.HashSet;
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
@@ -42,6 +45,9 @@ public interface ChoferMapper {
     
     public ChoferPKDTO ChoferPKTOChoferPKDTO( ChoferPK choferPK );
        
+    public ChoferConCarnetsDTO choferToChoferConCarnet(  Chofer chofer );
+    
+    public List<ChoferConCarnetsDTO> choferToChoferConCarnet(  List<Chofer> choferes );
     
     public Set<IncidenciaDTO> incidenciasToIncidenciasDTO(Set<Incidencia> incidencias);
     public IncidenciaDTO incidenciaToIncidenciaDTO( Incidencia incidencia );

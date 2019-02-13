@@ -17,7 +17,7 @@ import org.springframework.data.jpa.repository.Query;
  *
  * @author Usuario
  */
-public interface IncidenciaRepository extends JpaRepository<Incidencia, Long>, IncidenciaRepositoryCustom {
+public interface IncidenciaRepository extends JpaRepository<Incidencia, Long>{
     
     @Query( " Select CASE WHEN COUNT(i) > 0 THEN true ELSE false END from Incidencia i "
             + " where i.in_empresa  =?1 "

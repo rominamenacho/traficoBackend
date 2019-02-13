@@ -12,6 +12,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author Valeria
  */
-public interface CarnetRepository extends JpaRepository<Carnet, Long>, CarnetRepositoryCustom {
+public interface CarnetRepository extends JpaRepository<Carnet, Long> {
     
 }

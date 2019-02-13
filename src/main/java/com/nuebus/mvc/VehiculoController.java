@@ -4,11 +4,15 @@ import com.nuebus.dto.ListaVehiculoIncidenciasDTO;
 import com.nuebus.dto.VehiculoDTO;
 import com.nuebus.dto.VehiculoIncidenciaDTO;
 import com.nuebus.dto.VehiculoOpDTO;
+import com.nuebus.dto.VencimientosVehiculoDTO;
 import com.nuebus.erroresJson.WrapVehiculoIncidenciaError;
+import com.nuebus.model.Vehiculo;
 import com.nuebus.service.MapaAsientoService;
 import com.nuebus.service.VehiculoService;
 import com.nuebus.utilidades.IAuthenticationFacade;
 import com.nuebus.utilidades.Utilities;
+import com.nuebus.vencimientos.VencimientosVehiculo;
+
 import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
@@ -48,6 +52,7 @@ public class VehiculoController {
     VehiculoService vehiculoService;
     @Inject
     MapaAsientoService mapaAsientoService;
+    @Autowired VencimientosVehiculo vencimientosVehiculo;
     
     @RequestMapping(value = "/vehiculos/empresa/{vehEmpCodigo}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<VehiculoDTO>> findAllVehiculos( Pageable pageable, @PathVariable String vehEmpCodigo ) {
@@ -83,14 +88,15 @@ public class VehiculoController {
     }
     
     
+    @RequestMapping(value = "/vehiculos/empresa/{vehEmpCodigo}/interno/{vehInterno}/checkExiste", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public boolean checkExisteVehiculo( @PathVariable String vehEmpCodigo,  @PathVariable int vehInterno ) throws Exception {
+        return vehiculoService.existeInterno( vehEmpCodigo, vehInterno );                
+    }  
+    
+    
+    
     @RequestMapping(value = "/empresa/{vehEmpCodigo}/vehiculosCb", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<VehiculoOpDTO> getOpcionesVehiculos(Pageable pageable, @PathVariable String vehEmpCodigo) {
-                
-        /*Authentication authentication = authenticationFacade.getAuthentication();        
-        UserContext user = (UserContext)authentication.getPrincipal();        
-        VehiculoOpDTO opcionesVeh = new VehiculoOpDTO();                
-        opcionesVeh.setComboMapas(mapaAsientoService.findAllMapaAsiento( user.getEmpresa()));                
-        return new ResponseEntity<>(opcionesVeh, HttpStatus.OK);*/        
+    public ResponseEntity<VehiculoOpDTO> getOpcionesVehiculos(Pageable pageable, @PathVariable String vehEmpCodigo) {              
         
         VehiculoOpDTO opcionesVeh = new VehiculoOpDTO();                
         opcionesVeh.setComboMapas(mapaAsientoService.findAllMapaAsiento( vehEmpCodigo ));                
@@ -128,5 +134,12 @@ public class VehiculoController {
         return errores;
     }   
 
+    @RequestMapping(value = "/vehiculos/empresa/{vehEmpCodigo}/estado/{vehEstado}/vencimientos", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<VencimientosVehiculoDTO>> getVehiculosConVencimientos(@PathVariable String vehEmpCodigo,  @PathVariable int vehEstado ) {        
+        //List<VehiculoDTO> vehiculos = vehiculoService.getVehiculosConVencimientos( vehEmpCodigo, vehEstado );
+    	List<VencimientosVehiculoDTO> vencVehiculo = vencimientosVehiculo.calcularAllVencimientosVehiculos( vehEmpCodigo, 
+    																										vehEstado);
+        return new ResponseEntity<>( vencVehiculo, HttpStatus.OK );
+    }
     
 }

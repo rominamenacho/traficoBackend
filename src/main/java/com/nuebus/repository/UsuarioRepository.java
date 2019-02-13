@@ -15,7 +15,7 @@ import org.springframework.data.jpa.repository.Query;
  *
  * @author Valeria
  */
-public interface UsuarioRepository extends JpaRepository< Usuario, UsuarioPK>, UsuarioRepositoryCustom {
+public interface UsuarioRepository extends JpaRepository< Usuario, UsuarioPK> {
     
     @Query("select u from Usuario u where u.login = ?1 and u.pass = ?2 ")
     Usuario findByLoginAndPass(String login, String pass);
