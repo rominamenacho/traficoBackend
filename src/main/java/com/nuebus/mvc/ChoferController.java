@@ -5,10 +5,12 @@ import com.nuebus.dto.ChoferDTO;
 import com.nuebus.dto.ChoferIncidenciaDTO;
 import com.nuebus.dto.ListaCarnetDTO;
 import com.nuebus.dto.ListaChoferIncidencia;
+import com.nuebus.dto.VencimientosChoferDTO;
 import com.nuebus.dto.VencimientosVehiculoDTO;
 import com.nuebus.erroresJson.WrapCarnetError;
 import com.nuebus.erroresJson.WrapChoferIncidenciaError;
 import com.nuebus.service.ChoferService;
+import com.nuebus.service.VencimientoService;
 import com.nuebus.utilidades.Utilities;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +18,7 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -42,6 +45,9 @@ public class ChoferController {
     final static Logger LOG = LoggerFactory.getLogger(ChoferController.class);
     @Inject
     ChoferService choferService;
+    
+    @Autowired
+    VencimientoService vencimientoService;
         
     /*@RequestMapping(value = "/chofer", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<ChoferDTO>> findAllChofer(Pageable pageable, HttpServletRequest req, JwtAuthenticationToken token) {
@@ -137,13 +143,14 @@ public class ChoferController {
     }
     
     
-    /*@RequestMapping(value = "/choferes/empresa/{cho_emp_codigo}/estado/{cho_estado}/vencimientos", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<VencimientosVehiculoDTO>> getChoferesConVencimientos(@PathVariable String cho_emp_codigo,  @PathVariable int cho_estado ) {       
-
-    	List<VencimientosVehiculoDTO> vencVehiculo = vencimientosVehiculo.calcularAllVencimientosVehiculos( vehEmpCodigo, 
-    																										vehEstado);
-        return new ResponseEntity<>( vencVehiculo, HttpStatus.OK );
-    }*/
+    @RequestMapping(value = "/choferes/empresa/{cho_emp_codigo}/estado/{cho_estado}/vencimientos", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object > getVehiculosConVencimientos(@PathVariable String cho_emp_codigo, 
+    		@PathVariable int cho_estado ) {       
+    	
+    	List<VencimientosChoferDTO> vencimientosChoferes =  vencimientoService.calcularVencimientosChoferes( cho_emp_codigo, 
+    																								 cho_estado);
+        return new ResponseEntity<>( vencimientosChoferes, HttpStatus.OK );
+    }
     
     
 }

@@ -230,6 +230,11 @@ public class ChoferServiceImpl implements ChoferService{
         return   new ChoferOcupacionBuilder( choferRepository.ocupacionChoferes( empresa, inicio, fin ) ).build();
         
     }
+
+	@Override
+	public List<Chofer> getChoferesConCarnetsVencidos(String empresa, int estadoChofer, Date fechaControl) {
+		return choferRepository.getChoferesConCarnetsVencidos( empresa, estadoChofer, fechaControl );
+	}
     
      
     

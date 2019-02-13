@@ -162,10 +162,11 @@ public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK> {
     public List<Object[]> ocupacionChoferes( String empCodigo, java.util.Date inicio, java.util.Date fin );
     
     
-    @Query( " Select * from Chofer ch where ch.choferPK = :empresa "	
+    @Query( " Select DISTINCT ch from Chofer ch join fetch ch.carnets car "
+    		+ " where ch.choferPK.cho_emp_codigo = :empresa "	
     	 	+ " and ch.cho_estado = :estadoChofer "
-    		+ " and ch.carnets.fechaVenc <= :fechaControl ")
+    		+ " and car.fechaVenc <= :fechaControl ")
     public List<Chofer> getChoferesConCarnetsVencidos( @Param("empresa") String empresa,
-    											       @Param("estadoChofer") Integer estadoChofer,
+    											       @Param("estadoChofer") int estadoChofer,
     											       @Param("fechaControl") Date fechaControl ); 
 }

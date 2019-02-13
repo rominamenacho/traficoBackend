@@ -9,12 +9,16 @@ import com.nuebus.dto.CarnetDTO;
 import com.nuebus.dto.ChoferDTO;
 import com.nuebus.dto.ChoferIncidenciaDTO;
 import com.nuebus.dto.ChoferOcupacionDTO;
+import com.nuebus.model.Chofer;
 import com.nuebus.model.ChoferPK;
 import com.nuebus.vistas.combos.ComboChoferes;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 
 /**
  *
@@ -43,6 +47,8 @@ public interface ChoferService {
     
     public void findPersonalByViaje(long idViaje);//?? empCodigo, long idViaje, java.util.Date inicio, java.util.Date fin, int estadoChofer, int funcion
     
-     public  List<ChoferOcupacionDTO> findPersonalOcupacionByEmpresa( String empresa,  java.util.Date inicio, java.util.Date fin );
+    public  List<ChoferOcupacionDTO> findPersonalOcupacionByEmpresa( String empresa,  java.util.Date inicio, java.util.Date fin );
+     
+    public List<Chofer> getChoferesConCarnetsVencidos( String empresa, int estadoChofer, Date fechaControl );
     
 }

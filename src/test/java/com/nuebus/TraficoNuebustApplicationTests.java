@@ -1,6 +1,7 @@
 package com.nuebus;
 
 
+import com.nuebus.dto.VencimientosChoferDTO;
 import com.nuebus.helpers.CtrlCheckVuelta;
 import com.nuebus.model.Vehiculo;
 import com.nuebus.model.Vencimiento;
@@ -15,7 +16,10 @@ import com.nuebus.repository.VueltaDiagRepository;
 import com.nuebus.service.LineaService;
 import com.nuebus.service.ServicioService;
 import com.nuebus.service.VehiculoService;
+import com.nuebus.service.VencimientoService;
 import com.nuebus.service.ViajeEspecialService;
+import com.nuebus.vencimientos.VencimientosChofer;
+import com.nuebus.vencimientos.VencimientosChoferCarnet;
 import com.nuebus.vencimientos.VencimientosVehiculo;
 
 import java.util.GregorianCalendar;
@@ -84,13 +88,30 @@ public class TraficoNuebustApplicationTests {
         VencimientosVehiculo vencimientosVehiculo;
         
 
+        @Autowired
+        VencimientosChoferCarnet vencimientosChoferCarnet;
+        
+        @Autowired
+    	VencimientoService vencimientoService;
+        
+        @Autowired
+        VencimientosChofer vencimientosChofer;
+        
         @Test
         @Transactional       
 		public void contextLoads() {            
         	
-        	System.out.println( "haber" );
+        	//System.out.println( "haber" );
         	
-        	System.out.println( vencimientosVehiculo.calcularAllVencimientosVehiculos("IMQ", 0) );
+        	
+        	
+        	System.out.println( vencimientoService.calcularVencimientosChoferes( "IMQ", 0 ) );
+        	
+        	
+        	//System.out.println( vencimientosChoferCarnet.getVencimientosByCarnet( "IMQ", 0 ) );
+        	
+        	
+        	//System.out.println( vencimientosChoferCarnet.calcularVencimietosChofer( "IMQ", 0 ) );
 	         
 	       
 	   }          

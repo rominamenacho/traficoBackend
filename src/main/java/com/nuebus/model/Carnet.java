@@ -138,6 +138,14 @@ public class Carnet extends AbstractEntityVersion{
     public void setId(Integer id) {
         this.id = id;
     }
+
+
+	@Override
+	public String toString() {
+		return "Carnet [id=" + id + ", tipo=" + tipo + ", fechaEmision=" + fechaEmision + ", fechaVenc=" + fechaVenc
+				+ ", numeroCarnet=" + numeroCarnet + ", observaciones=" + observaciones + "]";
+	}
    
+    
        
 }
