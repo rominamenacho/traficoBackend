@@ -30,7 +30,7 @@ public class ServicioServiceImpl implements ServicioService {
     private ServicioRepository servicioRepository;
     
     public Servicio findServicioById( ServicioPK  servPK){
-        return servicioRepository.findOne( servPK );
+        return servicioRepository.findById( servPK ).orElse( null );
     }
 
     @Override

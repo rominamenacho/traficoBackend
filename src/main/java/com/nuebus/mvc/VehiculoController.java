@@ -12,10 +12,8 @@ import com.nuebus.service.VehiculoService;
 import com.nuebus.utilidades.IAuthenticationFacade;
 import com.nuebus.utilidades.Utilities;
 import com.nuebus.vencimientos.VencimientosVehiculo;
-
 import java.util.List;
 import java.util.Set;
-import javax.inject.Inject;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,9 +46,9 @@ public class VehiculoController {
     
     final static Logger LOG = LoggerFactory.getLogger(VehiculoController.class);
     
-    @Inject 
+    @Autowired 
     VehiculoService vehiculoService;
-    @Inject
+    @Autowired
     MapaAsientoService mapaAsientoService;
     @Autowired VencimientosVehiculo vencimientosVehiculo;
     

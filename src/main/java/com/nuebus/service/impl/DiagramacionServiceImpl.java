@@ -77,17 +77,13 @@ public class DiagramacionServiceImpl implements DiagramacionService {
         return diagramacionRepository.findDiagramacionesByEmpresa(empresa).stream()
                 .map(diag -> diagramacionMapper.toDTO(diag)).collect(Collectors.toList());
     }*/
-
-    
-    
-    
-    
+  
    
 
     @Override
     public void deleteDiagramacion(Long idDiagramacion) {
         Diagramacion d = diagramacionRepository.getOne(idDiagramacion);
-        diagramacionRepository.delete(idDiagramacion);
+        diagramacionRepository.delete( d );
     }
 
     

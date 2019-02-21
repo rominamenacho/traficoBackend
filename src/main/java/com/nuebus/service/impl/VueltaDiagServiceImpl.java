@@ -90,7 +90,7 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
     @Override
     public VueltaDiag modificarVueltaDiag(Long id, VueltaDiagDTO vueltaDiagDTO) {
         
-        VueltaDiag vuelta = vueltaDiagRepository.findOne( id );  
+        VueltaDiag vuelta = vueltaDiagRepository.findById( id ).orElse( null );  
         
         if( vuelta == null  ){
             throw new ResourceNotFoundException(id,"Vuelta No encontrada"); 
@@ -128,12 +128,12 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
     @Transactional( readOnly = false)    
     @Override
     public VueltaDiag deleteVueltaDiag(Long id) {
-        VueltaDiag vuelta = vueltaDiagRepository.findOne(id);
+        VueltaDiag vuelta = vueltaDiagRepository.findById( id ).orElse( null ); 
         
         if( vuelta == null  ){
             throw new ResourceNotFoundException(id,"Vuelta No encontrada"); 
         }        
-        vueltaDiagRepository.delete(id);        
+        vueltaDiagRepository.delete(vuelta);        
         return vuelta;
     }
 
@@ -255,10 +255,8 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
                 =  vehiculoService.findVehiculosOcupacionByEmpresa( vueltaDiagDTO.getEmpresa(),
                                                                     inicio, 
                                                                     fin );
-        //vehiOcupacion.stream().filter( veh ->  )
-     
-    }
-   
+        //vehiOcupacion.stream().filter( veh ->  )     
+    }   
    
     
 }

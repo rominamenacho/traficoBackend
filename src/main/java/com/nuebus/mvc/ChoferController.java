@@ -6,7 +6,6 @@ import com.nuebus.dto.ChoferIncidenciaDTO;
 import com.nuebus.dto.ListaCarnetDTO;
 import com.nuebus.dto.ListaChoferIncidencia;
 import com.nuebus.dto.VencimientosChoferDTO;
-import com.nuebus.dto.VencimientosVehiculoDTO;
 import com.nuebus.erroresJson.WrapCarnetError;
 import com.nuebus.erroresJson.WrapChoferIncidenciaError;
 import com.nuebus.service.ChoferService;
@@ -14,8 +13,9 @@ import com.nuebus.service.VencimientoService;
 import com.nuebus.utilidades.Utilities;
 import java.util.List;
 import java.util.Set;
-import javax.inject.Inject;
+
 import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChoferController { 
     
     final static Logger LOG = LoggerFactory.getLogger(ChoferController.class);
-    @Inject
+    @Autowired
     ChoferService choferService;
     
     @Autowired

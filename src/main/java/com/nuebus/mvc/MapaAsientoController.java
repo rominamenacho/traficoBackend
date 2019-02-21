@@ -6,12 +6,10 @@
 package com.nuebus.mvc;
 
 import com.nuebus.dto.CbMapaAsientoDTO;
-import com.nuebus.seguridad.security.model.UserContext;
 import com.nuebus.service.MapaAsientoService;
 import com.nuebus.utilidades.IAuthenticationFacade;
 import java.util.ArrayList;
 import java.util.List;
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,18 +35,21 @@ public class MapaAsientoController {
     @Autowired
     private IAuthenticationFacade authenticationFacade;
     final static Logger LOG = LoggerFactory.getLogger(MapaAsientoController.class);
-    @Inject
+    @Autowired
     MapaAsientoService mapaAsientoService;
     
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CbMapaAsientoDTO>> findAllMapaAsiento( HttpServletRequest req) {
         //Page<ChoferDTO> page = choferService.findChoferes(pageable);
         
-        Authentication authentication = authenticationFacade.getAuthentication();
+        /*Authentication authentication = authenticationFacade.getAuthentication();
         
         UserContext user = (UserContext)authentication.getPrincipal();
         
-        List<CbMapaAsientoDTO> lista = mapaAsientoService.findAllMapaAsiento( user.getEmpresa());
+        List<CbMapaAsientoDTO> lista = mapaAsientoService.findAllMapaAsiento( user.getEmpresa());*/
+    	
+    	List<CbMapaAsientoDTO> lista = mapaAsientoService.findAllMapaAsiento( "");
+    	
         return new ResponseEntity<>(lista, HttpStatus.OK);
     }
     

@@ -20,8 +20,8 @@ import com.nuebus.vistas.combos.ComboVehiculo;
 import com.nuebus.vistas.combos.VehiculoPKDet;
 import java.util.Date;
 import java.util.List;
-import javax.inject.Inject;
 import javax.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -45,15 +45,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "api")
 public class ViajeEspecialController {
 
-    @Inject
+	@Autowired
     private EscalaService escalaService;
-    @Inject
+    @Autowired
     ProvinciaService provinciaService;
-    @Inject
+    @Autowired
     ViajeEspecialService viajeEspecialService;     
-    @Inject
+    @Autowired
     VehiculoService vehiculoService;
-    @Inject
+    @Autowired
     ChoferService choferService;
 
                

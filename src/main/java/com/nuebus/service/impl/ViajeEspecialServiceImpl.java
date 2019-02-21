@@ -95,11 +95,11 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
         MapperVistas mapper =  new MapperVistas();        
         
         Page<ViajeEspecialDTO> retorno = viajeEspecialRepository.findViajesByEmpresaAndFecha(empresa, inicio, fin, pageable)
-                .map(viajeEspecial ->  mapper.toDTO( viajeEspecial,
-                                                     getDetalleConflictos( viajeEspecial ),
-                                                     getDetConflictosVehiculos(viajeEspecial),
-                                                     escalaRepository.findOne(viajeEspecial.getOrigen()),
-                                                     escalaRepository.findOne(viajeEspecial.getDestino()) ) );        
+            .map(viajeEspecial ->  mapper.toDTO( viajeEspecial,
+                                                 getDetalleConflictos( viajeEspecial ),
+                                                 getDetConflictosVehiculos(viajeEspecial),
+                                                 escalaRepository.findById(viajeEspecial.getOrigen()).orElse( null ) ,
+                                                 escalaRepository.findById(viajeEspecial.getDestino()).orElse( null ) ) );        
        
         
         return retorno;
@@ -109,8 +109,8 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
     @Override
     public void setVehiculo( long viaje,  VehiculoPK vehiculoPK )  throws Exception {
         
-        ViajeEspecial viajeEspecial =  viajeEspecialRepository.findOne(viaje);         
-        Vehiculo vehiculo = vehiculoRepository.findOne( vehiculoPK );                 
+        ViajeEspecial viajeEspecial =  viajeEspecialRepository.findById(viaje).orElse( null );         
+        Vehiculo vehiculo = vehiculoRepository.findById( vehiculoPK ).orElse( null );                 
         List<String> disponibles = vehiculoDisponiblesByViaje( viajeEspecial );
         String claveVehiculo = vehiculo.getVehiculoPK().getVehEmpCodigo() + vehiculo.getVehiculoPK().getVehInterno();
         
@@ -135,7 +135,8 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
     @Override
     public void setChoferes(long viaje,  List<ChoferPK> choferesPK) throws Exception {        
         
-        ViajeEspecial viajeEsp =  viajeEspecialRepository.findOne(viaje);                        
+        ViajeEspecial viajeEsp =  viajeEspecialRepository.findById(viaje).orElse( null );  
+                
         //es estack para validar y respetar el orden del array de entrada
         Stack <ChoferViaje > lista = new Stack<>();        
         ChoferViaje choferViaje = null;
@@ -144,7 +145,7 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
             choferViaje.setInicio( viajeEsp.getFechaHoraSalida() );
             choferViaje.setFin( viajeEsp.getFechaHoraRegreso() );
             choferViaje.setViajeEspecial(viajeEsp);            
-            choferViaje.setChofer(choferRepository.findOne(choferPk));
+            choferViaje.setChofer(choferRepository.findById(choferPk).orElse( null ) );
             lista.add(choferViaje);
         }        
         controlarChoferesLibres( disponiblesByViaje( viajeEsp ), lista);   
@@ -159,7 +160,7 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
      @Override
     public void setAuxiliares(long viaje,  List<ChoferPK> auxiliaresPK) throws Exception {        
         
-        ViajeEspecial viajeEsp =  viajeEspecialRepository.findOne(viaje);                        
+        ViajeEspecial viajeEsp =  viajeEspecialRepository.findById(viaje).orElse( null );                        
         //es estack para validar y respetar el orden del array de entrada
         Stack <AuxiliarViaje > lista = new Stack<>();        
         AuxiliarViaje auxiliarViaje = null;
@@ -168,7 +169,7 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
             auxiliarViaje.setInicio( viajeEsp.getFechaHoraSalida() );
             auxiliarViaje.setFin( viajeEsp.getFechaHoraRegreso() );
             auxiliarViaje.setViajeEspecial(viajeEsp);            
-            auxiliarViaje.setAuxiliar(choferRepository.findOne(choferPk));
+            auxiliarViaje.setAuxiliar(choferRepository.findById(choferPk).orElse( null ));
             lista.add(auxiliarViaje);
         }        
         controlarAuxiliaresLibres( auxiliaresDisponiblesByViaje( viajeEsp ), lista);   
@@ -274,7 +275,7 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
     public void deleteViajeEspecial(long idViaje) {
         
         ViajeEspecial viajeEsp = viajeEspecialRepository.getOne(idViaje);        
-        viajeEspecialRepository.delete(idViaje);
+        viajeEspecialRepository.delete(viajeEsp);
         
     }
    

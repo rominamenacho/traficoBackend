@@ -48,7 +48,7 @@ public class IncidenciaServiceImpl implements IncidenciaService{
 
     @Override
     public Incidencia getIncidencia(Long id) {
-        Incidencia incidencia = incidenciaRepository.findOne(id);
+        Incidencia incidencia = incidenciaRepository.findById(id).orElse( null );
         if (incidencia == null) {
             throw new ResourceNotFoundException(id,"Incidencia no encontrada"); 
         } else {
@@ -60,7 +60,7 @@ public class IncidenciaServiceImpl implements IncidenciaService{
     @Override
     public void updateIncidencia(long id, IncidenciaDTO incidenciaDTO)throws Exception {
         
-        Incidencia incidencia = incidenciaRepository.findOne(id);
+        Incidencia incidencia = incidenciaRepository.findById(id).orElse( null );
         if (incidencia == null) {
             throw new ResourceNotFoundException(id,"Incidencia no encontrada"); 
         }     
@@ -90,11 +90,11 @@ public class IncidenciaServiceImpl implements IncidenciaService{
     @Transactional(readOnly = false) 
     @Override
     public void deleteIncidencia(Long id) {        
-        Incidencia incidencia = incidenciaRepository.findOne(id);        
+        Incidencia incidencia = incidenciaRepository.findById( id ).orElse( null );        
         if (incidencia == null) {
             throw new ResourceNotFoundException( id ,"Incidencia no encontrada"); 
         } else {
-            incidenciaRepository.delete(id);
+            incidenciaRepository.delete( incidencia );
         }                  
     }
     

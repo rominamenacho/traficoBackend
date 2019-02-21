@@ -2,10 +2,15 @@ package com.nuebus.dto;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by mouradzouabi on 04/12/15.
  */
-public class PersonDTO extends AbstractDTO {
+public class PersonDTO {
+	
+	 @NotNull
+     private Long id;
 
     String firstname;
 
@@ -46,4 +51,14 @@ public class PersonDTO extends AbstractDTO {
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+    
+    
 }

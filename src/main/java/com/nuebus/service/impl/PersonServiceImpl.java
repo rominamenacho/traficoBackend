@@ -44,7 +44,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void updatePerson(PersonDTO personDTO) {
-        Person person = personRepository.findOne(personDTO.getId());
+        Person person = personRepository.findById( personDTO.getId() ).orElse( null );
         personMapper.mapToEntity(personDTO, person);
     }
 
@@ -56,6 +56,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void deletePerson(Long id) {
-        personRepository.delete(id);
+    	Person person = personRepository.findById( id ).orElse( null );
+        personRepository.delete( person );
     }
 }

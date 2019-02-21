@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -50,20 +49,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "api")
 public class DiagramacionController {
    
-    @Inject
+    @Autowired
     private DiagramacionService diagramacionService;
 
-    @Inject
+    @Autowired
     ServicioService servicioService;
 
-    @Inject
+    @Autowired
      LineaService lineaService;
     
     @Autowired
     VueltaDiagService vueltaDiagService;  
     
     
-    @Inject
+    @Autowired
     ChoferService choferService;
     
     @Autowired

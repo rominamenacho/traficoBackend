@@ -5,13 +5,12 @@
  */
 package com.nuebus.mvc;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import com.nuebus.dto.UsuarioDTO;
 import com.nuebus.model.UsuarioPK;
-import com.nuebus.service.UsuarioService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/usuario")
 public class UsuarioController {
     
-    final static Logger LOG = LoggerFactory.getLogger(UsuarioController.class);
-    @Inject
+    /*final static Logger LOG = LoggerFactory.getLogger(UsuarioController.class);
+    @Autowired
     UsuarioService usuarioService;
     
     @RequestMapping(value = "/{empresa}/{legajo}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -50,6 +49,6 @@ public class UsuarioController {
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public void loginUsuario( @RequestBody UsuarioDTO usuarioDTO ) {        
         usuarioService.findByLoginPass(usuarioDTO);
-    }
+    }*/
     
 }

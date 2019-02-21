@@ -8,7 +8,6 @@ import com.nuebus.model.Incidencia;
 import com.nuebus.service.IncidenciaService;
 import com.nuebus.utilidades.IAuthenticationFacade;
 import java.util.List;
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.slf4j.Logger;
@@ -36,7 +35,7 @@ public class IncidenciaController {
     
     final static Logger LOG = LoggerFactory.getLogger(IncidenciaController.class);
 
-    @Inject
+    @Autowired
     IncidenciaService incidenciaService;
     @Autowired
     IncidenciaMapper incidenciaMapper;

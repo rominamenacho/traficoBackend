@@ -70,7 +70,7 @@ public class VencimientoServiceImpl implements VencimientoService {
 	public Vencimiento deleteVencimiento(Long id) {
 
 		Vencimiento vencimiento = getVencimiento(id);
-		vencimientoRepository.delete(id);
+		vencimientoRepository.delete( vencimiento );
 		return vencimiento;
 	}
 
