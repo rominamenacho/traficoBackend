@@ -9,15 +9,15 @@ package com.nuebus.annotations;
  */
 public class PermisoEnVista 
 {
-	private String nombrePermiso;
+	private String authority;
 	private String descripcionPermiso;
-	public String getNombrePermiso() 
-	{
-		return nombrePermiso;
+	
+	
+	public String getAuthority() {
+		return authority;
 	}
-	public void setNombrePermiso(String nombrePermiso) 
-	{
-		this.nombrePermiso = nombrePermiso;
+	public void setAuthority(String authority) {
+		this.authority = authority;
 	}
 	public String getDescripcionPermiso() 
 	{

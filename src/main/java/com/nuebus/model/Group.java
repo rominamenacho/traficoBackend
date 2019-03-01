@@ -42,6 +42,9 @@ public class Group{
     @Column(name="group_name")
     @Size( max = 60)
     private String groupName;
+    
+    @Size( max = 4)
+    private String empresa;
 
     @Column(name="created")
     private Date created;
@@ -95,12 +98,22 @@ public class Group{
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}	
+
+	public String getEmpresa() {
+		return empresa;
 	}
 
+	public void setEmpresa(String empresa) {
+		this.empresa = empresa;
+	}
+
+	
+	
 	@Override
 	public String toString() {
-		return "Group [id=" + id + ", groupName=" + groupName + ", created=" + created + ", modified=" + modified
-				+ ", roles=" + roles + "]";
+		return "Group [id=" + id + ", groupName=" + groupName + ", empresa=" + empresa + ", created=" + created
+				+ ", modified=" + modified + ", roles=" + roles + "]";
 	}
 
 	@Override

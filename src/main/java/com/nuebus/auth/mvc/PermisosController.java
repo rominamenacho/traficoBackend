@@ -89,7 +89,7 @@ public class PermisosController {
             if(descMetodo!=null) {
                 PermisoEnVista permiso=new PermisoEnVista();
                 permiso.setDescripcionPermiso(descMetodo.value());
-                permiso.setNombrePermiso(descMetodo.permission());
+                permiso.setAuthority( descMetodo.permission() );
                 controllers.get( nombreClase.getDescripcionClase()  ).add(permiso);
             }
         }
@@ -113,17 +113,21 @@ public class PermisosController {
     @RequestMapping(value="/permisos/grupo/{idGrupo}/permiso/{idPermiso}/grantrevoke",method=RequestMethod.PUT)
     @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN') or hasRole('ROLE_PERMISOS_MODIFICAR'))")
     public ResponseEntity< Object > modificarPermiso( @PathVariable Long idGrupo,  @PathVariable String idPermiso){       
-        groupService.grantOrRevokePermission(idGrupo, idPermiso);
-        return new ResponseEntity<>( HttpStatus.NO_CONTENT); 
+        boolean retorno = groupService.grantOrRevokePermission(idGrupo, idPermiso);
+        return new ResponseEntity<>( retorno, HttpStatus.OK); 
     }
     
     
+
+    @Descripcion(value="Gestionar Grupos",permission="ROLE_GRUPOS_LISTAR")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN') or hasRole('ROLE_GRUPOS_LISTAR'))")
     @RequestMapping(value="/permisos/grupos", method=RequestMethod.GET)
     public Page<GroupDTO> getGrupos( Pageable pageable ){       
         return groupService.findAll( pageable).map( group -> groupMapper.toDTO(group) );
+    	//return groupService.findFetchWithRoles( pageable).map( group -> groupMapper.toDTO(group) ); 
     }
     
-    @RequestMapping(value="/permisos/grupo/add", method=RequestMethod.POST)
+    @RequestMapping(value="/permisos/grupo", method=RequestMethod.POST)
     public ResponseEntity< Object > saveGrupo( @Valid @RequestBody GroupDTO groupDTO ){
         groupService.save(groupDTO);
         return new ResponseEntity<>( HttpStatus.CREATED);

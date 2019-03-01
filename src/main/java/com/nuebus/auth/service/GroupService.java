@@ -13,6 +13,9 @@ public interface GroupService {
     public void update( Long id,  GroupDTO groupDTO );
     public void delete( Long id);
     public Page<Group> findAll(   Pageable pageable );    
-    public String grantOrRevokePermission( long groupId, String permisoBuscar );
+    public boolean grantOrRevokePermission( long groupId, String permisoBuscar );
+    
+    public Page<Group> findFetchWithRoles( Pageable pageable );
+    
           
 }

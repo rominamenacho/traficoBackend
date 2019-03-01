@@ -12,7 +12,8 @@ public class GroupDTO {
     private Long id; 
     private String groupName;    
     private Date created;   
-    private Date modified;   
+    private Date modified;  
+    private String empresa;
     private Set<RoleDTO> roles;
 
     public Long getId() {
@@ -53,6 +54,14 @@ public class GroupDTO {
 
 	public void setRoles(Set<RoleDTO> roles) {
 		this.roles = roles;
+	}
+
+	public String getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(String empresa) {
+		this.empresa = empresa;
 	} 
     
     

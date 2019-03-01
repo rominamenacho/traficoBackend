@@ -1,5 +1,7 @@
 package com.nuebus.mvc;
 
+import com.nuebus.annotations.Descripcion;
+import com.nuebus.annotations.DescripcionClase;
 import com.nuebus.dto.ListaVehiculoIncidenciasDTO;
 import com.nuebus.dto.VehiculoDTO;
 import com.nuebus.dto.VehiculoIncidenciaDTO;
@@ -23,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Valeria
  */
 
+@DescripcionClase(value="Unidades")
 @RestController
 @CrossOrigin
 @RequestMapping(value = "api")
@@ -52,6 +56,10 @@ public class VehiculoController {
     MapaAsientoService mapaAsientoService;
     @Autowired VencimientosVehiculo vencimientosVehiculo;
     
+    
+
+    @Descripcion(value="Gestionar Unidades",permission="ROLE_UNIDADES_LISTAR")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN') or hasRole('ROLE_UNIDADES_LISTAR'))")
     @RequestMapping(value = "/vehiculos/empresa/{vehEmpCodigo}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<VehiculoDTO>> findAllVehiculos( Pageable pageable, @PathVariable String vehEmpCodigo ) {
                

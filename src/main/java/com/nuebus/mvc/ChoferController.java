@@ -1,5 +1,7 @@
 package com.nuebus.mvc;
 
+import com.nuebus.annotations.Descripcion;
+import com.nuebus.annotations.DescripcionClase;
 import com.nuebus.dto.CarnetDTO;
 import com.nuebus.dto.ChoferDTO;
 import com.nuebus.dto.ChoferIncidenciaDTO;
@@ -24,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Valeria
  */
 
+@DescripcionClase(value="Choferes")
 @RestController
 @CrossOrigin
 @RequestMapping(value = "api")
@@ -57,6 +61,11 @@ public class ChoferController {
         return new ResponseEntity<>(page, HttpStatus.OK);
     }*/    
    /*Debera mandar 0 si quiere choferes y 1 si quiere auxiliares*/
+    
+    
+
+    @Descripcion(value="Gestionar Choferes",permission="ROLE_CHOFERES_LISTAR")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN') or hasRole('ROLE_CHOFERES_LISTAR'))")
     @RequestMapping(value = "/choferes/empresa/{cho_emp_codigo}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<ChoferDTO>> findAllPersonal(Pageable pageable, @PathVariable String cho_emp_codigo ) {       
         Page<ChoferDTO> page = choferService.findPersonalByEmpresa(pageable, cho_emp_codigo);

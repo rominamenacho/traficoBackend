@@ -36,8 +36,9 @@ public class GroupServiceImpl implements GroupService{
     
     @Override
     @Transactional(readOnly = false)
-    public void save(GroupDTO groupDTO){        
+    public void save( GroupDTO groupDTO ){        
         Group grupo = new Group();
+        grupo.setEmpresa( groupDTO.getEmpresa() );
         grupo.setGroupName(groupDTO.getGroupName());
         grupo.setCreated(new java.util.Date());
         grupo.setModified(new java.util.Date());
@@ -50,6 +51,7 @@ public class GroupServiceImpl implements GroupService{
     public void update(Long id, GroupDTO groupDTO) {
         Group grupo = getById(id);
         grupo.setGroupName( groupDTO.getGroupName() );
+        grupo.setModified(new java.util.Date());
     }
 
     @Override
@@ -67,7 +69,7 @@ public class GroupServiceImpl implements GroupService{
 	
 	@Override
 	@Transactional(readOnly = false)
-	public String grantOrRevokePermission(long groupId , String permission){
+	public boolean grantOrRevokePermission(long groupId , String permission){
 		
 		Group grupo= getById( groupId );	 
 	 
@@ -83,16 +85,16 @@ public class GroupServiceImpl implements GroupService{
 	    	
 	    	if( rol != null ){
 	              this.removerPermiso( grupo, rol );
-	              return "false";
+	              return false;
 	        }else{
 	              this.agregarPermiso( grupo, permission );
-	              return "true";
+	              return true;
 	        }    	
 	    	
 	    }else{
             grupo.getRoles().clear();
             this.agregarPermiso( grupo , permission);
-            return "true";
+            return true;
 	    }
 	    
     }
@@ -111,7 +113,10 @@ public class GroupServiceImpl implements GroupService{
         groupRepository.save(g);
     }
 
-
+	@Override
+	public Page<Group> findFetchWithRoles(Pageable pageable) { 
+		return groupRepository.findFetchWithRoles(pageable);
+	}
 
     
 }

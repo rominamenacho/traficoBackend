@@ -15,11 +15,9 @@ import com.nuebus.model.Group;
  *
  * @author Valeria
  */
-public interface GroupRepository extends JpaRepository<Group, Long> {
-    
-     @Query(" Select g from Group g where  g.id != :idGroupAdmin and g.id != :idGroupUsuarioPrestamo ")
-     Page<Group> findGruposComunes(Pageable pageable, 
-            @Param("idGroupAdmin") Long idGroupAdmin,
-            @Param("idGroupUsuarioPrestamo") Long idGroupUsuarioPrestamo);
+public interface GroupRepository extends JpaRepository<Group, Long> {     
+     
+     @Query(" Select g from Group g left join g.roles ")
+     Page<Group> findFetchWithRoles( Pageable pageable );
     
 }
