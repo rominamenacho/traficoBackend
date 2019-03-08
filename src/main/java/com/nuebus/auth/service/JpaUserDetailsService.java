@@ -44,7 +44,7 @@ public class JpaUserDetailsService implements UserDetailsService{
 			if ( usuario.getGroup() == null ) {
 				
 				logger.error("Error en el Login: Usuario '" + username + "' no tiene grupo Asignado!");
-	        	throw new UsernameNotFoundException("Error en el Login: usuario '" + username + "' no tiene grupo asignados!");
+	        	throw new UsernameNotFoundException("Error en el Login: usuario '" + username + "' no tiene roles asignados!");
 			}			
 			
 			for( Role role: usuario.getGroup().getRoles() ) {

@@ -18,6 +18,7 @@ import com.nuebus.dto.GroupDTO;
 import com.nuebus.mapper.GroupMapper;
 import com.nuebus.model.Chofer;
 import com.nuebus.model.Group;
+import com.nuebus.model.Usuario;
 import com.nuebus.repository.ChoferRepository;
 
 import org.springframework.data.domain.Page;
@@ -51,13 +52,15 @@ public class TraficoNuebusApplicationTests {
 	@Test
 	public void contextLoads() {	
 		
-		Group group = groupRepository.findById( (long) 1 ).orElse( null );
+		Pageable pageable = PageRequest.of(0, 500);
 		
-		System.out.println( group );		
+		Page<Usuario> pageUsuario = usuarioRepository.findAllByEmpresaAndBusqueda("IMQ", "1", pageable);
 		
-		GroupDTO  dto =  groupMapper.toDTO(group);
 		
-		System.out.println( dto.getEmpresa() );
+		System.out.println( pageUsuario.getContent().stream().count() );
+		
+		pageUsuario.getContent().stream().forEach( u -> System.out.println( u.getNombre()  ));
+		
 		
 	}	
 

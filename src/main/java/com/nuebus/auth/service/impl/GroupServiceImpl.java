@@ -65,6 +65,11 @@ public class GroupServiceImpl implements GroupService{
 	public Page<Group> findAll(Pageable pageable) {
 		return groupRepository.findAll( pageable );
 	}
+	
+	@Override
+	public Page<Group> findAllByEmpresa(String empresa, Pageable pageable) {
+		return groupRepository.findAllByEmpresa(empresa, pageable);
+	}
 
 	
 	@Override
@@ -117,6 +122,8 @@ public class GroupServiceImpl implements GroupService{
 	public Page<Group> findFetchWithRoles(Pageable pageable) { 
 		return groupRepository.findFetchWithRoles(pageable);
 	}
+
+	
 
     
 }

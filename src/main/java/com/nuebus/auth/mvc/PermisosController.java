@@ -121,9 +121,9 @@ public class PermisosController {
 
     @Descripcion(value="Gestionar Grupos",permission="ROLE_GRUPOS_LISTAR")
     @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN') or hasRole('ROLE_GRUPOS_LISTAR'))")
-    @RequestMapping(value="/permisos/grupos", method=RequestMethod.GET)
-    public Page<GroupDTO> getGrupos( Pageable pageable ){       
-        return groupService.findAll( pageable).map( group -> groupMapper.toDTO(group) );
+    @RequestMapping(value="/permisos/grupos/{empresa}", method=RequestMethod.GET)
+    public Page<GroupDTO> getGrupos( @PathVariable("empresa") String empresa, Pageable pageable ){       
+        return groupService.findAllByEmpresa( empresa, pageable).map( group -> groupMapper.toDTO(group) );
     	//return groupService.findFetchWithRoles( pageable).map( group -> groupMapper.toDTO(group) ); 
     }
     

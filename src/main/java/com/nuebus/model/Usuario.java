@@ -50,6 +50,11 @@ public class Usuario implements Serializable{
     @Column(name="USR_PRS_AGN_CODIGO")
     int agencia;
     
+    @Column(name="USR_ESTADO")
+    boolean estado;
+    
+    @Column( name=" USR_EMAIL")
+    String email;
     
     @OneToOne()
     Group group;
@@ -101,12 +106,30 @@ public class Usuario implements Serializable{
 
 	public void setGroup(Group group) {
 		this.group = group;
+	}	
+
+	public boolean isEstado() {
+		return estado;
 	}
 
+	public void setEstado(boolean estado) {
+		this.estado = estado;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	
 	@Override
 	public String toString() {
 		return "Usuario [usuarioPk=" + usuarioPk + ", username=" + username + ", password=" + password + ", nombre="
-				+ nombre + ", agencia=" + agencia + ", group=" + group + "]";
+				+ nombre + ", agencia=" + agencia + ", estado=" + estado + ", email=" + email + ", group=" + group
+				+ "]";
 	}
 
 	@Override

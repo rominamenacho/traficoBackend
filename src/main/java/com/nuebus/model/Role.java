@@ -59,16 +59,12 @@ public class Role implements Serializable {
 
 	public void setAuthority(String authority) {
 		this.authority = authority;
-	}
-	
-	public Group getGroup() {
-		return group;
-	}
+	}	
 
 	public void setGroup(Group group) {
 		this.group = group;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Role [id=" + id + ", authority=" + authority + "]";

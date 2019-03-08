@@ -19,5 +19,8 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
      
      @Query(" Select g from Group g left join g.roles ")
      Page<Group> findFetchWithRoles( Pageable pageable );
+     
+     Page<Group> findAllByEmpresa( String empresa, Pageable pageable );
+     
     
 }

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nuebus.auth.repository.UsuarioRepository;
 import com.nuebus.auth.service.UserService;
-import com.nuebus.dto.UserDTO;
+import com.nuebus.dto.UsuarioDTO;
 import com.nuebus.mapper.UserMapper;
 import com.nuebus.model.Usuario;
 
@@ -31,8 +31,13 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public Page<UserDTO> findAllUsuarioConDatos(Pageable pageable) {		
-		return usuarioRepository.findAll(pageable).map( u -> userMapper.toDTO( u ) );							                   
+	public Page<UsuarioDTO> findAllUsuarioConDatos( String empresa, Pageable pageable) {		
+		return usuarioRepository.findAllByEmpresa( empresa, pageable).map( u -> userMapper.toDTO( u ) );							                   
+	}
+
+	@Override
+	public Page<UsuarioDTO> findAllByEmpresaAndBusqueda(String empresa, String busqueda, Pageable pageable) {
+		return usuarioRepository.findAllByEmpresaAndBusqueda( empresa, busqueda, pageable).map( u -> userMapper.toDTO( u ) );
 	}
   
     
