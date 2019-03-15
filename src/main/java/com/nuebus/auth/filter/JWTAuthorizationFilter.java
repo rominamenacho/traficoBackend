@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
 import com.nuebus.auth.service.JWTService;
 import com.nuebus.auth.service.impl.JWTServiceImpl;
 
@@ -41,9 +42,12 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 			authentication = new UsernamePasswordAuthenticationToken( jwtService.getUsername(header),
 																	  null,
 																	  jwtService.getRoles(header));
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+		}else {
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			return;
 		}
 		
-		SecurityContextHolder.getContext().setAuthentication(authentication);
 		chain.doFilter(request, response);
 		
 	}

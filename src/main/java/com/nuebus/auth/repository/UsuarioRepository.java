@@ -23,8 +23,13 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	
 	@Query( " Select u from Usuario u where u.usuarioPk.empresa = :empresa"
 			+ "								and ( CAST( u.usuarioPk.legajo as string ) LIKE  CONCAT('%',:busqueda,'%')	"
-			+ "									  or	u.nombre LIKE CONCAT('%',:busqueda,'%') )")
+			+ "									  or  UPPER( u.nombre ) LIKE CONCAT('%',:busqueda,'%') )")
     Page<Usuario> findAllByEmpresaAndBusqueda( @Param( value="empresa") String empresa, 
     		@Param(value="busqueda") String busqueda,Pageable pageable);
+	
+	
+	@Query( " Select u from Usuario u where ( CAST( u.usuarioPk.legajo as string ) LIKE  CONCAT('%',:busqueda,'%')	"
+			+ "									  or  UPPER( u.nombre ) LIKE CONCAT('%',:busqueda,'%') )")
+    Page<Usuario> findAllByBusqueda( @Param(value="busqueda") String busqueda,Pageable pageable);
 	
 }

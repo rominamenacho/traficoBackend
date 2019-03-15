@@ -50,7 +50,7 @@ public class IncidenciaController {
 
 
     @Descripcion(value="Gestionar Incidencias",permission="ROLE_INCIDENCIAS_LISTAR")
-    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN') or hasRole('ROLE_INCIDENCIAS_LISTAR'))")
+    @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_INCIDENCIAS_LISTAR'))")
     @RequestMapping(value = "/incidencias/empresa/{idEmpresa}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<IncidenciaDTO>> findAllIncidencias(@PathVariable String idEmpresa , Pageable pageable, HttpServletRequest req) {    
              
@@ -59,13 +59,14 @@ public class IncidenciaController {
     }
     
     
-
+    @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_INCIDENCIAS_LISTAR'))")
     @RequestMapping(value = "/incidencias/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getIncidencia(@PathVariable Long id, HttpServletRequest req) {
         Incidencia incidencia = incidenciaService.getIncidencia(id);            
         return new ResponseEntity<>(incidenciaMapper.toDTO(incidencia), HttpStatus.OK);
     }
 
+    @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_INCIDENCIAS_LISTAR'))")
     @RequestMapping(value = "/incidencias", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> createIncidencia(@Valid @RequestBody IncidenciaDTO incidenciaDTO) throws Exception{                      
         Incidencia incidencia = incidenciaMapper.toEntity(incidenciaDTO);    
@@ -79,19 +80,22 @@ public class IncidenciaController {
         return incidenciaService.existeCodigo( empresa, tipo, codigo );                           
     }
     
+    
+    @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_INCIDENCIAS_LISTAR'))")
     @RequestMapping(value = "/incidencias/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> updateIncidencia( @PathVariable Long id, @Valid @RequestBody IncidenciaDTO incidenciaDTO ) throws Exception{         
         incidenciaService.updateIncidencia(id, incidenciaDTO); 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
+    
+    @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_INCIDENCIAS_LISTAR'))")
     @RequestMapping(value = "/incidencias/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteIncidencia(@PathVariable Long id) {
         incidenciaService.deleteIncidencia(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);        
     }
     
-    
+    @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_INCIDENCIAS_LISTAR'))")
     @RequestMapping(value = "/empresa/{idEmpresa}/tipo/{idTipo}/incidencias", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ComboDTO>> findIncidenciasByEmpresayTipo( @PathVariable String idEmpresa , @PathVariable int idTipo  ) {             
         List<ComboDTO> lista = incidenciaService.findIncidenciasByEmpresayTipo( idEmpresa, idTipo );

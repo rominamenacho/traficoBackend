@@ -24,6 +24,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import com.nuebus.auth.UserPrincipal;
 
 
+
 @Component
 public class JWTServiceImpl implements JWTService {
 
@@ -57,7 +58,6 @@ public class JWTServiceImpl implements JWTService {
 		try {
 
 			getClaims(token);
-
 			return true;
 		} catch (JwtException | IllegalArgumentException e) {
 			return false;

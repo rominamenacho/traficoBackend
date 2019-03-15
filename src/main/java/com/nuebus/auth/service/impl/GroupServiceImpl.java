@@ -3,23 +3,33 @@ package com.nuebus.auth.service.impl;
 
 import java.util.Set;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.nuebus.auth.mvc.PermisosController;
 import com.nuebus.auth.repository.GroupRepository;
 import com.nuebus.auth.service.GroupService;
 import com.nuebus.dto.GroupDTO;
 import com.nuebus.excepciones.ResourceNotFoundException;
 import com.nuebus.model.Group;
 import com.nuebus.model.Role;
+import com.nuebus.utilidades.IAuthenticationFacade;
 
 
 
 @Service
 @Transactional(readOnly = true)
 public class GroupServiceImpl implements GroupService{
+	
+	final static org.slf4j.Logger log =LoggerFactory.getLogger(GroupServiceImpl.class);
+	
+	@Autowired
+	private IAuthenticationFacade authenticationFacade;       
     
     @Autowired
     private GroupRepository groupRepository;
@@ -61,16 +71,15 @@ public class GroupServiceImpl implements GroupService{
        groupRepository.delete(grupo);        
     }
 
-	@Override
+	@Override	
 	public Page<Group> findAll(Pageable pageable) {
 		return groupRepository.findAll( pageable );
 	}
 	
-	@Override
+	@Override	
 	public Page<Group> findAllByEmpresa(String empresa, Pageable pageable) {
 		return groupRepository.findAllByEmpresa(empresa, pageable);
 	}
-
 	
 	@Override
 	@Transactional(readOnly = false)
@@ -122,6 +131,8 @@ public class GroupServiceImpl implements GroupService{
 	public Page<Group> findFetchWithRoles(Pageable pageable) { 
 		return groupRepository.findFetchWithRoles(pageable);
 	}
+
+	
 
 	
 

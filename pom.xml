@@ -8,7 +8,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>migracion-nuebus</name>
+	<name>trafico-nuebus</name>
 	<description>Migracion Nuebus</description>
 
 	<parent>
@@ -81,7 +81,13 @@
 	        <groupId>com.oracle</groupId>
 	        <artifactId>ojdbc6</artifactId>
 	        <version>11.2.0.3</version>
-	    </dependency>   
+	    </dependency> 
+	    <dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-test</artifactId>
+		    <version>5.1.4.RELEASE</version>
+		    <scope>test</scope>
+		</dependency>  
 	</dependencies>
 
 	<build>

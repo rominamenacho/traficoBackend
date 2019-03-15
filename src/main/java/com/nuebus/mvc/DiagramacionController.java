@@ -1,6 +1,8 @@
 
 package com.nuebus.mvc;
 
+import com.nuebus.annotations.Descripcion;
+import com.nuebus.annotations.DescripcionClase;
 import com.nuebus.dto.ChoferDTO;
 import com.nuebus.dto.ChoferOcupacionDTO;
 import com.nuebus.dto.VueltaDiagDTO;
@@ -32,6 +34,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,7 +46,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Valeria
  */
-
+@DescripcionClase(value="Diagramacion")
 @RestController
 @CrossOrigin
 @RequestMapping(value = "api")
@@ -97,8 +100,8 @@ public class DiagramacionController {
     }
 
    
-    
-
+    @Descripcion(value="Gestionar Diagramacion",permission="ROLE_DIAGRAMACION_LISTAR")
+    @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_DIAGRAMACION_LISTAR'))")
     @RequestMapping(value = "/diagr", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public void saveDiagramacion(@RequestBody Diagramacion diagramacionDTO) throws Exception {
         diagramacionService.saveDiagramacion(diagramacionDTO);

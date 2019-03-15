@@ -56,16 +56,19 @@ public class GlobalExceptionHandler {
             
             return new ResponseEntity<ExceptionResponse>(response, HttpStatus.BAD_REQUEST);                
 	}  
-        
-        
-        @ResponseStatus(value=HttpStatus.UNAUTHORIZED)
-        @ExceptionHandler(io.jsonwebtoken.ExpiredJwtException.class)
-        public ResponseEntity<  ExceptionResponse > handleTowenExpirado( HttpServletRequest request, ExpiredJwtException ex){              
-            ExceptionResponse response = new ExceptionResponse();
-            response.setErrorCode("Token Expirado");
-            response.setErrorMessage( ex.getMessage() );  
-            return new ResponseEntity<ExceptionResponse>(response, HttpStatus.UNAUTHORIZED);
-        }
+    
+		
+	
+	@ResponseStatus(value=HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(io.jsonwebtoken.ExpiredJwtException.class)
+    public ResponseEntity<  ExceptionResponse > handleTowenExpirado( HttpServletRequest request, ExpiredJwtException ex){              
+        ExceptionResponse response = new ExceptionResponse();
+        response.setErrorCode("Token Expirado");
+        response.setErrorMessage( ex.getMessage() );  
+        return new ResponseEntity<ExceptionResponse>(response, HttpStatus.UNAUTHORIZED);
+    }
+	      
+   
         
         
         private String  getMensajeLimitado( String mensaje ){
@@ -80,16 +83,16 @@ public class GlobalExceptionHandler {
             return retorno;
         }
         
-        @ExceptionHandler( org.springframework.web.HttpRequestMethodNotSupportedException.class )
-        public ResponseEntity<  ExceptionResponse > handleMetodoNoPermitido( HttpServletRequest request, HttpRequestMethodNotSupportedException ex){              
-            
-            ExceptionResponse response = new ExceptionResponse();
-            response.setErrorCode("Metodo No permitido");
-            response.setErrorMessage( ex.getMessage() );           
-            
-            loguearError(response, request);   
-            
-            return new ResponseEntity<ExceptionResponse>(response, HttpStatus.METHOD_NOT_ALLOWED);
+    @ExceptionHandler( org.springframework.web.HttpRequestMethodNotSupportedException.class )
+    public ResponseEntity<  ExceptionResponse > handleMetodoNoPermitido( HttpServletRequest request, HttpRequestMethodNotSupportedException ex){              
+        
+        ExceptionResponse response = new ExceptionResponse();
+        response.setErrorCode("Metodo No permitido");
+        response.setErrorMessage( ex.getMessage() );           
+        
+        loguearError(response, request);   
+        
+        return new ResponseEntity<ExceptionResponse>(response, HttpStatus.METHOD_NOT_ALLOWED);
                 
 	}  
             

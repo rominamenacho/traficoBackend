@@ -52,11 +52,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 		        	.antMatchers(TOKEN_BASED_AUTH_ENTRY_POINT).authenticated()	
 			.and()
 				.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtService))
-				.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtService))
+				.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtService))				
 		.csrf().disable()
 		.cors()
 		.and()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		
 
 	}
 

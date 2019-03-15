@@ -1,6 +1,8 @@
 
 package com.nuebus.mvc;
 
+import com.nuebus.annotations.Descripcion;
+import com.nuebus.annotations.DescripcionClase;
 import com.nuebus.dto.ListaChoferPK;
 import com.nuebus.dto.ViajeEspecialDTO;
 import com.nuebus.erroresJson.WrapChoferPKError;
@@ -28,6 +30,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +43,8 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Valeria
  */
+
+@DescripcionClase(value="Viajes Especiales")
 @RestController
 @CrossOrigin
 @RequestMapping(value = "api")
@@ -70,7 +75,8 @@ public class ViajeEspecialController {
         return new ResponseEntity<>(lista, HttpStatus.OK);
     }
 
-    
+    @Descripcion(value="Gestionar Viajes Especiales",permission="ROLE_VIAJES_ESPECIALES_LISTAR")
+    @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_VIAJES_ESPECIALES_LISTAR'))")
     @RequestMapping(value = "/ViajesEspeciales", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public void saveViajeEspecial(  @RequestBody ViajeEspecialDTO  viajeEspecial ) throws Exception {       
         viajeEspecialService.saveViajeEspecial(viajeEspecial);        
