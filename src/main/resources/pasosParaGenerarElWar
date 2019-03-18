@@ -1,19 +1,11 @@
 Pasos para generar el War
 
 1) Reemplazar el pom.xml con el pomWeb
-2) Borrar la clase TraficoNuebustApplication.java (o comentar los @) comentar el metodo main
-3) Descomentar el contenido de PrestamosApplicationWeb.java
-4) Reemplazar la clase TraficoNuebustApplicationWeb.java con el contenido de launcherWeb
+2) Crear la clase ServletInitializer  a la altura a la clase con la anotacion @SpringBootApplication
+3) Copiar  el contenido del file ServletInitializer ubicado en recursos a la clase creada en e l paso 2. 
 
 ============Para volver================================================================
 
-1)nunca commitear TraficoNuebustApplicationWeb
-2)deshacer la eliminacion (o los @ comentados )
-3)deshacer la modificacion de pom.xml
-
-
-
-git checkout origin src/main/java/com/nuebus/TraficoNuebustApplication.java
-
-git checkout origin pom.xml
+1) Borrar la clase ServletInitializer  a la altura a la clase con la anotacion @SpringBootApplication
+2) deshacer la modificacion de pom.xml ( git checkout origin pom.xml )
 
