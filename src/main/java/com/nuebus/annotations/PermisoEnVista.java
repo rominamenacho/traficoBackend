@@ -27,4 +27,11 @@ public class PermisoEnVista
 	{
 		this.descripcionPermiso = descripcionPermiso;
 	}
+	
+	@Override
+	public String toString() {
+		return "PermisoEnVista [authority=" + authority + ", descripcionPermiso=" + descripcionPermiso + "]";
+	}
+	
+	
 }

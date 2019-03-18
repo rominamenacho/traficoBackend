@@ -1,12 +1,13 @@
 package com.nuebus.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.nuebus.annotations.PermisoEnVista;
 
 public class WraperModulo {
     String modulo;
-    List<PermisoEnVista> permisos;
+    List<PermisoEnVista> permisos = new ArrayList<>();
 
     public WraperModulo() {
     }   
@@ -31,6 +32,13 @@ public class WraperModulo {
 
     public void setPermisos(List<PermisoEnVista> permisos) {
         this.permisos = permisos;
-    }   
+    }
+
+
+	@Override
+	public String toString() {
+		return "WraperModulo [modulo=" + modulo + ", permisos=" + permisos + "]";
+	}    
+    
     
 }

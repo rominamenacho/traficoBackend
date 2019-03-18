@@ -25,12 +25,15 @@ public class AuthenticationFacade implements IAuthenticationFacade {
 	
 	final static org.slf4j.Logger log =LoggerFactory.getLogger(AuthenticationFacade.class);
 	
+	Usuario usuario;
+	
 	@Autowired
 	UserService userService;
 
 	
     public AuthenticationFacade() {
-        super();
+    	super();
+    	this.usuario = null;       
     }
 
     // API
@@ -58,9 +61,17 @@ public class AuthenticationFacade implements IAuthenticationFacade {
     }
     
     @Override
-    public final String getEmpresa() {    	
-    	Usuario usuario = userService.findByUsername( getUserName());    	
-    	return (usuario!= null && usuario.getUsuarioPk() != null)?usuario.getUsuarioPk().getEmpresa() : "**emp**";    	
+    public final String getEmpresa() {    	    	
+    	return ( getUsuario() != null 
+    			 && getUsuario().getUsuarioPk() != null)? getUsuario().getUsuarioPk().getEmpresa() : "**emp**";    	
     }
+
+	@Override
+	public final Usuario getUsuario() {		
+		if( this.usuario == null ) {
+			this.usuario = userService.findByUsername( getUserName()); 
+		}		    
+		return this.usuario;
+	}
 
 }

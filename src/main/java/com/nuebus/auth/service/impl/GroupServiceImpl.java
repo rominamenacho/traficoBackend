@@ -1,7 +1,11 @@
 package com.nuebus.auth.service.impl;
 
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,7 @@ import com.nuebus.auth.mvc.PermisosController;
 import com.nuebus.auth.repository.GroupRepository;
 import com.nuebus.auth.service.GroupService;
 import com.nuebus.dto.GroupDTO;
+import com.nuebus.dto.WraperModulo;
 import com.nuebus.excepciones.ResourceNotFoundException;
 import com.nuebus.model.Group;
 import com.nuebus.model.Role;
@@ -132,9 +137,27 @@ public class GroupServiceImpl implements GroupService{
 		return groupRepository.findFetchWithRoles(pageable);
 	}
 
-	
+	@Override
+	public List<WraperModulo> filtrarModulosByGrupos(List<WraperModulo> modulos, Set<Role> roles) { 
+	    
+		List<WraperModulo> modulosRespuesta = new ArrayList<>();        
+        
+        modulos.forEach( modulo ->{
+        	modulo.setPermisos( modulo.getPermisos().stream()
+					.filter( per -> estaEnLosPermisos ( per.getAuthority(), roles ) ) 
+					.collect( Collectors.toList()) );
+        	if( modulo.getPermisos() != null && !modulo.getPermisos().isEmpty()) {
+        		modulosRespuesta.add( modulo);
+        	}
+        } );
+        
+        return modulosRespuesta;
+	}
 
-	
+	private boolean estaEnLosPermisos( String authority,  Set<Role> roles ) {		
+		Optional<Role> rol = roles.stream().filter( r -> r.getAuthority().equalsIgnoreCase(authority)).findFirst();		
+		return rol.isPresent();
+	}	
 
     
 }

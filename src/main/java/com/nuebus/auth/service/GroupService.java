@@ -1,10 +1,15 @@
 package com.nuebus.auth.service;
 
 
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import com.nuebus.dto.GroupDTO;
+import com.nuebus.dto.WraperModulo;
 import com.nuebus.model.Group;
+import com.nuebus.model.Role;
 
 public interface GroupService {
     
@@ -18,7 +23,7 @@ public interface GroupService {
     
     public Page<Group> findFetchWithRoles( Pageable pageable );
     
-    
+    public List<WraperModulo> filtrarModulosByGrupos(  List<WraperModulo> modulos, Set<Role> roles );
     
     
           

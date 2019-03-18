@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -33,6 +34,8 @@ import com.nuebus.dto.GroupDTO;
 import com.nuebus.dto.WraperModulo;
 import com.nuebus.mapper.GroupMapper;
 import com.nuebus.model.Empresa;
+import com.nuebus.model.Role;
+import com.nuebus.model.Usuario;
 import com.nuebus.service.EmpresaService;
 import com.nuebus.utilidades.IAuthenticationFacade;
 import org.springframework.data.domain.Page;
@@ -68,51 +71,64 @@ public class PermisosController {
        
     @RequestMapping(value="/permisos/listar",method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_GRUPOS_LISTAR'))")
-    public List<WraperModulo> listarPermisos(){  
+    public List<WraperModulo> listarPermisos( HttpServletRequest request  ){  
       
-        Map<String,List<PermisoEnVista>> controllers=new LinkedHashMap<String,List<PermisoEnVista>>();
-        Map<RequestMappingInfo, HandlerMethod> p=this.handlerMapping.getHandlerMethods();
-        for(Map.Entry<RequestMappingInfo, HandlerMethod> entry:p.entrySet()) {
-            // Ahora para cada metodo averiguo el nombre del controller, del 
-            // metodo y el tipo de request.
-            NombreClase nombreClase=new NombreClase();
-            nombreClase.setNombreClase( entry.getValue().getMethod().getDeclaringClass().getName() ) ;
-            DescripcionClase descClase=entry.getValue().getMethod().getDeclaringClass().getAnnotation(DescripcionClase.class);
-            if(descClase!=null){
-                nombreClase.setDescripcionClase(descClase.value());
-            } else {
-                nombreClase.setDescripcionClase(nombreClase.getNombreClase());
-            }           
-           
-            if(!controllers.containsKey(nombreClase.getDescripcionClase())){              
-                List<PermisoEnVista> metodos=new LinkedList<PermisoEnVista>();               
-                controllers.put( nombreClase.getDescripcionClase() , metodos);
-            }          
-            Descripcion descMetodo=entry.getValue().getMethod().getAnnotation(Descripcion.class);
-            if(descMetodo!=null) {
-                PermisoEnVista permiso=new PermisoEnVista();
-                permiso.setDescripcionPermiso(descMetodo.value());
-                permiso.setAuthority( descMetodo.permission() );
-                controllers.get( nombreClase.getDescripcionClase()  ).add(permiso);
-            }
+    	List<WraperModulo> modulos = listarPermisosBases();
+        
+        if ( !request.isUserInRole("ROLE_ADMIN") ) {  
+        	/////////////Filtrar permisos solo los que tenga el usuarios ///////////////
+        	Usuario usr = authenticationFacade.getUsuario();      	
+        	return groupService.filtrarModulosByGrupos( modulos, usr.getGroup().getRoles() );
         }
-        
-        
-        List<WraperModulo> modulos = new ArrayList();
-        WraperModulo unModulo;
-        
-        for( String clave: controllers.keySet() ){
-        	if ( clave.indexOf(".") < 0 ) {
-        		unModulo = new WraperModulo();
-                unModulo.setModulo(clave);
-                unModulo.setPermisos(controllers.get(clave));
-                modulos.add(unModulo);
-        	}            
-        }      
       
         return modulos;
     }  
     
+    
+    private List<WraperModulo> listarPermisosBases() {
+    	
+    	 Map<String,List<PermisoEnVista>> controllers=new LinkedHashMap<String,List<PermisoEnVista>>();
+         Map<RequestMappingInfo, HandlerMethod> p=this.handlerMapping.getHandlerMethods();
+         for(Map.Entry<RequestMappingInfo, HandlerMethod> entry:p.entrySet()) {
+             // Ahora para cada metodo averiguo el nombre del controller, del 
+             // metodo y el tipo de request.
+             NombreClase nombreClase=new NombreClase();
+             nombreClase.setNombreClase( entry.getValue().getMethod().getDeclaringClass().getName() ) ;
+             DescripcionClase descClase=entry.getValue().getMethod().getDeclaringClass().getAnnotation(DescripcionClase.class);
+             if(descClase!=null){
+                 nombreClase.setDescripcionClase(descClase.value());
+             } else {
+                 nombreClase.setDescripcionClase(nombreClase.getNombreClase());
+             }           
+            
+             if(!controllers.containsKey(nombreClase.getDescripcionClase())){              
+                 List<PermisoEnVista> metodos=new LinkedList<PermisoEnVista>();               
+                 controllers.put( nombreClase.getDescripcionClase() , metodos);
+             }          
+             Descripcion descMetodo=entry.getValue().getMethod().getAnnotation(Descripcion.class);
+             if(descMetodo!=null) {
+                 PermisoEnVista permiso=new PermisoEnVista();
+                 permiso.setDescripcionPermiso(descMetodo.value());
+                 permiso.setAuthority( descMetodo.permission() );
+                 controllers.get( nombreClase.getDescripcionClase()  ).add(permiso);
+             }
+         }
+         
+         
+         List<WraperModulo> modulos = new ArrayList();
+         WraperModulo unModulo;
+         
+         for( String clave: controllers.keySet() ){
+         	if ( clave.indexOf(".") < 0 ) {
+         		unModulo = new WraperModulo();
+                 unModulo.setModulo(clave);
+                 unModulo.setPermisos(controllers.get(clave));
+                 modulos.add(unModulo);
+         	}            
+         }   
+    	
+         return modulos;
+    }
     
     
     @RequestMapping(value="/permisos/grupo/{idGrupo}/permiso/{idPermiso}/grantrevoke",method=RequestMethod.PUT)
@@ -137,10 +153,13 @@ public class PermisosController {
     		//Si tiene permisos entrega todos sino solo de su empresa
     		respuesta.put("grupos", groupService.findAll( pageable ).map( group -> groupMapper.toDTO(group) ) );
     		respuesta.put("empresas", empresas );                		
-    	}else {    		
-    		respuesta.put("grupos", groupService.findAllByEmpresa( authenticationFacade.getEmpresa(),
+    	}else {
+    		
+    		String empresaUsuario = authenticationFacade.getEmpresa();
+    		
+    		respuesta.put("grupos", groupService.findAllByEmpresa( empresaUsuario,
     																pageable).map( group -> groupMapper.toDTO(group) ));
-    		respuesta.put("empresas", empresas.stream().filter( emp -> emp.getEmpCodigo().equalsIgnoreCase(authenticationFacade.getEmpresa()) ) );                				
+    		respuesta.put("empresas", empresas.stream().filter( emp -> emp.getEmpCodigo().equalsIgnoreCase( empresaUsuario ) ) );                				
     	}    	
     	return new ResponseEntity<>( respuesta, HttpStatus.OK);
     }   
