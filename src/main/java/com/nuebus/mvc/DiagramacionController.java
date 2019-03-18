@@ -1,5 +1,3 @@
-==== BASE ====
-
 package com.nuebus.mvc;
 
 import com.nuebus.annotations.Descripcion;
@@ -101,8 +99,8 @@ public class DiagramacionController {
     }
 
    
-    
-
+    @Descripcion(value="Gestionar Diagramacion",permission="ROLE_DIAGRAMACION_LISTAR")
+    @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_DIAGRAMACION_LISTAR'))")
     @RequestMapping(value = "/diagr", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public void saveDiagramacion(@RequestBody Diagramacion diagramacionDTO) throws Exception {
         diagramacionService.saveDiagramacion(diagramacionDTO);
@@ -208,4 +206,3 @@ public class DiagramacionController {
 
 
 }
-==== BASE ====

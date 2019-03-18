@@ -1,4 +1,3 @@
-==== BASE ====
 package com.nuebus.service.impl;
 
 import com.nuebus.dto.ChoferEtapasDTO;
@@ -245,13 +244,6 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
         return vueltaDiagRepository.findByFechaServiciosIda(empresa, linea, inicio, fin);
         
     }
-    
-    @Override
-    public List<Object[]> getFullVueltas(String empresa, Date inicio, Date fin) {
-        
-        return vueltaDiagRepository.findAll(empresa, inicio, fin);
-        
-    }
 
     @Override
     public void checkVueltaDiag( VueltaDiagDTO vueltaDiagDTO ) {
@@ -264,8 +256,15 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
                                                                     inicio, 
                                                                     fin );
         //vehiOcupacion.stream().filter( veh ->  )     
-    }   
+    }
+
+
+    @Override
+    public List<Object[]> getFullVueltas(String empresa, Date inicio, Date fin) {
+        
+        return vueltaDiagRepository.findAll(empresa, inicio, fin);
+        
+    }
    
     
 }
-==== BASE ====
