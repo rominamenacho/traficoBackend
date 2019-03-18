@@ -2,12 +2,8 @@ package com.nuebus.excepciones;
 
 /**
  *
- * @author Valeria
- */
+ * @author Valeria */
 
-import com.nuebus.seguridad.security.model.UserContext;
-
-import com.nuebus.utilidades.Utilities;
 import io.jsonwebtoken.ExpiredJwtException;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -18,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,10 +26,17 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.nuebus.utilidades.IAuthenticationFacade;
+import com.nuebus.utilidades.Utilities;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {   
+	
+	@Autowired
+	private IAuthenticationFacade authenticationFacade;
+
         
-        public static int LONGITUD_MAX_MENSAJE = 50;
+    public static int LONGITUD_MAX_MENSAJE = 50;
         
 	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 	
@@ -52,16 +56,19 @@ public class GlobalExceptionHandler {
             
             return new ResponseEntity<ExceptionResponse>(response, HttpStatus.BAD_REQUEST);                
 	}  
-        
-        
-        @ResponseStatus(value=HttpStatus.UNAUTHORIZED)
-        @ExceptionHandler(io.jsonwebtoken.ExpiredJwtException.class)
-        public ResponseEntity<  ExceptionResponse > handleTowenExpirado( HttpServletRequest request, ExpiredJwtException ex){              
-            ExceptionResponse response = new ExceptionResponse();
-            response.setErrorCode("Token Expirado");
-            response.setErrorMessage( ex.getMessage() );  
-            return new ResponseEntity<ExceptionResponse>(response, HttpStatus.UNAUTHORIZED);
-        }
+    
+		
+	
+	@ResponseStatus(value=HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(io.jsonwebtoken.ExpiredJwtException.class)
+    public ResponseEntity<  ExceptionResponse > handleTowenExpirado( HttpServletRequest request, ExpiredJwtException ex){              
+        ExceptionResponse response = new ExceptionResponse();
+        response.setErrorCode("Token Expirado");
+        response.setErrorMessage( ex.getMessage() );  
+        return new ResponseEntity<ExceptionResponse>(response, HttpStatus.UNAUTHORIZED);
+    }
+	      
+   
         
         
         private String  getMensajeLimitado( String mensaje ){
@@ -76,16 +83,16 @@ public class GlobalExceptionHandler {
             return retorno;
         }
         
-        @ExceptionHandler( org.springframework.web.HttpRequestMethodNotSupportedException.class )
-        public ResponseEntity<  ExceptionResponse > handleMetodoNoPermitido( HttpServletRequest request, HttpRequestMethodNotSupportedException ex){              
-            
-            ExceptionResponse response = new ExceptionResponse();
-            response.setErrorCode("Metodo No permitido");
-            response.setErrorMessage( ex.getMessage() );           
-            
-            loguearError(response, request);   
-            
-            return new ResponseEntity<ExceptionResponse>(response, HttpStatus.METHOD_NOT_ALLOWED);
+    @ExceptionHandler( org.springframework.web.HttpRequestMethodNotSupportedException.class )
+    public ResponseEntity<  ExceptionResponse > handleMetodoNoPermitido( HttpServletRequest request, HttpRequestMethodNotSupportedException ex){              
+        
+        ExceptionResponse response = new ExceptionResponse();
+        response.setErrorCode("Metodo No permitido");
+        response.setErrorMessage( ex.getMessage() );           
+        
+        loguearError(response, request);   
+        
+        return new ResponseEntity<ExceptionResponse>(response, HttpStatus.METHOD_NOT_ALLOWED);
                 
 	}  
             
@@ -147,10 +154,11 @@ public class GlobalExceptionHandler {
         
         @ResponseStatus(value=HttpStatus.NOT_FOUND)
         @ExceptionHandler(ResourceNotFoundException.class)
-        public ResponseEntity<ExceptionResponse> handleResourceNotFound(ResourceNotFoundException ex) {
+        public ResponseEntity<ExceptionResponse> handleResourceNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
             ExceptionResponse response = new ExceptionResponse();
             response.setErrorCode("No encontrado");
             response.setErrorMessage(ex.getMessage());
+            loguearError( response, request );  
             return new ResponseEntity<ExceptionResponse>(response, HttpStatus.NOT_FOUND);
         }
         
@@ -200,20 +208,16 @@ public class GlobalExceptionHandler {
             
         }    
         
-        private static String getUserName(){
-            
-            Authentication auth  = SecurityContextHolder.getContext().getAuthentication();
-            if (auth != null) {                
-                UserContext usuario = (UserContext)auth.getPrincipal();
-                if( usuario != null ){
-                    return usuario.getUsername();
-                }              
-            }         
+        private  String getUserName(){            
+
+        	if(  authenticationFacade.getAuthentication() != null  ) {
+        		return (String)authenticationFacade.getAuthentication().getPrincipal();
+        	}
             return "Desconocido";
         }
         
-        private static void loguearError( ExceptionResponse response, HttpServletRequest request  ){
-             logger.error( getUserName() + " - " + request.getRequestURI() + " - " + request.getMethod() + " - "
+        private  void loguearError( ExceptionResponse response, HttpServletRequest request  ){
+             logger.error( "Usr[" + getUserName() + "] - " + request.getRequestURI() + " - " + request.getMethod() + " - "
                            + response.getErrorCode() + " - " + response.getErrorMessage() );        
         }
        

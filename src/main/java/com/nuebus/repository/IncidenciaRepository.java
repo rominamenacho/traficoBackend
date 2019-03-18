@@ -12,12 +12,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
  *
  * @author Usuario
  */
-public interface IncidenciaRepository extends JpaRepository<Incidencia, Long>{
+public interface IncidenciaRepository extends PagingAndSortingRepository<Incidencia, Long>{
     
     @Query( " Select CASE WHEN COUNT(i) > 0 THEN true ELSE false END from Incidencia i "
             + " where i.in_empresa  =?1 "

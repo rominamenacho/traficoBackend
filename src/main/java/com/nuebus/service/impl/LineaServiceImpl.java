@@ -56,8 +56,8 @@ public class LineaServiceImpl implements LineaService{
         
         EnlaceLineas enlace = new EnlaceLineas();
         
-        Linea ida = lineaRepository.findOne( enlaceDTO.getIdaPK() );
-        Linea vta = lineaRepository.findOne( enlaceDTO.getVueltaPK() );
+        Linea ida = lineaRepository.findById( enlaceDTO.getIdaPK() ).orElse( null );
+        Linea vta = lineaRepository.findById( enlaceDTO.getVueltaPK() ).orElse( null );
         
         enlace.setEmpCodigo(enlaceDTO.getEmpCodigo());
         enlace.setIda(ida);
@@ -74,7 +74,8 @@ public class LineaServiceImpl implements LineaService{
     @Override
     @Transactional( readOnly = false )
     public void deleteEnlaceLineas(Long idEnlace) {
-        enlaceLineasRepository.delete(idEnlace);
+    	EnlaceLineas enlaceLinea = enlaceLineasRepository.findById( idEnlace ).orElse( null ); 
+        enlaceLineasRepository.delete( enlaceLinea );
     }
     
 }

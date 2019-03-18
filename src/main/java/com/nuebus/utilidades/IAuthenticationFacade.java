@@ -7,6 +7,8 @@ package com.nuebus.utilidades;
 
 import org.springframework.security.core.Authentication;
 
+import com.nuebus.model.Usuario;
+
 /**
  *
  * @author Valeria
@@ -15,5 +17,8 @@ import org.springframework.security.core.Authentication;
 public interface IAuthenticationFacade {
 
     Authentication getAuthentication();
+    String getUserName();
+    String getEmpresa();
+    Usuario getUsuario();
 
 }

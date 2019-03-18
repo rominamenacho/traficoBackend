@@ -76,7 +76,7 @@ public class ChoferServiceImpl implements ChoferService{
         claveCho.setCho_emp_codigo(cho_emp_codigo);
         claveCho.setCho_codigo(cho_codigo);
                 
-        Chofer chofer = choferRepository.findOne( claveCho );   
+        Chofer chofer = choferRepository.findById( claveCho ).orElse( null );   
         
         if( chofer == null ){
             throw new ResourceNotFoundException(cho_codigo,"Chofer no encontrado"); 
@@ -108,7 +108,7 @@ public class ChoferServiceImpl implements ChoferService{
         choferPK.setCho_emp_codigo( cho_emp_codigo );
         choferPK.setCho_codigo( cho_codigo );
         
-        Chofer chofer = choferRepository.findOne( choferPK );   
+        Chofer chofer = choferRepository.findById( choferPK ).orElse( null );   
         
         if( chofer == null ){
             throw new ResourceNotFoundException(cho_codigo,"Chofer no encontrado"); 
@@ -134,20 +134,20 @@ public class ChoferServiceImpl implements ChoferService{
             idChofer.setCho_emp_codigo( cho_emp_codigo );
             idChofer.setCho_codigo( cho_codigo );
             
-            Chofer unChofer =  choferRepository.findOne(idChofer);     
+            Chofer unChofer =  choferRepository.findById(idChofer).orElse( null );     
             
             if( unChofer == null ){
                 throw new ResourceNotFoundException(cho_codigo,"Chofer no encontrado"); 
             }
               
             ChoferIncidencia choIncid;            
-            List<ChoferIncidencia> lista = new ArrayList<>();            
+            List<ChoferIncidencia> lista = new ArrayList<>();        
             
             for( ChoferIncidenciaDTO chInc: incidencias  ){
                     
                 choIncid = new ChoferIncidencia();          
-                choIncid.setId(chInc.getId() );
-                choIncid.setIncidencia( incidenciaRepository.findOne(chInc.getIdIncidencia()) ); 
+                choIncid.setId(chInc.getId() );               
+                choIncid.setIncidencia( incidenciaRepository.findById(chInc.getIdIncidencia()).orElse( null ) ); 
                 choIncid.setChofer(unChofer);
                 choIncid.setInicio( chInc.getInicio() );
                 choIncid.setFin( chInc.getFin() );
@@ -169,7 +169,11 @@ public class ChoferServiceImpl implements ChoferService{
         idChofer.setCho_emp_codigo( cho_emp_codigo );
         idChofer.setCho_codigo( cho_codigo );
         
-        Chofer unChofer = choferRepository.findOne( idChofer );           
+        Chofer unChofer = choferRepository.findById( idChofer ).orElse( null );
+        
+        if( unChofer == null ){
+            throw new ResourceNotFoundException(cho_codigo,"Chofer no encontrado"); 
+        }
         
         return unChofer.getChoferIncidencias().stream().
                 map( choInc -> MapperVistas.toChoferIncidenciaDTO(choInc) ).collect(Collectors.toList()); 
@@ -184,7 +188,7 @@ public class ChoferServiceImpl implements ChoferService{
         idChofer.setCho_emp_codigo( cho_emp_codigo );
         idChofer.setCho_codigo( cho_codigo );
 
-        Chofer unChofer =  choferRepository.findOne(idChofer);    
+        Chofer unChofer =  choferRepository.findById(idChofer).orElse( null );    
         
         if( unChofer == null ){
             throw new ResourceNotFoundException(cho_codigo,"Chofer no encontrado"); 
@@ -206,7 +210,11 @@ public class ChoferServiceImpl implements ChoferService{
         idChofer.setCho_emp_codigo( cho_emp_codigo );
         idChofer.setCho_codigo( cho_codigo );
         
-        Chofer unChofer = choferRepository.findOne( idChofer );           
+        Chofer unChofer = choferRepository.findById( idChofer ).orElse( null );    
+        
+        if( unChofer == null ){
+            throw new ResourceNotFoundException(cho_codigo,"Chofer no encontrado"); 
+        }
         
         return unChofer.getCarnets().stream().
                 map( carnet -> choferMapper.carnetToCarnetDTO(carnet) ).collect(Collectors.toList()); 

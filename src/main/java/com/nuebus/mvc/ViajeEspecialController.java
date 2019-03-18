@@ -1,6 +1,8 @@
 
 package com.nuebus.mvc;
 
+import com.nuebus.annotations.Descripcion;
+import com.nuebus.annotations.DescripcionClase;
 import com.nuebus.dto.ListaChoferPK;
 import com.nuebus.dto.ViajeEspecialDTO;
 import com.nuebus.erroresJson.WrapChoferPKError;
@@ -20,14 +22,15 @@ import com.nuebus.vistas.combos.ComboVehiculo;
 import com.nuebus.vistas.combos.VehiculoPKDet;
 import java.util.Date;
 import java.util.List;
-import javax.inject.Inject;
 import javax.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,20 +43,22 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Valeria
  */
+
+@DescripcionClase(value="Viajes Especiales")
 @RestController
 @CrossOrigin
 @RequestMapping(value = "api")
 public class ViajeEspecialController {
 
-    @Inject
+	@Autowired
     private EscalaService escalaService;
-    @Inject
+    @Autowired
     ProvinciaService provinciaService;
-    @Inject
+    @Autowired
     ViajeEspecialService viajeEspecialService;     
-    @Inject
+    @Autowired
     VehiculoService vehiculoService;
-    @Inject
+    @Autowired
     ChoferService choferService;
 
                
@@ -70,7 +75,8 @@ public class ViajeEspecialController {
         return new ResponseEntity<>(lista, HttpStatus.OK);
     }
 
-    
+    @Descripcion(value="Gestionar Viajes Especiales",permission="ROLE_VIAJES_ESPECIALES_LISTAR")
+    @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_VIAJES_ESPECIALES_LISTAR'))")
     @RequestMapping(value = "/ViajesEspeciales", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public void saveViajeEspecial(  @RequestBody ViajeEspecialDTO  viajeEspecial ) throws Exception {       
         viajeEspecialService.saveViajeEspecial(viajeEspecial);        

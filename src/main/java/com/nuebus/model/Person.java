@@ -2,6 +2,8 @@ package com.nuebus.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
 @Entity
-public class Person extends AbstractEntityVersion {
+public class Person implements Serializable {
     
         private static final long serialVersionUID = 1L;
     

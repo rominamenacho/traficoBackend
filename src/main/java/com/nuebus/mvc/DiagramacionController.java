@@ -1,6 +1,9 @@
+==== BASE ====
 
 package com.nuebus.mvc;
 
+import com.nuebus.annotations.Descripcion;
+import com.nuebus.annotations.DescripcionClase;
 import com.nuebus.dto.ChoferDTO;
 import com.nuebus.dto.ChoferOcupacionDTO;
 import com.nuebus.dto.VueltaDiagDTO;
@@ -27,12 +30,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,26 +47,26 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Valeria
  */
-
+@DescripcionClase(value="Diagramacion")
 @RestController
 @CrossOrigin
 @RequestMapping(value = "api")
 public class DiagramacionController {
    
-    @Inject
+    @Autowired
     private DiagramacionService diagramacionService;
 
-    @Inject
+    @Autowired
     ServicioService servicioService;
 
-    @Inject
+    @Autowired
      LineaService lineaService;
     
     @Autowired
     VueltaDiagService vueltaDiagService;  
     
     
-    @Inject
+    @Autowired
     ChoferService choferService;
     
     @Autowired
@@ -201,17 +204,8 @@ public class DiagramacionController {
         
         return new ResponseEntity<>( vueltas, HttpStatus.OK );
     }
-   
-    @RequestMapping(value = "/diagr/empresa/{idEmpresa}/fechaInicio/{inicio}/fechaFin/{fin}/fullVueltas",  method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getFullVueltas( @PathVariable String idEmpresa, 
-            @PathVariable("inicio") @DateTimeFormat(pattern = "yyyy-MM-dd") Date inicio,
-            @PathVariable("fin") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fin ){         
-               
-        List<Object[]> vueltas = vueltaDiagService.getFullVueltas(idEmpresa, inicio, fin);
-        
-        return new ResponseEntity<>( vueltas, HttpStatus.OK );
-    }
     
 
 
 }
+==== BASE ====

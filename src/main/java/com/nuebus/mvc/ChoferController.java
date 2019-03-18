@@ -1,12 +1,13 @@
 package com.nuebus.mvc;
 
+import com.nuebus.annotations.Descripcion;
+import com.nuebus.annotations.DescripcionClase;
 import com.nuebus.dto.CarnetDTO;
 import com.nuebus.dto.ChoferDTO;
 import com.nuebus.dto.ChoferIncidenciaDTO;
 import com.nuebus.dto.ListaCarnetDTO;
 import com.nuebus.dto.ListaChoferIncidencia;
 import com.nuebus.dto.VencimientosChoferDTO;
-import com.nuebus.dto.VencimientosVehiculoDTO;
 import com.nuebus.erroresJson.WrapCarnetError;
 import com.nuebus.erroresJson.WrapChoferIncidenciaError;
 import com.nuebus.service.ChoferService;
@@ -14,8 +15,9 @@ import com.nuebus.service.VencimientoService;
 import com.nuebus.utilidades.Utilities;
 import java.util.List;
 import java.util.Set;
-import javax.inject.Inject;
+
 import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,51 +40,51 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Valeria
  */
 
+@DescripcionClase(value="Choferes")
 @RestController
 @CrossOrigin
 @RequestMapping(value = "api")
 public class ChoferController { 
     
     final static Logger LOG = LoggerFactory.getLogger(ChoferController.class);
-    @Inject
+    @Autowired
     ChoferService choferService;
     
     @Autowired
-    VencimientoService vencimientoService;
-        
-    /*@RequestMapping(value = "/chofer", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<ChoferDTO>> findAllChofer(Pageable pageable, HttpServletRequest req, JwtAuthenticationToken token) {
-        //Page<ChoferDTO> page = choferService.findChoferes(pageable);
-        UserContext user =  (UserContext) token.getPrincipal();
-        Page<ChoferDTO> page = choferService.findChoferesByEmpresa(pageable, user.getEmpresa());
-        return new ResponseEntity<>(page, HttpStatus.OK);
-    }*/    
-   /*Debera mandar 0 si quiere choferes y 1 si quiere auxiliares*/
+    VencimientoService vencimientoService;   
+    
+
+    @Descripcion(value="Gestionar Personal",permission="ROLE_CHOFERES_LISTAR")
+    @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_CHOFERES_LISTAR'))")
     @RequestMapping(value = "/choferes/empresa/{cho_emp_codigo}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<ChoferDTO>> findAllPersonal(Pageable pageable, @PathVariable String cho_emp_codigo ) {       
         Page<ChoferDTO> page = choferService.findPersonalByEmpresa(pageable, cho_emp_codigo);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
       
-    
+    @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_CHOFERES_LISTAR'))")
     @RequestMapping(value = "/choferes", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> createChofer(@Valid @RequestBody ChoferDTO choferDTO) throws Exception {        
         choferService.saveChofer(choferDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);  
     }
     
+    @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_CHOFERES_LISTAR'))")
     @RequestMapping(value = "/choferes/empresa/{cho_emp_codigo}/codigo/{cho_codigo}", method = RequestMethod.PUT)
     public ResponseEntity<Object> updateChofer(@PathVariable String cho_emp_codigo, @PathVariable Long cho_codigo, @Valid @RequestBody ChoferDTO choferDTO) throws Exception {        
         choferService.updateChofer( cho_emp_codigo,  cho_codigo, choferDTO );
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
+    @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_CHOFERES_LISTAR'))")
     @RequestMapping(value = "/choferes/empresa/{cho_emp_codigo}/codigo/{cho_codigo}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object>  deleteChofer(@PathVariable String cho_emp_codigo, @PathVariable Long cho_codigo ) {
         choferService.deleteChofer( cho_emp_codigo, cho_codigo);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
+    
+    
+    @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_CHOFERES_LISTAR'))")
     @RequestMapping(value = "/choferes/empresa/{cho_emp_codigo}/codigo/{cho_codigo}/incidencias", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> salvarIncidenciasByChofer( @PathVariable String cho_emp_codigo, @PathVariable Long cho_codigo,
                                        @Valid @RequestBody ListaChoferIncidencia listaChoferIncidencia, BindingResult result )throws Exception { 
@@ -92,7 +95,8 @@ public class ChoferController {
         
         choferService.salvarIncidenciasByChofer( cho_emp_codigo, cho_codigo, listaChoferIncidencia.getChoferIncidencias() );        
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);         
-    }    
+    } 
+    
     
      private WrapChoferIncidenciaError validarChoferIncidencias( Set<ChoferIncidenciaDTO> choferIncidencias ){        
         WrapChoferIncidenciaError errores = new WrapChoferIncidenciaError();       
@@ -105,15 +109,18 @@ public class ChoferController {
         }                            
         
         return errores;
-    }   
+    }
+     
     
-    
+    @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_CHOFERES_LISTAR'))")
     @RequestMapping(value = "/choferes/empresa/{cho_emp_codigo}/codigo/{cho_codigo}/incidencias", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ChoferIncidenciaDTO>> getIncidenciasByChofer( @PathVariable String cho_emp_codigo,  @PathVariable long cho_codigo ) {        
         List<ChoferIncidenciaDTO> incidencias = choferService.getIncidenciasByChofer( cho_emp_codigo,  cho_codigo );        
         return new ResponseEntity<>(incidencias, HttpStatus.OK);
     }
     
+    
+    @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_CHOFERES_LISTAR'))")
     @RequestMapping(value = "/choferes/empresa/{cho_emp_codigo}/codigo/{cho_codigo}/carnets", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> salvarCarnetsByChofer( @PathVariable String cho_emp_codigo, @PathVariable Long cho_codigo,
                                        @Valid @RequestBody ListaCarnetDTO listaCarnetsDTO, BindingResult result )throws Exception {        
@@ -136,21 +143,12 @@ public class ChoferController {
     }   
     
     
+    @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_CHOFERES_LISTAR'))")
     @RequestMapping(value = "/choferes/empresa/{cho_emp_codigo}/codigo/{cho_codigo}/carnets", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CarnetDTO>> getCarnetsByChofer( @PathVariable String cho_emp_codigo,  @PathVariable long cho_codigo ) {        
         List<CarnetDTO> carnets = choferService.getCarnetsByChofer( cho_emp_codigo,  cho_codigo );        
         return new ResponseEntity<>(carnets, HttpStatus.OK);
-    }
-    
-    
-    @RequestMapping(value = "/choferes/empresa/{cho_emp_codigo}/estado/{cho_estado}/vencimientos", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object > getVehiculosConVencimientos(@PathVariable String cho_emp_codigo, 
-    		@PathVariable int cho_estado ) {       
-    	
-    	List<VencimientosChoferDTO> vencimientosChoferes =  vencimientoService.calcularVencimientosChoferes( cho_emp_codigo, 
-    																								 cho_estado);
-        return new ResponseEntity<>( vencimientosChoferes, HttpStatus.OK );
-    }
+    } 
     
     
 }

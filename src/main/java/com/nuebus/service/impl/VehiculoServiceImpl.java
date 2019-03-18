@@ -11,6 +11,8 @@ import com.nuebus.excepciones.ResourceNotFoundException;
 import com.nuebus.model.VehiculoIncidencia;
 import com.nuebus.excepciones.ValidacionExcepcion;
 import com.nuebus.mapper.VehiculoMapper;
+import com.nuebus.model.Incidencia;
+import com.nuebus.model.MapaAsiento;
 import com.nuebus.model.MapaAsientoPK;
 import com.nuebus.model.Vehiculo;
 import com.nuebus.model.VehiculoPK;
@@ -78,7 +80,7 @@ public class VehiculoServiceImpl implements VehiculoService{
         idOK.setVehEmpCodigo(vehEmpCodigo);
         idOK.setVehInterno(vehInterno);
                 
-        Vehiculo vehiculo = vehiculoRepository.findOne(idOK);
+        Vehiculo vehiculo = vehiculoRepository.findById(idOK).orElse( null );
         if (vehiculo == null) {
             throw new ResourceNotFoundException( (long)vehInterno, "Vehiculo no encontrado" );
         }        
@@ -96,7 +98,7 @@ public class VehiculoServiceImpl implements VehiculoService{
     @Transactional( readOnly = false )
     public void deleteVehiculo( String vehEmpCodigo, int vehInterno ) {
         Vehiculo vehiculo = getVehiculo( vehEmpCodigo, vehInterno );        
-        vehiculoRepository.delete(vehiculo.getVehiculoPK());
+        vehiculoRepository.delete( vehiculo );
     }
 
     @Override
@@ -123,10 +125,14 @@ public class VehiculoServiceImpl implements VehiculoService{
         MapperVistas mapper =  new MapperVistas();  
         
         Page<VehiculoDTO> page = vehiculoRepository.findVehiculosByEmpresa( empresa, pageable ).map( vehiculo -> {
+        	
             final MapaAsientoPK mapaAsientoPK = new MapaAsientoPK();
             mapaAsientoPK.setEmpresa(vehiculo.getVehiculoPK().getVehEmpCodigo());
-            mapaAsientoPK.setCodigo( vehiculo.getVehMpaCodigo() );                                   
-            return mapper.toDTO( vehiculoMapper.toDTO(vehiculo), mapaAsientoRepository.findOne(mapaAsientoPK).getDescripcion() );
+            mapaAsientoPK.setCodigo( vehiculo.getVehMpaCodigo() );                 
+            final MapaAsiento asiento = mapaAsientoRepository.findById(mapaAsientoPK).orElse( null );            
+            return mapper.toDTO( vehiculoMapper.toDTO(vehiculo), 
+            					( asiento != null ) ?asiento.getDescripcion():"Sin especificar" );
+            
            });
         
         vencimientosVehiculo.calcularAllVencimientosVehiculos(empresa, page.getContent());        
@@ -158,11 +164,19 @@ public class VehiculoServiceImpl implements VehiculoService{
             
             VehiculoIncidencia vehInc;
             List<VehiculoIncidencia> lista = new ArrayList<>();
+            Incidencia incidencia;
             for( VehiculoIncidenciaDTO incid : incidencias ){
+            	
+            	incidencia =  incidenciaRepository.findById(incid.getIdIncidencia()).orElse( null );
+            	
+            	if( incidencia == null) {
+                    throw new ResourceNotFoundException( (long)incid.getIdIncidencia(), "Incidencia no encontrada" );
+                }  
+            	
                 vehInc = new VehiculoIncidencia();
                 vehInc.setId( incid.getId() );
                 vehInc.setVehiculo(vehiculo);
-                vehInc.setIncidencia( incidenciaRepository.findOne(incid.getIdIncidencia()));
+                vehInc.setIncidencia( incidencia );
                 vehInc.setInicio( incid.getInicio() );
                 vehInc.setFin( incid.getFin() );
                 lista.add(vehInc);
@@ -200,8 +214,10 @@ public class VehiculoServiceImpl implements VehiculoService{
                         .stream().map( vehiculo -> {
                             final MapaAsientoPK mapaAsientoPK = new MapaAsientoPK();
                             mapaAsientoPK.setEmpresa(vehiculo.getVehiculoPK().getVehEmpCodigo());
-                            mapaAsientoPK.setCodigo( vehiculo.getVehMpaCodigo() );                                   
-                            return mapper.toDTO( vehiculoMapper.toDTO(vehiculo), mapaAsientoRepository.findOne(mapaAsientoPK).getDescripcion() );
+                            mapaAsientoPK.setCodigo( vehiculo.getVehMpaCodigo() );     
+                            final MapaAsiento asiento = mapaAsientoRepository.findById(mapaAsientoPK).orElse( null );        
+                            return mapper.toDTO( vehiculoMapper.toDTO(vehiculo), 
+                            		( asiento != null ) ?asiento.getDescripcion():"Sin especificar" );
                         }).collect( Collectors.toList());
         
         
@@ -219,8 +235,10 @@ public class VehiculoServiceImpl implements VehiculoService{
                         .stream().map( vehiculo -> {
                             final MapaAsientoPK mapaAsientoPK = new MapaAsientoPK();
                             mapaAsientoPK.setEmpresa(vehiculo.getVehiculoPK().getVehEmpCodigo());
-                            mapaAsientoPK.setCodigo( vehiculo.getVehMpaCodigo() );                                   
-                            return mapper.toDTO( vehiculoMapper.toDTO(vehiculo), mapaAsientoRepository.findOne(mapaAsientoPK).getDescripcion() );
+                            mapaAsientoPK.setCodigo( vehiculo.getVehMpaCodigo() );  
+                            final MapaAsiento asiento = mapaAsientoRepository.findById(mapaAsientoPK).orElse( null );     
+                            return mapper.toDTO( vehiculoMapper.toDTO(vehiculo), 
+                            		( asiento != null ) ?asiento.getDescripcion():"Sin especificar" );
                         }).collect( Collectors.toList());
         
         

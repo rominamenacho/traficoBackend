@@ -10,6 +10,7 @@ import org.mapstruct.TargetType;
 /**
  * Created by mouradzouabi on 04/12/15.
  */
+
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PersonMapper {
 
