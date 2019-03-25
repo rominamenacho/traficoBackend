@@ -1,9 +1,0 @@
-server.port: 9966
-spring.profiles: oracle
-spring.profiles.active: oracle
-nuebus.security.jwt:
-  tokenExpirationTime: 180 # Number of minutes
-  refreshTokenExpTime: 180 # Minutes
-  tokenIssuer: www.nuebus.com
-  tokenSigningKey: xm8EV6HyPLSA1234ACIDAwQus
-  

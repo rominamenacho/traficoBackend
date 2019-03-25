@@ -1,2 +1,0 @@
-# Practicas sobre backend
-

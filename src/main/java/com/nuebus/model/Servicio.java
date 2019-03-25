@@ -2,9 +2,14 @@
 package com.nuebus.model;
 
 import java.io.Serializable;
-import javax.persistence.Embeddable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.Valid;
 
@@ -15,13 +20,20 @@ import javax.validation.Valid;
 
 @Entity
 @Table(name="Servicios")
-public class Servicio implements Serializable{
-    @Valid
+public class Servicio implements Serializable{  
+	
+	@Valid
     @EmbeddedId
     ServicioPK servicioPK;        
     int serEsrCodigo = 0;
     
-    public Servicio() {
+    @OneToMany  (cascade = CascadeType.ALL,
+    			fetch = FetchType.EAGER,
+    			mappedBy = "horarioServicioPK.servicio")
+    List<HorarioServicio> horarios ;
+    
+    public Servicio() {    	
+    	 horarios = new ArrayList<>();
     }
     
     public ServicioPK getServicioPK() {
@@ -38,13 +50,22 @@ public class Servicio implements Serializable{
 
     public void setSerEsrCodigo(int serEsrCodigo) {
         this.serEsrCodigo = serEsrCodigo;
-    } 
+    }    
+    
+    public List<HorarioServicio> getHorarios() {
+		return horarios;
+	}
 
+	public void setHorarios(List<HorarioServicio> horarios) {
+		this.horarios = horarios;
+	}
+	    
     @Override
-    public String toString() {
-        return "Servicio{" + "servicioPK=" + servicioPK + ", serEsrCodigo=" + serEsrCodigo + '}';
-    }
-    
-    
+	public String toString() {
+		return "Servicio [servicioPK=" + servicioPK + ", serEsrCodigo=" + serEsrCodigo + ", horarios=" + horarios + "]";
+	}
+
+
+	private static final long serialVersionUID = 1L;
     
 }

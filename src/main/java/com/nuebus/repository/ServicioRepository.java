@@ -5,6 +5,8 @@ import com.nuebus.model.ServicioPK;
 import com.nuebus.vistas.combos.ComboVehiculo;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -82,22 +84,7 @@ public interface ServicioRepository extends JpaRepository< Servicio, ServicioPK>
     public List< Object[] > findChoferesYVehiculosByServiciosAndLineaAndFechas( @Param("empresa") String empresa,
                             @Param("linea") String linea, @Param("inicioServ") java.util.Date inicioServ, 
                             @Param("finServ") java.util.Date finServ );
-    
-    /*
-    
-      @Query( value = "Select ser_emp_codigo, ser_lin_codigo, ser_fecha_hora, ser_refuerzo, cho_uni_codigo, " 
-            +  " inicio, fin, is_chofer, eta_inicio, eta_fin    "
-            + "     from CHOFERES_UNIDAD_SERVICIOS "
-            + "         where ser_emp_codigo = :empresa " 
-            + "             and ser_lin_codigo = :linea " 
-            + "             and trunc( ser_fecha_hora ) between :inicioServ and :finServ "            
-            + "             and cho_uni_codigo is not null ", nativeQuery = true )
-    public List< Object[] > findChoferesYVehiculosByServiciosAndLineaAndFechas( @Param("empresa") String empresa,
-                            @Param("linea") String linea, @Param("inicioServ") java.util.Date inicioServ, 
-                            @Param("finServ") java.util.Date finServ );
-    
-    */
-    
+     
     
     @Modifying
     @Query ( value = " update horarios_servicios h set h.HRS_CHOFER1 =null,"
@@ -176,12 +163,16 @@ public interface ServicioRepository extends JpaRepository< Servicio, ServicioPK>
     public int updateUnidad( @Param("unidad") Integer unidad, @Param("empresa") String empresa, @Param("linea") String linea,
                               @Param("fechaServ") java.util.Date fechaServ, @Param("refuerzo") Integer refuerzo, 
                               @Param("etaInicio") Integer etaInicio, @Param("etaFin") Integer etaFin );
+
+	
     
     
     
-    /*@Modifying
-    @Query( value =   " update empresas e set e.emp_nombre = :nombre "
-                    + "  where e.emp_codigo = :empresa ", nativeQuery = true)
-    public int updateEmpresa( @Param("empresa") String empresa, @Param("nombre") String nombre );*/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////  
+    
+    
+    /*@Query( " Select s from  Servicio s left join s.horarios where s.servicioPK = :servicioPK ")
+	public Optional<Servicio> findById( @Param("servicioPK") ServicioPK servicioPK );*/ 
+    
 
 }
