@@ -1,5 +1,6 @@
 package com.nuebus.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,9 +12,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.hibernate.validator.constraints.NotBlank;
+
 
 /**
  *
@@ -22,10 +24,15 @@ import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 @Table(name="choferes")
-public class Chofer{
+public class Chofer implements Serializable{
     
     public static final int CHOFER = 0;
     public static final int AUXILIAR = 1;   
+    
+    public static final int PRIMER_CHOFER = 1;
+    public static final int SEGUNDO_CHOFER = 2;
+    public static final int PRIMER_AUX = 3;
+    public static final int SEGUNDO_AUX = 4;
 
     
     public static final int HABILITADO = 0;
@@ -70,6 +77,9 @@ public class Chofer{
     private int cho_estado = 0;
     @Digits(integer = 1,fraction = 0)
     private int cho_chofer = 0; /*0 es chofer, 1 es auxiliar*/
+    
+    private Integer cho_id_aux;
+    
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "chofer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Carnet> carnets = new HashSet<Carnet>();  
@@ -194,9 +204,17 @@ public class Chofer{
 
     public int getCho_estado() {
         return cho_estado;
-    }
+    }    
 
-    public void setCho_estado(int cho_estado) {
+    public Integer getCho_id_aux() {
+		return cho_id_aux;
+	}
+
+	public void setCho_id_aux(Integer cho_id_aux) {
+		this.cho_id_aux = cho_id_aux;
+	}
+
+	public void setCho_estado(int cho_estado) {
         this.cho_estado = cho_estado;
     }
           
@@ -240,10 +258,18 @@ public class Chofer{
         this.AuxiliarViaje = AuxiliarViaje;
     }
 
+	@Override
+	public String toString() {
+		return "Chofer [choferPK=" + choferPK + ", cho_nombre=" + cho_nombre + ", cho_funcion=" + cho_funcion
+				+ ", cho_telefono=" + cho_telefono + ", cho_documento=" + cho_documento + ", cho_direccion="
+				+ cho_direccion + ", cho_codigo_postal=" + cho_codigo_postal + ", cho_observaciones="
+				+ cho_observaciones + ", cho_grupo_sanguineo=" + cho_grupo_sanguineo + ", cho_telefono_emergencia="
+				+ cho_telefono_emergencia + ", cho_doc_codigo=" + cho_doc_codigo + ", cho_legajo=" + cho_legajo
+				+ ", cho_fecha_nacimiento=" + cho_fecha_nacimiento + ", cho_estado=" + cho_estado + ", cho_chofer="
+				+ cho_chofer + ", cho_id_aux=" + cho_id_aux + "]";
+	}
+
     
-    @Override
-    public String toString() {
-        return "Chofer{" + "choferPK=" + choferPK + ", cho_nombre=" + cho_nombre + ", cho_funcion=" + cho_funcion + ", cho_telefono=" + cho_telefono + ", cho_documento=" + cho_documento + ", cho_direccion=" + cho_direccion + ", cho_codigo_postal=" + cho_codigo_postal + ", cho_observaciones=" + cho_observaciones + ", cho_grupo_sanguineo=" + cho_grupo_sanguineo + ", cho_telefono_emergencia=" + cho_telefono_emergencia + ", cho_doc_codigo=" + cho_doc_codigo + ", cho_legajo=" + cho_legajo + ", cho_fecha_nacimiento=" + cho_fecha_nacimiento + ", cho_estado=" + cho_estado + ", cho_chofer=" + cho_chofer + ", carnets=" + carnets + ", choferIncidencias=" + choferIncidencias + ", ChoferViaje=" + ChoferViaje + '}';
-    }
+  
     
 }

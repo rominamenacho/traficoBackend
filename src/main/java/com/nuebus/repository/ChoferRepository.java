@@ -144,7 +144,8 @@ public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK> {
     
       
     @Query( value = "  Select   cho.cho_emp_codigo, cho.cho_codigo, cho.cho_nombre, cho.cho_chofer,  ocup.tipo, ocup.id, ocup.emp_codigo, "
-                  + " ocup.ser_emp_codigo, ocup.ser_lin_codigo, ocup.ser_fecha_hora, ocup.ser_refuerzo, ocup.inicio, ocup.fin, cho.cho_estado "
+                  + " ocup.ser_emp_codigo, ocup.ser_lin_codigo, ocup.ser_fecha_hora, ocup.ser_refuerzo, ocup.inicio, ocup.fin, "
+                  + "  cho.cho_estado, cho_id_aux "
                   + " from choferes cho left join "
                   + "        ( Select * from ( "
                   + "      Select 1 as tipo, 0 as id, ser_emp_codigo as emp_codigo, ser_emp_codigo, ser_lin_codigo, ser_fecha_hora, "
@@ -175,4 +176,22 @@ public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK> {
     public List<Chofer> getChoferesConCarnetsVencidos( @Param("empresa") String empresa,
     											       @Param("estadoChofer") int estadoChofer,
     											       @Param("fechaControl") Date fechaControl ); 
+    
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    @Query(  value = "Select distinct ch.cho_emp_codigo , ch.cho_codigo,  ch.cho_nombre, ch.cho_chofer, cho_estado, cho_id_aux "                
+    		 + " from horarios_servicios h, choferes ch " 
+    	     + "     where h.hrs_ser_emp_codigo  =  ch.cho_emp_codigo " 
+    	     + "       and  (  h.HRS_CHOFER1 = ch.cho_codigo " 
+    	     + "               or  h.HRS_CHOFER2 = ch.cho_codigo "
+    	     + "               or  h.HRS_AUXILIAR1 = ch.cho_codigo "
+    	     + "               or  h.HRS_AUXILIAR2 = ch.cho_codigo ) "
+             + " 		and h.hrs_ser_emp_codigo = :empresa "
+             + " 		and h.hrs_ser_lin_codigo = :linea "
+             + " 		and trunc( h.hrs_ser_fecha_hora) between  :inicioServ "
+             + " 		and :finServ ", nativeQuery = true )     
+    public List<Object[]> findChoferesFromHorariosServicios(  @Param("empresa") String empresa,
+            @Param("linea") String linea, @Param("inicioServ") java.util.Date inicioServ, 
+            @Param("finServ") java.util.Date finServ);  
 }

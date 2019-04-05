@@ -17,15 +17,14 @@ public class ChoferOcupacionDTO implements Serializable {
     private int tipoChofer;
     private int estado;
     private String nombreConTipo;
-    
+    private Integer cho_id_aux;
     private List<IncidenciaOcupacionDTO> incidencias = new ArrayList<>();
     private List<ServicioOcupacionDTO> servicios = new ArrayList<>();
     private List<ViajeOcupacionDTO> viajes = new ArrayList<>();
 
     public ChoferOcupacionDTO() {
         
-    } 
-    
+    }     
 
     public ChoferPK getChoferPK() {
         return choferPK;
@@ -91,11 +90,22 @@ public class ChoferOcupacionDTO implements Serializable {
         this.nombreConTipo = nombreConTipo;
     }
 
-    @Override
-    public String toString() {
-        return "ChoferOcupacionDTO{" + "choferPK=" + choferPK + ", nombre=" + nombre + ", tipoChofer=" + tipoChofer + ", estado=" + estado + ", nombreConTipo=" + nombreConTipo + ", incidencias=" + incidencias + ", servicios=" + servicios + ", viajes=" + viajes + '}';
-    }
 
-   
+	public Integer getCho_id_aux() {
+		return cho_id_aux;
+	}
+
+
+	public void setCho_id_aux(Integer cho_id_aux) {
+		this.cho_id_aux = cho_id_aux;
+	}
+
+
+	@Override
+	public String toString() {
+		return "ChoferOcupacionDTO [choferPK=" + choferPK + ", nombre=" + nombre + ", tipoChofer=" + tipoChofer
+				+ ", estado=" + estado + ", nombreConTipo=" + nombreConTipo + ", cho_id_aux=" + cho_id_aux
+				+ ", incidencias=" + incidencias + ", servicios=" + servicios + ", viajes=" + viajes + "]";
+	}       
     
 }

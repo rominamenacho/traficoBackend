@@ -15,6 +15,8 @@ public class ChoferEtapasDTO {
     Integer etaHasta; 
     String nombre;
     String nombreConTipo;
+    Integer ordenChofer;
+    Integer idAux;
 
      public ChoferEtapasDTO() {
     }   
@@ -65,12 +67,29 @@ public class ChoferEtapasDTO {
 
     public void setNombreConTipo(String nombreConTipo) {
         this.nombreConTipo = nombreConTipo;
-    }
+    }    
 
-    @Override
-    public String toString() {
-        return "ChoferEtapasDTO{" + "choferPK=" + choferPK + ", tipoChofer=" + tipoChofer + ", etaDesde=" + etaDesde + ", etaHasta=" + etaHasta + ", nombre=" + nombre + ", nombreConTipo=" + nombreConTipo + '}';
-    }  
-   
+    public Integer getOrdenChofer() {
+		return ordenChofer;
+	}
+
+	public void setOrdenChofer(Integer ordenChofer) {
+		this.ordenChofer = ordenChofer;
+	}
+
+	public Integer getIdAux() {
+		return idAux;
+	}
+
+	public void setIdAux(Integer idAux) {
+		this.idAux = idAux;
+	}
+
+	@Override
+	public String toString() {
+		return "ChoferEtapasDTO [choferPK=" + choferPK + ", tipoChofer=" + tipoChofer + ", etaDesde=" + etaDesde
+				+ ", etaHasta=" + etaHasta + ", nombre=" + nombre + ", nombreConTipo=" + nombreConTipo
+				+ ", ordenChofer=" + ordenChofer + ", idAux=" + idAux + "]";
+	}	
     
 }

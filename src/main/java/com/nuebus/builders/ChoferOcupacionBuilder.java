@@ -49,7 +49,8 @@ public class ChoferOcupacionBuilder {
            choferOcup.setTipoChofer(((BigDecimal)obj[3]).intValue() );
            choferOcup.setEstado( ((BigDecimal)obj[13]).intValue() );
            descTipo = ( choferOcup.getTipoChofer() == CHOFER )? "(CHO)":"(AUX)";
-           choferOcup.setNombreConTipo( descTipo + choferOcup.getNombre() );
+           choferOcup.setNombreConTipo( descTipo + choferOcup.getNombre() );           
+           choferOcup.setCho_id_aux( ((BigDecimal)obj[14]).intValue() );
            
            
            if( !mapaCho.containsKey(choferPKStr) ){ mapaCho.put( choferPKStr, choferOcup ); }          

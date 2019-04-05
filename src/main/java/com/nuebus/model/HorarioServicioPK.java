@@ -1,24 +1,31 @@
 package com.nuebus.model;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 
 
 public class HorarioServicioPK implements Serializable {	
 	
 	
-	@Column(name="hrs_eta_codigo")
-	Integer etaCodigo;
+	@Column( name = "hrs_eta_codigo" )
+	Integer etaCodigo;	
 	
+	
+	@JsonBackReference
 	@ManyToOne
     @NotFound(
         action = NotFoundAction.IGNORE)
@@ -36,18 +43,23 @@ public class HorarioServicioPK implements Serializable {
                 name = "hrs_ser_refuerzo",
                 referencedColumnName = "serRefuerzo")
     })
-	Servicio servicio;	
-	
-	
+	Servicio servicio;
+		
+	public Servicio getServicio() {
+		return servicio;
+	}
+
+	public void setServicio(Servicio servicio) {
+		this.servicio = servicio;
+	}
+
 	public Integer getEtaCodigo() {
 		return etaCodigo;
 	}
 
-
 	public void setEtaCodigo(Integer etaCodigo) {
 		this.etaCodigo = etaCodigo;
 	}
-	
 
 	@Override
 	public String toString() {

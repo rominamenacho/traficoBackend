@@ -51,4 +51,6 @@ public interface ChoferService {
      
     public List<Chofer> getChoferesConCarnetsVencidos( String empresa, int estadoChofer, Date fechaControl );
     
+    public  List< ChoferDTO > findChoferesFromHorariosServicios(String empresa,  String linea, java.util.Date inicio, java.util.Date fin );
+    
 }

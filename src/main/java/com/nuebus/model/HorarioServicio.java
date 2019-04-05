@@ -5,28 +5,52 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table( name="horarios_servicios")
 public class HorarioServicio implements Serializable {
+	
+	public static final int HORARIO_SALIDA = 2;
+	public static final int HORARIO_LLEGADA = 4;
 
 	@EmbeddedId
-	HorarioServicioPK horarioServicioPK;	
-	
-	@Column( name = "hrs_ace_codigo")
-	Long accionEtaCodigo;	
-	@Column( name = "hrs_chofer1")
+	HorarioServicioPK horarioServicioPK;
+
+	@Column(name = "hrs_fecha_hora")
+	java.util.Date fechaHora;
+	@Column(name = "hrs_ace_codigo")
+	Long accionEtaCodigo;
+	@Column(name = "hrs_chofer1")
 	Long chofer1;
-	@Column( name = "hrs_chofer2")
+	@Column(name = "hrs_chofer2")
 	Long chofer2;
-	@Column( name = "hrs_auxiliar1")
+	@Column(name = "hrs_auxiliar1")
 	Long auxiliar1;
-	@Column( name = "hrs_auxiliar2")
+	@Column(name = "hrs_auxiliar2")
 	Long auxiliar2;
-	@Column( name = "hrs_interno")
-	Long interno;
-	 
+	@Column(name = "hrs_interno")
+	Integer interno;
+
+	
+	@ManyToOne 
+	@JoinColumns({
+        @JoinColumn(
+                name = "hrs_ser_emp_codigo",
+                referencedColumnName = "eta_emp_codigo", insertable=false, updatable=false ),
+            @JoinColumn(
+                name = "hrs_ser_lin_codigo",
+                referencedColumnName = "eta_lin_codigo", insertable=false, updatable=false ),
+            @JoinColumn(
+                    name = "hrs_eta_codigo",
+                    referencedColumnName = "eta_codigo", insertable=false, updatable=false )            
+        })
+	Etapa etapa;	
+	
+	
 	public HorarioServicioPK getHorarioServicioPK() {
 		return horarioServicioPK;
 	}
@@ -75,24 +99,65 @@ public class HorarioServicio implements Serializable {
 		this.auxiliar2 = auxiliar2;
 	}
 
-	public Long getInterno() {
+	public Integer getInterno() {
 		return interno;
 	}
 
-	public void setInterno(Long interno) {
+	public void setInterno(Integer interno) {
 		this.interno = interno;
 	}
-	
-	
 
-	@Override
-	public String toString() {
-		return "HorarioServicio [horarioServicioPK=" + horarioServicioPK + ", accionEtaCodigo=" + accionEtaCodigo
-				+ ", chofer1=" + chofer1 + ", chofer2=" + chofer2 + ", auxiliar1=" + auxiliar1 + ", auxiliar2="
-				+ auxiliar2 + ", interno=" + interno + "]";
+	public java.util.Date getFechaHora() {
+		return fechaHora;
 	}
 
+	public void setFechaHora(java.util.Date fechaHora) {
+		this.fechaHora = fechaHora;
+	}
 
+	public Etapa getEtapa() {
+		return etapa;
+	}
+
+	public void setEtapa(Etapa etapa) {
+		this.etapa = etapa;
+	}
+	
+	public Integer getCodigoEtapa(){
+		return horarioServicioPK!=null? horarioServicioPK.getEtaCodigo():-1;
+	}
+	
+	public Long getChoferByOrden( int orderChofer ) {
+		
+		Long chofer = (long)-1; 
+		switch (orderChofer) {
+		case Chofer.PRIMER_CHOFER:
+			chofer = getChofer1();
+			break;
+		case Chofer.SEGUNDO_CHOFER:
+			chofer = getChofer2();
+			break;	
+		case Chofer.PRIMER_AUX:
+			chofer = getAuxiliar1();
+			break;
+		case Chofer.SEGUNDO_AUX:
+			chofer = getAuxiliar2();
+			break;	
+		default:
+			chofer = (long)-1; 
+			break;
+		}
+		return chofer;
+	}
+
+	
+	@Override
+	public String toString() {
+		return "HorarioServicio [horarioServicioPK=" + horarioServicioPK + ", fechaHora=" + fechaHora
+				+ ", accionEtaCodigo=" + accionEtaCodigo + ", chofer1=" + chofer1 + ", chofer2=" + chofer2
+				+ ", auxiliar1=" + auxiliar1 + ", auxiliar2=" + auxiliar2 + ", interno=" + interno + ", etapa=" + etapa
+				+ "]";
+	}
 
 	private static final long serialVersionUID = 1L;
 }

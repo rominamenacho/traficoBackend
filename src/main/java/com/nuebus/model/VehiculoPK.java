@@ -4,9 +4,10 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.hibernate.validator.constraints.NotBlank;
+
 
 /**
  *
@@ -36,13 +37,13 @@ public class VehiculoPK  implements Serializable{
     @Column
     @NotNull
     @Digits(integer=4, fraction=0)
-    private int vehInterno = 0;
+    private Integer vehInterno = 0;
     
     public VehiculoPK(){
     
     }    
     
-    public VehiculoPK( String vehEmpCodigo, int vehInterno ){
+    public VehiculoPK( String vehEmpCodigo, Integer vehInterno ){
         this.vehEmpCodigo = vehEmpCodigo;
         this.vehInterno = vehInterno;
     } 
@@ -80,17 +81,18 @@ public class VehiculoPK  implements Serializable{
         this.vehEmpCodigo = vehEmpCodigo;
     }
 
-    public int getVehInterno() {
-        return vehInterno;
-    }
+	public Integer getVehInterno() {
+		return vehInterno;
+	}
 
-    public void setVehInterno(int vehInterno) {
-        this.vehInterno = vehInterno;
-    }
+	public void setVehInterno(Integer vehInterno) {
+		this.vehInterno = vehInterno;
+	}
 
-    @Override
-    public String toString() {
-        return "VehiculoPK{" + "vehEmpCodigo=" + vehEmpCodigo + ", vehInterno=" + vehInterno + '}';
-    }   
+	@Override
+	public String toString() {
+		return "VehiculoPK [vehEmpCodigo=" + vehEmpCodigo + ", vehInterno=" + vehInterno + "]";
+	}
+       
     
 }

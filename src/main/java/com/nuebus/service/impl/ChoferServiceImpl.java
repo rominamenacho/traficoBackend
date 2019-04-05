@@ -17,6 +17,8 @@ import com.nuebus.repository.IncidenciaRepository;
 import com.nuebus.service.ChoferService;
 import com.nuebus.vistas.MapperVistas;
 import com.nuebus.vistas.combos.ComboChoferes;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -243,7 +245,31 @@ public class ChoferServiceImpl implements ChoferService{
 	public List<Chofer> getChoferesConCarnetsVencidos(String empresa, int estadoChofer, Date fechaControl) {
 		return choferRepository.getChoferesConCarnetsVencidos( empresa, estadoChofer, fechaControl );
 	}
-    
+
+	@Override
+	public List<ChoferDTO> findChoferesFromHorariosServicios(String empresa, String linea, Date inicio, Date fin) {
+		 List< ChoferDTO > choferes = new ArrayList<>();
+		 List<Object[]> chofs = choferRepository.findChoferesFromHorariosServicios(empresa, linea, inicio, fin);
+		 
+		 for( Object[] obj: chofs) {
+			 
+		 	ChoferDTO chofer = new ChoferDTO();
+		 	ChoferPK choPK = new ChoferPK(); 
+		 	choPK.setCho_emp_codigo( (String)obj[0]  );
+		 	choPK.setCho_codigo(((BigDecimal) obj[1]).intValue());       
+	        chofer.setChoferPK(choPK);
+	        chofer.setCho_nombre(((String) obj[2]));
+	        chofer.setCho_chofer(((BigDecimal) obj[3]).intValue());    
+	        chofer.setCho_estado( ((BigDecimal) obj[4]).intValue() );
+	        chofer.setCho_id_aux( ((BigDecimal) obj[5]).intValue() );
+			 
+			choferes.add( chofer );			 
+		 }
+		 
+		 return choferes;
+	}
+
+	
      
     
 }

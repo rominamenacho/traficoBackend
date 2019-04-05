@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  */
 public interface VueltaDiagRepository extends JpaRepository< VueltaDiag, Long> {
     
-    @Query( " Select v from VueltaDiag v "
+    @Query( " Select distinct v from VueltaDiag v  join v.servicio join v.servicio.horarios "
         +   "   where v.servicio.servicioPK.serEmpCodigo = :empresa "
         +   "       and  v.servicio.servicioPK.serLinCodigo = :lineaIda "   
         +   "       and trunc( v.servicio.servicioPK.serFechaHora ) between :inicio and :fin  "   )
