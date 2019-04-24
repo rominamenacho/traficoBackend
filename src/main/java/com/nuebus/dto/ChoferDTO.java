@@ -56,6 +56,8 @@ public class ChoferDTO {
     private int cho_chofer = 0; //0 si, 1 no (o sea, es auxiliar)
      
     private Integer cho_id_aux;
+    
+    private String foto;
      
     //private Set<CarnetDTO> carnets = new HashSet<>();
     
@@ -192,6 +194,14 @@ public class ChoferDTO {
 		this.cho_id_aux = cho_id_aux;
 	}
 
+	public String getFoto() {
+		return foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+
 	@Override
 	public String toString() {
 		return "ChoferDTO [choferPK=" + choferPK + ", cho_nombre=" + cho_nombre + ", cho_funcion=" + cho_funcion
@@ -200,7 +210,7 @@ public class ChoferDTO {
 				+ cho_observaciones + ", cho_grupo_sanguineo=" + cho_grupo_sanguineo + ", cho_telefono_emergencia="
 				+ cho_telefono_emergencia + ", cho_doc_codigo=" + cho_doc_codigo + ", cho_legajo=" + cho_legajo
 				+ ", cho_fecha_nacimiento=" + cho_fecha_nacimiento + ", cho_estado=" + cho_estado + ", cho_chofer="
-				+ cho_chofer + ", cho_id_aux=" + cho_id_aux + "]";
-	}	
+				+ cho_chofer + ", cho_id_aux=" + cho_id_aux + ", foto=" + foto + "]";
+	}		
     
 }

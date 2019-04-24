@@ -53,4 +53,6 @@ public interface ChoferService {
     
     public  List< ChoferDTO > findChoferesFromHorariosServicios(String empresa,  String linea, java.util.Date inicio, java.util.Date fin );
     
+    public Chofer getChoferById(ChoferPK id);  
+    
 }

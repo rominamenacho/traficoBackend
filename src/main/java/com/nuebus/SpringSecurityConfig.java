@@ -25,7 +25,10 @@ import com.nuebus.auth.service.JpaUserDetailsService;
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	public static final String TOKEN_BASED_AUTH_ENTRY_POINT ="/api/**";
-	public static final String ENTRY_POINT ="/api/login";
+	public static final String ENTRY_POINT = "/api/login";
+	public static final String ENTRY_POINT_UPLOADS_IMG = "/upload/**";
+	public static final String ENTRY_POINT_VIEW_IMG = "/img/**";
+	
 
 
 	/*
@@ -46,7 +49,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 
 		http.authorizeRequests()
-		.antMatchers("ENTRY_POINT").permitAll()
+		.antMatchers( ENTRY_POINT_UPLOADS_IMG ).permitAll()
+		.antMatchers( ENTRY_POINT_VIEW_IMG ).permitAll()		
+		.antMatchers( ENTRY_POINT ).permitAll()
 			.and()		
 		    	.authorizeRequests()
 		        	.antMatchers(TOKEN_BASED_AUTH_ENTRY_POINT).authenticated()	
@@ -70,12 +75,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Bean
     CorsConfigurationSource corsConfigurationSource() {
+		
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("*");
 		configuration.addAllowedHeader("*");
 		configuration.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration(TOKEN_BASED_AUTH_ENTRY_POINT, configuration);
+        source.registerCorsConfiguration( TOKEN_BASED_AUTH_ENTRY_POINT , configuration );
+        source.registerCorsConfiguration( ENTRY_POINT_UPLOADS_IMG , configuration );
+        source.registerCorsConfiguration( ENTRY_POINT_VIEW_IMG , configuration );        
         return source;
     }
 }

@@ -3,6 +3,9 @@ package com.nuebus;
 import static com.nuebus.model.Chofer.CHOFER;
 
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -14,7 +17,10 @@ import java.util.stream.Collectors;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.repository.query.Param;
@@ -70,23 +76,45 @@ public class TraficoNuebusApplicationTests {
 	VueltaDiagService vueltaDiagService;
 	
 	
+	@Value(value = "classpath:img/no-img.jpg")
+	Resource noImg;
+	
+	@Value(value = "${directorioUploadsChoferes}")
+	String directorioUploadsChoferes;
+	
+	
 	@Test
 	public void contextLoads() {
 		
-		ServicioPK servicioPK = getServicioPK();		
+		/*ServicioPK servicioPK = getServicioPK();		
 		Servicio servicio = servicioService.findServicioById(servicioPK);
 		
-		System.out.println( servicio );
+		ordenarYCompletarHorariosServicios( servicio.getHorarios() );
 		
-		java.util.Date inicio = Utilities.stringToDate("30/11/2018 10:00", Utilities.FORMAT_DATE);
-		java.util.Date fin = Utilities.stringToDate("01/12/2018 10:00", Utilities.FORMAT_DATE);
+		mostrarHorarios( servicio );*/
 		
-		ArrayList<Servicio> servicios = servicioRepository.findServiciosByFecha("IMQ", "100", inicio, fin );
 		
-		servicios.forEach( System.out:: println );
-		 
+		System.out.println( directorioUploadsChoferes );
+		
+		
 		
 	}
+	
+	void ordenarYCompletarHorariosServicios(  List<HorarioServicio> horarios ) {
+		
+		horarios.sort( Comparator.comparing( HorarioServicio :: getCodigoEtapa ) );
+		
+		HorarioServicio anterior = null;
+		
+		for( HorarioServicio h: horarios ) {
+			if(  anterior != null && anterior.getFechaHoraLlegada() == null  ){
+				anterior.setFechaHoraLlegada(  h.getFechaHoraSalida() );
+			}			
+			anterior = h;
+		}
+		
+	}
+	
 	
 	
 	/*@Test(expected = JsonMappingException.class)

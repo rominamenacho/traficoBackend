@@ -44,7 +44,19 @@ public class HorarioServicioPK implements Serializable {
                 referencedColumnName = "serRefuerzo")
     })
 	Servicio servicio;
+	
+	
 		
+	public HorarioServicioPK() {
+		super();		
+	}
+
+	public HorarioServicioPK(Integer etaCodigo, Servicio servicio) {
+		super();
+		this.etaCodigo = etaCodigo;
+		this.servicio = servicio;
+	}
+
 	public Servicio getServicio() {
 		return servicio;
 	}

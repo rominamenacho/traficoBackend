@@ -10,30 +10,49 @@ import com.nuebus.dto.ListaChoferIncidencia;
 import com.nuebus.dto.VencimientosChoferDTO;
 import com.nuebus.erroresJson.WrapCarnetError;
 import com.nuebus.erroresJson.WrapChoferIncidenciaError;
+import com.nuebus.model.Chofer;
+import com.nuebus.model.ChoferPK;
+import com.nuebus.repository.ChoferRepository;
 import com.nuebus.service.ChoferService;
 import com.nuebus.service.VencimientoService;
 import com.nuebus.utilidades.Utilities;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -45,10 +64,14 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @RequestMapping(value = "api")
 public class ChoferController { 
+	
+	private final Logger log = LoggerFactory.getLogger(ChoferController.class);    
     
-    final static Logger LOG = LoggerFactory.getLogger(ChoferController.class);
     @Autowired
     ChoferService choferService;
+    
+    @Autowired
+    ChoferRepository choferRepository; 
     
     @Autowired
     VencimientoService vencimientoService;   
@@ -150,5 +173,7 @@ public class ChoferController {
         return new ResponseEntity<>(carnets, HttpStatus.OK);
     } 
     
+    
+   
     
 }

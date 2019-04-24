@@ -269,6 +269,16 @@ public class ChoferServiceImpl implements ChoferService{
 		 return choferes;
 	}
 
+	@Override
+	public Chofer getChoferById(ChoferPK id) {
+		Chofer chofer = choferRepository.getOne(id);
+        if (chofer == null) {
+            return null;
+        } else {
+            return chofer;
+        }
+	}
+
 	
      
     

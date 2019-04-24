@@ -1,9 +1,13 @@
 
 package com.nuebus.dto;
 
+import com.nuebus.model.HorarioServicio;
 import com.nuebus.model.ServicioPK;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -26,23 +30,13 @@ public class ServicioDTO {
     Set<ChoferEtapasDTO> choferes = new HashSet<>();
     
     Set<VehiculoEtapaDTO> vehiculos = new HashSet<>();
+    
+    List<HorarioServicio> horarios = new ArrayList<>();
 
     public ServicioDTO() {
     }  
     
 
-    public ServicioDTO(ServicioPK servicioPK, int estado, Date fechaHoraSalida, String escalaSalida, Date fechaHoraLlegada,
-            String escalaLlegada, Integer etaInicio, Integer etaFin ) {
-        this.servicioPK = servicioPK;
-        this.estado = estado;
-        this.fechaHoraSalida = fechaHoraSalida;
-        this.escSalida = escalaSalida;
-        this.fechaHoraLlegada = fechaHoraLlegada;
-        this.escLlegada = escalaLlegada;
-        this.etaInicio = etaInicio;
-        this.etaFin = etaFin;
-        
-    }
     
 
     public ServicioPK getServicioPK() {
@@ -125,8 +119,17 @@ public class ServicioDTO {
     public void setEtaFin(Integer etaFin) {
         this.etaFin = etaFin;
     }
+    
+    
+    public List<HorarioServicio> getHorarios() {
+		return horarios;
+	}
 
-    @Override
+	public void setHorarios(List<HorarioServicio> horarios) {
+		this.horarios = horarios;
+	}
+
+	@Override
     public String toString() {
         return "ServicioDTO{" + "servicioPK=" + servicioPK + ", estado=" + estado + ", fechaHoraSalida=" + fechaHoraSalida + ", escSalida=" + escSalida + ", fechaHoraLlegada=" + fechaHoraLlegada + ", escLlegada=" + escLlegada + ", etaInicio=" + etaInicio + ", etaFin=" + etaFin + ", choferes=" + choferes + ", vehiculos=" + vehiculos + '}';
     }

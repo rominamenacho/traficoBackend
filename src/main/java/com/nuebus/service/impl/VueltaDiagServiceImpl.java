@@ -10,9 +10,11 @@ import static com.nuebus.model.Chofer.AUXILIAR;
 
 import com.nuebus.model.Chofer;
 import com.nuebus.model.HorarioServicio;
+import com.nuebus.model.HorarioServicioPK;
 import com.nuebus.model.Servicio;
 import com.nuebus.model.ServicioPK;
 import com.nuebus.model.VueltaDiag;
+import com.nuebus.repository.HorarioServicioRepository;
 import com.nuebus.repository.ServicioRepository;
 import com.nuebus.repository.VueltaDiagRepository;
 import com.nuebus.service.ServicioService;
@@ -48,6 +50,9 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
     @Autowired
     VehiculoService vehiculoService;
     
+    @Autowired
+    HorarioServicioRepository horarioServicioRepository;
+    
     @Transactional( readOnly = false)
     @Override    
     public VueltaDiag saveVueltaDiag( VueltaDiagDTO vueltaDiagDTO ) {        
@@ -62,11 +67,10 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
         
         Servicio serVt = servicioService.findServicioById( vueltaDiagDTO
                                                            .getServRet()
-                                                           .getServicioPK() );
-        servicioRepository.save( serVt );
+                                                           .getServicioPK() );        
         
-        setPersonalYUnidadAHorariosServicio( serVt, vueltaDiagDTO.getServRet() );      
-        
+        setPersonalYUnidadAHorariosServicio( serVt, vueltaDiagDTO.getServRet() );
+        servicioRepository.save( serVt );      
         
         
         VueltaDiag vuelta = new VueltaDiag();        
@@ -87,75 +91,33 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
     
     void setPersonalYUnidadAHorariosServicio( Servicio servicio,  ServicioDTO servicioDTO ){
     	limpiarPersonalYUnidadDeHorariosSerivicio( servicio.getHorarios() );
-		setChoferesAHorariosServicio( servicio,  servicioDTO.getChoferes() );
-		setAuxiliaresAHorariosServicio( servicio,  servicioDTO.getChoferes() );
-		setUnidadAHorariosServicio( servicio, servicioDTO.getVehiculos() );
-		
+    	
+    	// nose si limpiar los horarios el servicios 
+    	
+    	List<HorarioServicio> horarios = new ArrayList<>();
+    	
+    	servicioDTO.getHorarios().forEach( h -> {
+    		HorarioServicioPK horarioPK = new HorarioServicioPK( h.getCodigoEtapa(), servicio ); 
+    		HorarioServicio unHorario = horarioServicioRepository.findById(horarioPK).orElse(null);
+    		if( unHorario != null ){
+    			
+    			unHorario.setChofer1( h.getChofer1() );
+    			unHorario.setChofer2( h.getChofer2() );
+    			unHorario.setAuxiliar1( h.getAuxiliar1() );
+    			unHorario.setAuxiliar2( h.getAuxiliar2() );
+    			unHorario.setInterno( h.getInterno());
+    			
+    			horarios.add( unHorario );
+    			
+    		}
+    	}); 
+    	
+		servicio.getHorarios().clear();
+		servicio.setHorarios(horarios);		
 	}			
 		
 	
-	private void setUnidadAHorariosServicio( Servicio serv, Set<VehiculoEtapaDTO> vehiculos ) {
-		
-		vehiculos.forEach( v ->{
-			serv.getHorarios().stream().filter( h -> v.getEtaDesde() <= h.getHorarioServicioPK().getEtaCodigo()
-													&& h.getHorarioServicioPK().getEtaCodigo() <= v.getEtaHasta() )
-									  .forEach( h -> h.setInterno( v.getVehiculoPK().getVehInterno() ) );
-		} );	
-		
-	}	
-	
-	private void setChoferesAHorariosServicio( Servicio serv,  Set<ChoferEtapasDTO> choferes  ){
-        
-        ServicioPK servPk = serv.getServicioPK(); 
-        List< ChoferEtapasDTO > choferesTipo = choferes.stream()
-                                                  .filter( c -> c.getTipoChofer() == Chofer.CHOFER  )
-                                                  .collect( Collectors.toList() );
 
-       ///Actualiza Chofer   Uno  y dos                
-       //Lo hago individualmente porque pueden tener cho entre desde y hasta distintos       
-       
-       if( choferesTipo != null && choferesTipo.size() >= 1 && choferesTipo.get(0) != null  ){ 
-           ChoferEtapasDTO choUno = choferesTipo.get(0);
-           serv.getHorarios().stream().filter( h -> choUno.getEtaDesde() <= h.getHorarioServicioPK().getEtaCodigo()
-				   &&  h.getHorarioServicioPK().getEtaCodigo() <= choUno.getEtaHasta() )
-					 .forEach( h -> h.setChofer1( choUno.getChoferPK().getCho_codigo() ) );          
-	   }        
-       
-       if( choferesTipo != null && choferesTipo.size() >= 2 && choferesTipo.get(1) != null  ){ 
-           ChoferEtapasDTO choDos = choferesTipo.get(1);
-           serv.getHorarios().stream().filter( h -> choDos.getEtaDesde() <= h.getHorarioServicioPK().getEtaCodigo()
-				   &&  h.getHorarioServicioPK().getEtaCodigo() <= choDos.getEtaHasta() )
-					 .forEach( h -> h.setChofer2( choDos.getChoferPK().getCho_codigo() ) );           
-       }         
-       
-   }
-	
-	private void setAuxiliaresAHorariosServicio( Servicio serv,  Set<ChoferEtapasDTO> choferes  ){
-        
-        ServicioPK servPk = serv.getServicioPK(); 
-        List< ChoferEtapasDTO > choferesTipo = choferes.stream()
-                                                  .filter( c -> c.getTipoChofer() == Chofer.AUXILIAR  )
-                                                  .collect( Collectors.toList() );
-
-       ///Actualiza  auxiliar  Uno  y dos                
-       //Lo hago individualmente porque pueden tener cho entre desde y hasta distintos       
-       
-       if( choferesTipo != null && choferesTipo.size() >= 1 && choferesTipo.get(0) != null  ){ 
-           ChoferEtapasDTO choUno = choferesTipo.get(0);
-           serv.getHorarios().stream().filter( h -> choUno.getEtaDesde() <= h.getHorarioServicioPK().getEtaCodigo()
-				   &&  h.getHorarioServicioPK().getEtaCodigo() <= choUno.getEtaHasta() )
-					 .forEach( h -> h.setAuxiliar1( choUno.getChoferPK().getCho_codigo() ) );          
-	   }        
-       
-       if( choferesTipo != null && choferesTipo.size() >= 2 && choferesTipo.get(1) != null  ){ 
-           ChoferEtapasDTO choDos = choferesTipo.get(1);
-           serv.getHorarios().stream().filter( h -> choDos.getEtaDesde() <= h.getHorarioServicioPK().getEtaCodigo()
-				   &&  h.getHorarioServicioPK().getEtaCodigo() <= choDos.getEtaHasta() )
-					 .forEach( h -> h.setAuxiliar2( choDos.getChoferPK().getCho_codigo() ) );           
-       }         
-       
-   }
-		
 	
 	void limpiarPersonalYUnidadDeHorariosSerivicio( List<HorarioServicio> horarios ){
 		
@@ -192,9 +154,11 @@ public class VueltaDiagServiceImpl implements VueltaDiagService {
 		Servicio serVt = servicioService.findServicioById( vueltaDiagDTO
 		              .getServRet()
 		              .getServicioPK() );
-		servicioRepository.save( serVt );
+		
 		
 		setPersonalYUnidadAHorariosServicio( serVt, vueltaDiagDTO.getServRet() );
+		
+		servicioRepository.save( serVt );
         
         
         vuelta.setEmpresa( vueltaDiagDTO.getEmpresa() );

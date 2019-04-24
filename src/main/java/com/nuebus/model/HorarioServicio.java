@@ -21,7 +21,9 @@ public class HorarioServicio implements Serializable {
 	HorarioServicioPK horarioServicioPK;
 
 	@Column(name = "hrs_fecha_hora")
-	java.util.Date fechaHora;
+	java.util.Date fechaHoraSalida;
+	@Column(name = " hrs_fecha_hora_llegada ")
+	java.util.Date fechaHoraLlegada;
 	@Column(name = "hrs_ace_codigo")
 	Long accionEtaCodigo;
 	@Column(name = "hrs_chofer1")
@@ -107,14 +109,7 @@ public class HorarioServicio implements Serializable {
 		this.interno = interno;
 	}
 
-	public java.util.Date getFechaHora() {
-		return fechaHora;
-	}
-
-	public void setFechaHora(java.util.Date fechaHora) {
-		this.fechaHora = fechaHora;
-	}
-
+	
 	public Etapa getEtapa() {
 		return etapa;
 	}
@@ -151,13 +146,34 @@ public class HorarioServicio implements Serializable {
 	}
 
 	
+	
+
+	public java.util.Date getFechaHoraSalida() {
+		return fechaHoraSalida;
+	}
+
+	public void setFechaHoraSalida(java.util.Date fechaHoraSalida) {
+		this.fechaHoraSalida = fechaHoraSalida;
+	}
+
+	public java.util.Date getFechaHoraLlegada() {
+		return fechaHoraLlegada;
+	}
+
+	public void setFechaHoraLlegada(java.util.Date fechaHoraLlegada) {
+		this.fechaHoraLlegada = fechaHoraLlegada;
+	}
+
 	@Override
 	public String toString() {
-		return "HorarioServicio [horarioServicioPK=" + horarioServicioPK + ", fechaHora=" + fechaHora
-				+ ", accionEtaCodigo=" + accionEtaCodigo + ", chofer1=" + chofer1 + ", chofer2=" + chofer2
-				+ ", auxiliar1=" + auxiliar1 + ", auxiliar2=" + auxiliar2 + ", interno=" + interno + ", etapa=" + etapa
-				+ "]";
+		return "HorarioServicio [horarioServicioPK=" + horarioServicioPK + ", fechaHoraSalida=" + fechaHoraSalida
+				+ ", fechaHoraLlegada=" + fechaHoraLlegada + ", accionEtaCodigo=" + accionEtaCodigo + ", chofer1="
+				+ chofer1 + ", chofer2=" + chofer2 + ", auxiliar1=" + auxiliar1 + ", auxiliar2=" + auxiliar2
+				+ ", interno=" + interno + ", etapa=" + etapa + "]";
 	}
+
+
+
 
 	private static final long serialVersionUID = 1L;
 }

@@ -42,12 +42,15 @@ public class ServicioConHorariosBuilder {
             servDTO.setServicioPK( serv.getServicioPK() );
             servDTO.setEstado( serv.getSerEsrCodigo() );
             
+            ordenarByCodigoEtapaYCompletarHorariosServicios( serv.getHorarios() );
+            
+            
             HorarioServicio desde = serv.getHorarios().stream()
             							.filter( h -> h.getAccionEtaCodigo() == HorarioServicio.HORARIO_SALIDA )
             							.findFirst().orElse(null);	
             
             if( desde != null ) {
-            	 servDTO.setFechaHoraSalida( desde.getFechaHora() );
+            	 servDTO.setFechaHoraSalida( desde.getFechaHoraSalida() );
             	 if( desde.getEtapa() != null ) {
             		 servDTO.setEscSalida( desde.getEtapa().getEscalaCodigo() );
             	 }                 
@@ -58,7 +61,7 @@ public class ServicioConHorariosBuilder {
 										.filter( h -> h.getAccionEtaCodigo() == HorarioServicio.HORARIO_LLEGADA )
 										.findFirst().orElse(null);
             if( hasta != null ) {
-            	 servDTO.setFechaHoraLlegada( hasta.getFechaHora() );
+            	 servDTO.setFechaHoraLlegada( hasta.getFechaHoraLlegada() );
             	 if ( hasta.getEtapa() != null ) {
             		 servDTO.setEscLlegada( hasta.getEtapa().getEscalaCodigo() );
             	 }                     
@@ -66,13 +69,38 @@ public class ServicioConHorariosBuilder {
             }            
             
             servDTO.setChoferes(  buildChoferes( serv.getHorarios() ) );                        
-            servDTO.setVehiculos( buildVehiculos( serv.getHorarios() ) );            
+            servDTO.setVehiculos( buildVehiculos( serv.getHorarios() ) );        
+            
+            servDTO.setHorarios( serv.getHorarios()  );
             
             serviciosDTO.add( servDTO );  
             
         }        
         return serviciosDTO;
     }
+	
+	void ordenarByCodigoEtapaYCompletarHorariosServicios(  List<HorarioServicio> horarios ) {
+		
+		horarios.sort( Comparator.comparing( HorarioServicio :: getCodigoEtapa ) );
+		
+		HorarioServicio anterior = null;
+		
+		for( HorarioServicio h: horarios ) {
+			if(  anterior != null && anterior.getFechaHoraLlegada() == null  ){
+				anterior.setFechaHoraLlegada(  h.getFechaHoraSalida() );
+			}			
+			anterior = h;
+		}
+		
+		HorarioServicio hasta = horarios.stream()
+				.filter( h -> h.getAccionEtaCodigo() == HorarioServicio.HORARIO_LLEGADA )
+				.findFirst().orElse(null);
+		 
+		if( hasta != null && hasta.getFechaHoraLlegada() == null && hasta.getFechaHoraSalida() != null ) {
+			hasta.setFechaHoraLlegada( hasta.getFechaHoraSalida() );
+		}
+		
+	}
 	 
 	 Set<ChoferEtapasDTO> buildChoferes( List<HorarioServicio> horarios ){
 			
@@ -171,8 +199,15 @@ public class ServicioConHorariosBuilder {
 		
 		ChoferDTO choferDTO = this.choferes.stream()
 				.filter( ch -> ch.getChoferPK().equals(choferPK) ).findAny().orElse(null);
-		return choferDTO;
+		return choferDTO;		
+	}
+	
+	void ordenarYCompletarHorariosServicios(  ArrayList<HorarioServicio> horarios ) {
+		
+		horarios.sort( Comparator.comparing( HorarioServicio :: getCodigoEtapa ) );	
 		
 	}
 
 }
+		
+	

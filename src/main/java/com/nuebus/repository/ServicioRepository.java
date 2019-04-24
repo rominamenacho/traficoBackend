@@ -23,8 +23,8 @@ public interface ServicioRepository extends JpaRepository< Servicio, ServicioPK>
 	/*public Servicio findServiciosByIdWithHorariosWithEtapa(Long id);*/
 	
 
-    @Query(" Select s "
-            + " from Servicio s where "
+    @Query(" Select distinct s  from Servicio s left join fetch s.horarios h left join h.etapa e "
+            + " where "
             + "  s.servicioPK.serEmpCodigo = ?1 "
             + "  and s.servicioPK.serLinCodigo = ?2 "
             + "  and trunc(s.servicioPK.serFechaHora) between ?3 and ?4 ")
