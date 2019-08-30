@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -45,6 +46,10 @@ public class Vencimiento implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tipoVencimiento_id", nullable = false)
     private TipoVencimiento tipoVencimiento;
+    
+    @Transient
+    private Integer diasAMostrarDespuesVencido=60;
+    
 
 	public Long getId() {
 		return id;
@@ -102,13 +107,19 @@ public class Vencimiento implements Serializable {
 	 }
 	  */
 
+	
+	public Integer getDiasAMostrarDespuesVencido() {
+		return diasAMostrarDespuesVencido;
+	}	
+	
+	
 	@Override
 	public String toString() {
 		return "Vencimiento [id=" + id + ", empresa=" + empresa + ", activo=" + activo + ", cantidadAnticipacion="
-				+ cantidadAnticipacion + ", tipoVencimiento=" + tipoVencimiento + "]";
-	}     
-	
-	
+				+ cantidadAnticipacion + ", tipoVencimiento=" + tipoVencimiento + ", diasAMostrarDespuesVendido="
+				+ diasAMostrarDespuesVencido + "]";
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -120,6 +131,8 @@ public class Vencimiento implements Serializable {
 		result = prime * result + ((tipoVencimiento == null) ? 0 : tipoVencimiento.hashCode());
 		return result;
 	}
+
+	
 
 	@Override
 	public boolean equals(Object obj) {

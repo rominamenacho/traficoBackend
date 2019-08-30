@@ -153,7 +153,7 @@ public class DiagramacionController {
     @RequestMapping(value = "/diagr/empresa/{idEmpresa}/internos", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> finAllInternos( @PathVariable String idEmpresa ) {             
         
-        Page<VehiculoDTO> page = vehiculoService.findVehiculosByEmpresa( null, idEmpresa );
+        Page<VehiculoDTO> page = vehiculoService.findAllVehiculosByEmpresa( null, idEmpresa );
         
         List<VehiculoPKDet> internos = page.getContent().stream()
                                             .map( v -> new VehiculoPKDet( v.getVehiculoPK(), v.getVehiculoPK().getVehInterno()) )

@@ -13,10 +13,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nuebus.annotations.Descripcion;
@@ -26,7 +28,7 @@ import com.nuebus.dto.VencimientosChoferDTO;
 import com.nuebus.dto.VencimientosVehiculoDTO;
 import com.nuebus.model.Vencimiento;
 import com.nuebus.service.VencimientoService;
-import com.nuebus.vencimientos.VencimientosVehiculo;
+import com.nuebus.vencimientos.VencimientosVehiculoService;
 
 @DescripcionClase(value="Vencimientos")
 @RestController
@@ -37,7 +39,7 @@ public class VencimientoController {
 	
 	  @Autowired
 	  VencimientoService vencimientoService;
-	  @Autowired VencimientosVehiculo vencimientosVehiculo;
+	  @Autowired VencimientosVehiculoService vencimientosVehiculo;
 	    
 
 	  @Descripcion(value="Gestionar Conf Vencimientos",permission="ROLE_CONF_VENCIMIENTOS_LISTAR")
@@ -86,13 +88,14 @@ public class VencimientoController {
 	  
 	  
 	  @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_VENCIMIENTOS_LISTAR') or hasRole('ROLE_UNIDADES_LISTAR'))")
-	  @RequestMapping(value = "/vehiculos/empresa/{vehEmpCodigo}/estado/{vehEstado}/vencimientos", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	  public ResponseEntity<List<VencimientosVehiculoDTO>> getVehiculosConVencimientos(@PathVariable String vehEmpCodigo,  @PathVariable int vehEstado ) {        
+	  @GetMapping("/vencimientos/empresa/{vehEmpCodigo}/estado/{vehEstado}/vehiculos" )
+	  @ResponseStatus( code = HttpStatus.OK)
+	  public List<VencimientosVehiculoDTO> getVehiculosConVencimientos(@PathVariable String vehEmpCodigo,  @PathVariable int vehEstado ) {        
 	        //List<VehiculoDTO> vehiculos = vehiculoService.getVehiculosConVencimientos( vehEmpCodigo, vehEstado );
 	    	List<VencimientosVehiculoDTO> vencVehiculo = vencimientosVehiculo.calcularAllVencimientosVehiculos( vehEmpCodigo, 
 	    																										vehEstado);
-	        return new ResponseEntity<>( vencVehiculo, HttpStatus.OK );
-	 }
+	        return  vencVehiculo;
+	  }
 	    
 
 }

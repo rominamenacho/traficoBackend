@@ -1,7 +1,11 @@
 package com.nuebus.dto;
 
 import com.nuebus.model.VehiculoPK;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.validation.Valid;
@@ -37,9 +41,7 @@ public class VehiculoDTO{
     
     private String vehMpaDesc = "";    
     
-    private int diasVencerFechaVerificacion;
-    
-    private boolean mostrarDias;
+    List<VencimientoCalculadoDTO> vencimientos = new ArrayList<>();
     
     public VehiculoDTO(){
         
@@ -124,22 +126,14 @@ public class VehiculoDTO{
 
     public void setVehMpaDesc(String vehMpaDesc) {
         this.vehMpaDesc = vehMpaDesc;
-    }	
+    }
 
-	public int getDiasVencerFechaVerificacion() {
-		return diasVencerFechaVerificacion;
+	public List<VencimientoCalculadoDTO> getVencimientos() {
+		return vencimientos;
 	}
 
-	public void setDiasVencerFechaVerificacion(int diasVencerFechaVerificacion) {
-		this.diasVencerFechaVerificacion = diasVencerFechaVerificacion;
-	}
-
-	public boolean isMostrarDias() {
-		return mostrarDias;
-	}
-
-	public void setMostrarDias(boolean mostrarDias) {
-		this.mostrarDias = mostrarDias;
+	public void setVencimientos(List<VencimientoCalculadoDTO> vencimientos) {
+		this.vencimientos = vencimientos;
 	}
 
 	@Override
@@ -147,8 +141,8 @@ public class VehiculoDTO{
 		return "VehiculoDTO [vehiculoPK=" + vehiculoPK + ", vehMotor=" + vehMotor + ", vehChasis=" + vehChasis
 				+ ", vehPatente=" + vehPatente + ", vehCarroceria=" + vehCarroceria + ", vehMovilGps=" + vehMovilGps
 				+ ", vehMpaCodigo=" + vehMpaCodigo + ", vehVerificacionTecnicaVto=" + vehVerificacionTecnicaVto
-				+ ", vehEstado=" + vehEstado + ", vehMpaDesc=" + vehMpaDesc + ", diasVencerFechaVerificacion="
-				+ diasVencerFechaVerificacion + ", mostrarDias=" + mostrarDias + "]";
+				+ ", vehEstado=" + vehEstado + ", vehMpaDesc=" + vehMpaDesc + ", vencimientos=" + vencimientos + "]";
 	}	
+
     
 }

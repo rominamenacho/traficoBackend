@@ -9,11 +9,12 @@ import com.nuebus.dto.VehiculoOpDTO;
 import com.nuebus.dto.VencimientosVehiculoDTO;
 import com.nuebus.erroresJson.WrapVehiculoIncidenciaError;
 import com.nuebus.model.Vehiculo;
+import com.nuebus.model.VehiculoPK;
 import com.nuebus.service.MapaAsientoService;
 import com.nuebus.service.VehiculoService;
 import com.nuebus.utilidades.IAuthenticationFacade;
 import com.nuebus.utilidades.Utilities;
-import com.nuebus.vencimientos.VencimientosVehiculo;
+import com.nuebus.vencimientos.VencimientosVehiculoService;
 import java.util.List;
 import java.util.Set;
 import javax.validation.Valid;
@@ -28,10 +29,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -54,73 +61,99 @@ public class VehiculoController {
     VehiculoService vehiculoService;
     @Autowired
     MapaAsientoService mapaAsientoService;
-    
-    
+       
     
 
     @Descripcion(value="Gestionar Unidades",permission="ROLE_UNIDADES_LISTAR")
     @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_UNIDADES_LISTAR'))")
-    @RequestMapping(value = "/vehiculos/empresa/{vehEmpCodigo}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<VehiculoDTO>> findAllVehiculos( Pageable pageable, @PathVariable String vehEmpCodigo ) {
+    @GetMapping( "/vehiculos/empresa/{vehEmpCodigo}" )
+    @ResponseStatus( HttpStatus.OK)
+    public Page<VehiculoDTO> findAllVehiculos( Pageable pageable, @PathVariable String vehEmpCodigo,
+    		 								   @RequestParam(required = false) String busqueda) {
                
         /*Authentication authentication = authenticationFacade.getAuthentication();        
         UserContext user = (UserContext)authentication.getPrincipal();        
         Page<VehiculoDTO> page = vehiculoService.findVehiculosByEmpresa( pageable, user.getEmpresa() );
-        return new ResponseEntity<>(page, HttpStatus.OK);*/
-        
-        
-        Page<VehiculoDTO> page = vehiculoService.findVehiculosByEmpresa( pageable, vehEmpCodigo );
-        return new ResponseEntity<>(page, HttpStatus.OK);
+        return new ResponseEntity<>(page, HttpStatus.OK);*/    
+    	
+        Page<VehiculoDTO> page = null;
+        if( busqueda != null ){
+        	page = vehiculoService.findByEmpresaAndBusqueda( vehEmpCodigo, busqueda, pageable );
+        }else {
+        	page = vehiculoService.findAllVehiculosByEmpresa( pageable, vehEmpCodigo );
+        }       
+        return page;
     }
 
     
     @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_UNIDADES_LISTAR'))")
-    @RequestMapping(value = "/vehiculos", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> createVehiculo(@Valid @RequestBody VehiculoDTO vehiculoDTO) throws Exception {
-        vehiculoService.saveVehiculo(vehiculoDTO);
-        return new ResponseEntity<>( HttpStatus.CREATED );        
+    @PostMapping( "/vehiculos" )
+    @ResponseStatus( HttpStatus.CREATED )    
+    public VehiculoDTO createVehiculo(@Valid @RequestBody VehiculoDTO vehiculoDTO) throws Exception {
+        /*Vehiculo vehiculo = vehiculoService.saveVehiculo(vehiculoDTO);
+        return vehiculo;*/        
+    	Vehiculo vehiculo = vehiculoService.saveVehiculo(vehiculoDTO);
+    	VehiculoDTO dto = vehiculoService.generarDTOYAddVencimientos(vehiculo);
+        return dto;
     }
 
     @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_UNIDADES_LISTAR'))")
-    @RequestMapping(value = "/vehiculos/empresa/{vehEmpCodigo}/interno/{vehInterno}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateVehiculo( @PathVariable String vehEmpCodigo,  @PathVariable int vehInterno, @Valid @RequestBody VehiculoDTO vehiculoDTO) throws Exception {
-        vehiculoService.updateVehiculo(vehiculoDTO);
-        return new ResponseEntity<>( HttpStatus.NO_CONTENT );        
+    @PutMapping( "/vehiculos/empresa/{vehEmpCodigo}/interno/{vehInterno}" )
+    @ResponseStatus( HttpStatus.CREATED )
+    public VehiculoDTO  updateVehiculo( @PathVariable String vehEmpCodigo,  @PathVariable int vehInterno,
+    												@Valid @RequestBody VehiculoDTO vehiculoDTO) throws Exception {
+    	/*Vehiculo vehiculo = vehiculoService.updateVehiculo(vehiculoDTO);
+        return vehiculo;*/        
+    	Vehiculo vehiculo = vehiculoService.updateVehiculo(vehiculoDTO);
+    	VehiculoDTO dto = vehiculoService.generarDTOYAddVencimientos(vehiculo);
+        return dto;
     }  
     
     @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_UNIDADES_LISTAR'))")
-    @RequestMapping(value = "/vehiculos/empresa/{vehEmpCodigo}/interno/{vehInterno}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> deleteVehiculo(@PathVariable String vehEmpCodigo,  @PathVariable int vehInterno) {
-        vehiculoService.deleteVehiculo(vehEmpCodigo, vehInterno);
-        return new ResponseEntity<>( HttpStatus.NO_CONTENT );
+    @DeleteMapping( "/vehiculos/empresa/{vehEmpCodigo}/interno/{vehInterno}" )
+    @ResponseStatus( HttpStatus.NO_CONTENT )
+    public void deleteVehiculo(@PathVariable String vehEmpCodigo,  @PathVariable int vehInterno) {
+        vehiculoService.deleteVehiculo(vehEmpCodigo, vehInterno);        
     }
     
     @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_UNIDADES_LISTAR'))")
-    @RequestMapping(value = "/vehiculos/empresa/{vehEmpCodigo}/interno/{vehInterno}/checkExiste", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping( "/vehiculos/empresa/{vehEmpCodigo}/interno/{vehInterno}" )
+    @ResponseStatus( HttpStatus.OK )
+    public VehiculoDTO getVehiculo(@PathVariable String vehEmpCodigo,  @PathVariable int vehInterno) {    	
+    	VehiculoPK vehiculoPK = new VehiculoPK( vehEmpCodigo, vehInterno );
+    	VehiculoDTO vehiculoDTO = vehiculoService.getVehiculo( vehiculoPK );
+    	return vehiculoDTO;
+    }
+    
+    @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_UNIDADES_LISTAR'))")
+    @GetMapping( "/vehiculos/empresa/{vehEmpCodigo}/interno/{vehInterno}/checkExiste" )
+    @ResponseStatus( HttpStatus.OK)
     public boolean checkExisteVehiculo( @PathVariable String vehEmpCodigo,  @PathVariable int vehInterno ) throws Exception {
         return vehiculoService.existeInterno( vehEmpCodigo, vehInterno );                
     }  
     
     
     @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_UNIDADES_LISTAR'))")
-    @RequestMapping(value = "/empresa/{vehEmpCodigo}/vehiculosCb", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<VehiculoOpDTO> getOpcionesVehiculos(Pageable pageable, @PathVariable String vehEmpCodigo) {              
-        
+    @GetMapping("/empresa/{vehEmpCodigo}/vehiculosCb")    
+    @ResponseStatus( HttpStatus.OK)
+    public VehiculoOpDTO getOpcionesVehiculos(Pageable pageable, @PathVariable String vehEmpCodigo) {   
         VehiculoOpDTO opcionesVeh = new VehiculoOpDTO();                
         opcionesVeh.setComboMapas(mapaAsientoService.findAllMapaAsiento( vehEmpCodigo ));                
-        return new ResponseEntity<>(opcionesVeh, HttpStatus.OK);       
+        return opcionesVeh;       
     }
     
     
     @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_UNIDADES_LISTAR'))")
-    @RequestMapping(value = "/vehiculos/empresa/{vehEmpCodigo}/interno/{vehInterno}/incidencias", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<VehiculoIncidenciaDTO>> getIncidenciasByVehiculo(@PathVariable String vehEmpCodigo,  @PathVariable int vehInterno) {        
+    @GetMapping( "/vehiculos/empresa/{vehEmpCodigo}/interno/{vehInterno}/incidencias" )   
+    @ResponseStatus( HttpStatus.OK)
+    public List<VehiculoIncidenciaDTO> getIncidenciasByVehiculo(@PathVariable String vehEmpCodigo, 
+    																					@PathVariable int vehInterno) {        
         List<VehiculoIncidenciaDTO> incidencias = vehiculoService.getIncidenciasByVehiculo( vehEmpCodigo,  vehInterno );        
-        return new ResponseEntity<>(incidencias, HttpStatus.OK);
+        return incidencias;
     }
     
     @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_UNIDADES_LISTAR'))")
-    @RequestMapping(value = "/vehiculos/empresa/{vehEmpCodigo}/interno/{vehInterno}/incidencias", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping( "/vehiculos/empresa/{vehEmpCodigo}/interno/{vehInterno}/incidencias" )    
     public ResponseEntity<Object> salvarIncidenciasByVehiculo( @PathVariable String vehEmpCodigo,  @PathVariable int vehInterno, 
                             @Valid @RequestBody ListaVehiculoIncidenciasDTO  incidencias, BindingResult result ) {   
         

@@ -16,9 +16,12 @@ import com.nuebus.model.Chofer;
 import com.nuebus.model.ChoferIncidencia;
 import com.nuebus.model.ChoferViaje;
 import com.nuebus.model.Escala;
+import com.nuebus.model.MapaAsiento;
+import com.nuebus.model.MapaAsientoPK;
 import com.nuebus.model.Vehiculo;
 import com.nuebus.model.VehiculoIncidencia;
 import com.nuebus.model.ViajeEspecial;
+import com.nuebus.repository.MapaAsientoRepository;
 import com.nuebus.vistas.combos.CbMapaAsiento;
 import com.nuebus.vistas.combos.Combo;
 import com.nuebus.vistas.combos.ComboStr;
@@ -26,17 +29,21 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author Valeria
  */
+@Component
 public class MapperVistas {
 
     @Autowired
     ViajeEspecialMapper viajeEspecialMapper;
     @Autowired
-    VehiculoMapper vehiculoMapper;
+    VehiculoMapper vehiculoMapper;    
+    @Autowired
+    MapaAsientoRepository mapaAsientoRepository;
 
     public static CbMapaAsientoDTO toDTO(CbMapaAsiento mapa) {
 
@@ -177,9 +184,14 @@ public class MapperVistas {
         return viajeEspecialDTO;
     }
 
-    public VehiculoDTO toDTO(VehiculoDTO retorno, String mapaDesc) {
-        retorno.setVehMpaDesc(mapaDesc);
-        return retorno;
+    public VehiculoDTO toDTO(VehiculoDTO retorno ) {
+    	
+    	 MapaAsientoPK mapaAsientoPK = new MapaAsientoPK();
+         mapaAsientoPK.setEmpresa(retorno.getVehiculoPK().getVehEmpCodigo());
+         mapaAsientoPK.setCodigo( retorno.getVehMpaCodigo() );     
+         MapaAsiento asiento = mapaAsientoRepository.findById(mapaAsientoPK).orElse( null );   
+         retorno.setVehMpaDesc(( asiento != null ) ?asiento.getDescripcion():"Sin especificar" );
+         return retorno;
     }
 
  

@@ -1,5 +1,6 @@
 package com.nuebus.repository;
 
+import com.nuebus.model.Usuario;
 import com.nuebus.model.Vehiculo;
 import com.nuebus.model.VehiculoPK;
 import com.nuebus.vistas.combos.ComboVehiculo;
@@ -122,15 +123,23 @@ public interface VehiculoRepository extends JpaRepository< Vehiculo, VehiculoPK>
     public List<Object[]> ocupacionVehiculos( @Param("empCodigo") String empCodigo, 
             @Param("inicio") java.util.Date inicio, @Param("fin") java.util.Date fin );
     
+    
+    /////////////////////////// De acuerdo a los criterios de Vencimiento ////////////////////////////
+    
     @Query( "  Select v from Vehiculo v "
             + "  where v.vehiculoPK.vehEmpCodigo = ?1 "
             + "    and v.vehEstado =?2 "
             + "    and vehVerificacionTecnicaVto <= ?3 ")
-    public List<Vehiculo> getVencimientos( @Param("empresa") String empresa, 
+    public List<Vehiculo> getVencimientosByVerificacionTecnica( @Param("empresa") String empresa, 
                                            @Param("estado") Integer estado,
-                                           @Param("fecha") Date fechaControl );
+                                           @Param("fecha") Date fechaControl );   
     
-    
+     	
+	@Query( " Select v from Vehiculo v where"
+			+ "  v.vehiculoPK.vehEmpCodigo = :empresa "
+			+ "	 and CAST( v.vehiculoPK.vehInterno as string ) LIKE  CONCAT('%',:busqueda,'%')  ")
+    Page<Vehiculo> findAllByEmpresaAndBusqueda( @Param(value="empresa") String empresa,
+    								  @Param(value="busqueda") String busqueda,Pageable pageable);
     
     
 }

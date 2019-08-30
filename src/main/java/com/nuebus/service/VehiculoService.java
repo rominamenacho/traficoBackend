@@ -22,10 +22,10 @@ public interface VehiculoService {
     
     public Page<VehiculoDTO> findVehiculos(Pageable pageable);
     public VehiculoDTO getVehiculo(VehiculoPK id);    
-    public void updateVehiculo(VehiculoDTO vehiculoDTO)throws Exception;    
+    public Vehiculo updateVehiculo(VehiculoDTO vehiculoDTO)throws Exception;    
     public void deleteVehiculo( String vehEmpCodigo, int vehInterno );
-    public void saveVehiculo(VehiculoDTO vehiculoDTO)throws Exception;
-    public Page<VehiculoDTO> findVehiculosByEmpresa(Pageable pageable, String empresa);
+    public Vehiculo saveVehiculo(VehiculoDTO vehiculoDTO)throws Exception;
+    public Page<VehiculoDTO> findAllVehiculosByEmpresa(Pageable pageable, String empresa);
     public boolean existeInterno(String vehEmpCodigo, int vehInterno ); 
     
     public List<VehiculoIncidenciaDTO> getIncidenciasByVehiculo( String vehEmpCodigo, int vehInterno );    
@@ -38,5 +38,9 @@ public interface VehiculoService {
     
     public List<VehiculoDTO> getVehiculosConVencimientosByFechaVerificacion( String empresa,
     																		 int estadoVehiculo, Date fechaControl );
+    
+    public VehiculoDTO generarDTOYAddVencimientos( Vehiculo vehiculo );
+    
+    public Page<VehiculoDTO> findByEmpresaAndBusqueda( String empresa, String busqueda, Pageable pageable );
     
 }

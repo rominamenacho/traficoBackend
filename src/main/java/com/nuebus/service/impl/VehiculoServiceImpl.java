@@ -4,9 +4,12 @@ package com.nuebus.service.impl;
 import com.nuebus.builders.VehiculoOcupacionBuilder;
 import java.util.List;
 import java.util.ArrayList;
+
+import com.nuebus.dto.UsuarioDTO;
 import com.nuebus.dto.VehiculoDTO;
 import com.nuebus.dto.VehiculoIncidenciaDTO;
 import com.nuebus.dto.VehiculoOcupacionDTO;
+import com.nuebus.dto.VencimientoCalculadoDTO;
 import com.nuebus.excepciones.ResourceNotFoundException;
 import com.nuebus.model.VehiculoIncidencia;
 import com.nuebus.excepciones.ValidacionExcepcion;
@@ -16,11 +19,12 @@ import com.nuebus.model.MapaAsiento;
 import com.nuebus.model.MapaAsientoPK;
 import com.nuebus.model.Vehiculo;
 import com.nuebus.model.VehiculoPK;
+import com.nuebus.model.Vencimiento;
 import com.nuebus.repository.IncidenciaRepository;
 import com.nuebus.repository.MapaAsientoRepository;
 import com.nuebus.repository.VehiculoRepository;
 import com.nuebus.service.VehiculoService;
-import com.nuebus.vencimientos.VencimientosVehiculo;
+import com.nuebus.vencimientos.VencimientosVehiculoService;
 import com.nuebus.vistas.MapperVistas;
 import java.util.stream.Collectors;
 import java.util.HashSet;
@@ -50,6 +54,9 @@ public class VehiculoServiceImpl implements VehiculoService{
     final static Logger LOG = LoggerFactory.getLogger(VehiculoServiceImpl.class);
     
     @Autowired
+    MapperVistas mapperVistas;
+    
+    @Autowired
     VehiculoRepository vehiculoRepository;
     
     @Autowired 
@@ -58,11 +65,9 @@ public class VehiculoServiceImpl implements VehiculoService{
     @Autowired
     VehiculoMapper vehiculoMapper;
     
-    @Autowired
-    MapaAsientoRepository mapaAsientoRepository;
     
     @Autowired 
-    VencimientosVehiculo vencimientosVehiculo;
+    VencimientosVehiculoService vencimientosVehiculo;
      
     @Override
     public Page<VehiculoDTO> findVehiculos(Pageable pageable) {
@@ -72,7 +77,7 @@ public class VehiculoServiceImpl implements VehiculoService{
     @Override
     public VehiculoDTO getVehiculo(VehiculoPK id) {        
         Vehiculo vehiculo = getVehiculo( id.getVehEmpCodigo(), id.getVehInterno() );
-        return vehiculoMapper.toDTO(vehiculo);               
+        return generarDTOYAddVencimientos(vehiculo);               
     }
     
     private Vehiculo getVehiculo(  String vehEmpCodigo, int vehInterno ) {        
@@ -89,9 +94,10 @@ public class VehiculoServiceImpl implements VehiculoService{
 
     @Override
     @Transactional( readOnly = false)
-    public void updateVehiculo( VehiculoDTO vehiculoDTO ) throws Exception {        
+    public Vehiculo updateVehiculo( VehiculoDTO vehiculoDTO ) throws Exception {        
         Vehiculo vehiculo = getVehiculo( vehiculoDTO.getVehiculoPK().getVehEmpCodigo(), vehiculoDTO.getVehiculoPK().getVehInterno() );       
-        vehiculoMapper.mapToEntity(vehiculoDTO, vehiculo);             
+        vehiculoMapper.mapToEntity(vehiculoDTO, vehiculo);    
+        return vehiculo;
     }
 
     @Override
@@ -103,7 +109,7 @@ public class VehiculoServiceImpl implements VehiculoService{
 
     @Override
     @Transactional(readOnly = false)
-    public void saveVehiculo(VehiculoDTO vehiculoDTO) throws Exception {
+    public Vehiculo saveVehiculo(VehiculoDTO vehiculoDTO) throws Exception {
         
         Vehiculo vehiculo = vehiculoMapper.toEntity(vehiculoDTO);     
        
@@ -117,25 +123,25 @@ public class VehiculoServiceImpl implements VehiculoService{
             vehiculoRepository.save(vehiculo);
         }else{            
             throw new ValidacionExcepcion( errors );            
-        }                  
+        } 
+        
+        return vehiculo;
     }
 
     @Override
-    public Page<VehiculoDTO> findVehiculosByEmpresa(Pageable pageable, String empresa) {
-        MapperVistas mapper =  new MapperVistas();  
-        
-        Page<VehiculoDTO> page = vehiculoRepository.findVehiculosByEmpresa( empresa, pageable ).map( vehiculo -> {
-        	
-            final MapaAsientoPK mapaAsientoPK = new MapaAsientoPK();
-            mapaAsientoPK.setEmpresa(vehiculo.getVehiculoPK().getVehEmpCodigo());
-            mapaAsientoPK.setCodigo( vehiculo.getVehMpaCodigo() );                 
-            final MapaAsiento asiento = mapaAsientoRepository.findById(mapaAsientoPK).orElse( null );            
-            return mapper.toDTO( vehiculoMapper.toDTO(vehiculo), 
-            					( asiento != null ) ?asiento.getDescripcion():"Sin especificar" );
+    public Page<VehiculoDTO> findAllVehiculosByEmpresa(Pageable pageable, String empresa) {
+               
+        List<Vencimiento> vencimientos = vencimientosVehiculo.getVencimientosActivosByVehiculos( empresa );
+        Page<VehiculoDTO> page = vehiculoRepository.findVehiculosByEmpresa( empresa, pageable ).map( vehiculo -> {        	
+          
+            VehiculoDTO vehiculoDTO = mapperVistas.toDTO(
+            								vehiculoMapper.toDTO(vehiculo) );            		
+            vehiculoDTO.setVencimientos ( vencimientosVehiculo.getVencimientoCalculado( vencimientos, vehiculo ) );
             
-           });
-        
-        vencimientosVehiculo.calcularAllVencimientosVehiculos(empresa, page.getContent());        
+            return vehiculoDTO;
+            
+           });        
+           
         return  page;
     }
     
@@ -152,7 +158,7 @@ public class VehiculoServiceImpl implements VehiculoService{
         Vehiculo vehiculo = getVehiculo( vehEmpCodigo, vehInterno );     
         
         return vehiculo.getVehiculoIncidencias().stream().
-                map( vehiInc -> MapperVistas.toVehiculoIncidenciaDTO(vehiInc) ).collect(Collectors.toList()); 
+                map( vehiInc -> mapperVistas.toVehiculoIncidenciaDTO(vehiInc) ).collect(Collectors.toList()); 
         
     }
     
@@ -201,23 +207,17 @@ public class VehiculoServiceImpl implements VehiculoService{
     }
 
     @Override
-    public List<VehiculoDTO> getVehiculosConVencimientos(String empresa, int estado) {
-        
-        MapperVistas mapper =  new MapperVistas();             
+    public List<VehiculoDTO> getVehiculosConVencimientos(String empresa, int estado) {        
+                     
         GregorianCalendar fechaControl = new GregorianCalendar();
         fechaControl.add( GregorianCalendar.DATE , 60 );     
         
-        List<VehiculoDTO> vehiculos =  vehiculoRepository.getVencimientos(  
+        List<VehiculoDTO> vehiculos =  vehiculoRepository.getVencimientosByVerificacionTecnica(  
                                              empresa, 
                                              estado,
                                              fechaControl.getTime())
                         .stream().map( vehiculo -> {
-                            final MapaAsientoPK mapaAsientoPK = new MapaAsientoPK();
-                            mapaAsientoPK.setEmpresa(vehiculo.getVehiculoPK().getVehEmpCodigo());
-                            mapaAsientoPK.setCodigo( vehiculo.getVehMpaCodigo() );     
-                            final MapaAsiento asiento = mapaAsientoRepository.findById(mapaAsientoPK).orElse( null );        
-                            return mapper.toDTO( vehiculoMapper.toDTO(vehiculo), 
-                            		( asiento != null ) ?asiento.getDescripcion():"Sin especificar" );
+                        	  return mapperVistas.toDTO( vehiculoMapper.toDTO(vehiculo) ); 
                         }).collect( Collectors.toList());
         
         
@@ -226,24 +226,46 @@ public class VehiculoServiceImpl implements VehiculoService{
 
 	@Override
 	public List<VehiculoDTO> getVehiculosConVencimientosByFechaVerificacion(String empresa, int estadoVehiculo, Date fechaControl) {
-		
-		MapperVistas mapper =  new MapperVistas();        
-        List<VehiculoDTO> vehiculos =  vehiculoRepository.getVencimientos(  
+        List<VehiculoDTO> vehiculos =  vehiculoRepository.getVencimientosByVerificacionTecnica(  
                                              empresa, 
                                              estadoVehiculo,
                                              fechaControl )
-                        .stream().map( vehiculo -> {
-                            final MapaAsientoPK mapaAsientoPK = new MapaAsientoPK();
-                            mapaAsientoPK.setEmpresa(vehiculo.getVehiculoPK().getVehEmpCodigo());
-                            mapaAsientoPK.setCodigo( vehiculo.getVehMpaCodigo() );  
-                            final MapaAsiento asiento = mapaAsientoRepository.findById(mapaAsientoPK).orElse( null );     
-                            return mapper.toDTO( vehiculoMapper.toDTO(vehiculo), 
-                            		( asiento != null ) ?asiento.getDescripcion():"Sin especificar" );
+                        .stream().map( vehiculo -> {                               
+                            return mapperVistas.toDTO( vehiculoMapper.toDTO(vehiculo) );                            		
                         }).collect( Collectors.toList());
         
         
         return vehiculos;
 	}
 
+	public VehiculoDTO generarDTOYAddVencimientos( Vehiculo vehiculo ){
+		
+		 List<Vencimiento> vencimientos = vencimientosVehiculo
+				 									.getVencimientosActivosByVehiculos( vehiculo
+				 										         						  .getVehiculoPK()
+				 																		  .getVehEmpCodigo());
+	               
+	     VehiculoDTO vehiculoDTO = mapperVistas.toDTO(
+	            								vehiculoMapper.toDTO(vehiculo) );            		
+	     vehiculoDTO.setVencimientos ( vencimientosVehiculo.getVencimientoCalculado( vencimientos, vehiculo ) );	 
+	     
+	     return vehiculoDTO;
+	}
+	
+	@Override
+	public Page<VehiculoDTO> findByEmpresaAndBusqueda( String empresa, String busqueda, Pageable pageable ) {
+		busqueda = busqueda.toUpperCase();		
+		List<Vencimiento> vencimientos = vencimientosVehiculo.getVencimientosActivosByVehiculos( empresa );
+        Page<VehiculoDTO> page = vehiculoRepository.findAllByEmpresaAndBusqueda( empresa, busqueda, pageable )
+        		.map( vehiculo -> {        	
+          
+	            VehiculoDTO vehiculoDTO = mapperVistas.toDTO(
+	            								vehiculoMapper.toDTO(vehiculo) );            		
+	            vehiculoDTO.setVencimientos( vencimientosVehiculo.getVencimientoCalculado( vencimientos, vehiculo ) );	            
+	            return vehiculoDTO;            
+         });        
+           
+        return  page;
+	}
    
 }
