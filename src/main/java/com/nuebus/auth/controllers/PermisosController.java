@@ -1,4 +1,4 @@
-package com.nuebus.auth.mvc;
+package com.nuebus.auth.controllers;
 
 import java.util.ArrayList;
 import java.util.HashMap;

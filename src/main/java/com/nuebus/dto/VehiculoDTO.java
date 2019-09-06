@@ -1,5 +1,6 @@
 package com.nuebus.dto;
 
+import com.nuebus.model.MapaAsiento;
 import com.nuebus.model.VehiculoPK;
 
 import java.util.ArrayList;
@@ -42,6 +43,9 @@ public class VehiculoDTO{
     private String vehMpaDesc = "";    
     
     List<VencimientoCalculadoDTO> vencimientos = new ArrayList<>();
+    
+    MapaAsiento mapaAsiento;   
+    
     
     public VehiculoDTO(){
         
@@ -134,6 +138,14 @@ public class VehiculoDTO{
 
 	public void setVencimientos(List<VencimientoCalculadoDTO> vencimientos) {
 		this.vencimientos = vencimientos;
+	}	
+
+	public MapaAsiento getMapaAsiento() {
+		return mapaAsiento;
+	}
+
+	public void setMapaAsiento(MapaAsiento mapaAsiento) {
+		this.mapaAsiento = mapaAsiento;
 	}
 
 	@Override
@@ -141,7 +153,8 @@ public class VehiculoDTO{
 		return "VehiculoDTO [vehiculoPK=" + vehiculoPK + ", vehMotor=" + vehMotor + ", vehChasis=" + vehChasis
 				+ ", vehPatente=" + vehPatente + ", vehCarroceria=" + vehCarroceria + ", vehMovilGps=" + vehMovilGps
 				+ ", vehMpaCodigo=" + vehMpaCodigo + ", vehVerificacionTecnicaVto=" + vehVerificacionTecnicaVto
-				+ ", vehEstado=" + vehEstado + ", vehMpaDesc=" + vehMpaDesc + ", vencimientos=" + vencimientos + "]";
+				+ ", vehEstado=" + vehEstado + ", vehMpaDesc=" + vehMpaDesc + ", vencimientos=" + vencimientos
+				+ ", mapaAsiento=" + mapaAsiento + "]";
 	}	
 
     

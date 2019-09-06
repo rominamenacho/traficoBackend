@@ -15,7 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.nuebus.auth.mvc.PermisosController;
+import com.nuebus.auth.controllers.PermisosController;
 import com.nuebus.auth.repository.GroupRepository;
 import com.nuebus.auth.service.GroupService;
 import com.nuebus.dto.GroupDTO;

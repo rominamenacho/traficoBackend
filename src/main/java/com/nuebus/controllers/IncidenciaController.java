@@ -1,4 +1,4 @@
-package com.nuebus.mvc;
+package com.nuebus.controllers;
 
 
 import com.nuebus.annotations.Descripcion;
@@ -51,30 +51,33 @@ public class IncidenciaController {
 
     @Descripcion(value="Gestionar Incidencias",permission="ROLE_INCIDENCIAS_LISTAR")
     @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_INCIDENCIAS_LISTAR'))")
-    @RequestMapping(value = "/incidencias/empresa/{idEmpresa}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<IncidenciaDTO>> findAllIncidencias(@PathVariable String idEmpresa , Pageable pageable, HttpServletRequest req) {    
+    @GetMapping(  "/incidencias/empresa/{idEmpresa}" ) 
+    @ResponseStatus( HttpStatus.OK )
+    public Page<IncidenciaDTO> findAllIncidencias(@PathVariable String idEmpresa , Pageable pageable, HttpServletRequest req) {    
              
         Page<IncidenciaDTO> page = incidenciaService.findIncidenciasByEmpresa( pageable,idEmpresa );
-        return new ResponseEntity<>(page, HttpStatus.OK);
+        return page;
     }
     
     
     @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_INCIDENCIAS_LISTAR'))")
-    @RequestMapping(value = "/incidencias/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getIncidencia(@PathVariable Long id, HttpServletRequest req) {
+    @GetMapping( "/incidencias/{id}" )   
+    @ResponseStatus( HttpStatus.OK )
+    public IncidenciaDTO getIncidencia(@PathVariable Long id, HttpServletRequest req) {
         Incidencia incidencia = incidenciaService.getIncidencia(id);            
-        return new ResponseEntity<>(incidenciaMapper.toDTO(incidencia), HttpStatus.OK);
+        return  incidenciaMapper.toDTO(incidencia);
     }
 
     @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_INCIDENCIAS_LISTAR'))")
-    @RequestMapping(value = "/incidencias", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> createIncidencia(@Valid @RequestBody IncidenciaDTO incidenciaDTO) throws Exception{                      
+    @PostMapping(  "/incidencias" )  
+    @ResponseStatus( HttpStatus.CREATED )
+    public IncidenciaDTO createIncidencia(@Valid @RequestBody IncidenciaDTO incidenciaDTO) throws Exception{                      
         Incidencia incidencia = incidenciaMapper.toEntity(incidenciaDTO);    
-        incidenciaService.saveIncidencia( incidencia );
-        return new ResponseEntity<>(HttpStatus.CREATED);              
+        return incidenciaMapper.toDTO( incidencia );                   
     }
 
-    @RequestMapping(value = "/checkCodigoIncidencia/empresa/{empresa}/tipo/{tipo}/codigo/{codigo}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(  "/checkCodigoIncidencia/empresa/{empresa}/tipo/{tipo}/codigo/{codigo}" )   
+    @ResponseStatus( HttpStatus.OK  )
     public boolean  checkCodigoIncidencia( @PathVariable String empresa, @PathVariable int tipo, 
                                                          @PathVariable String codigo ) throws Exception{                         
         return incidenciaService.existeCodigo( empresa, tipo, codigo );                           
@@ -82,24 +85,26 @@ public class IncidenciaController {
     
     
     @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_INCIDENCIAS_LISTAR'))")
-    @RequestMapping(value = "/incidencias/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateIncidencia( @PathVariable Long id, @Valid @RequestBody IncidenciaDTO incidenciaDTO ) throws Exception{         
-        incidenciaService.updateIncidencia(id, incidenciaDTO); 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @PutMapping( "/incidencias/{id}" )    
+    @ResponseStatus( HttpStatus.CREATED )
+    public IncidenciaDTO updateIncidencia( @PathVariable Long id, @Valid @RequestBody IncidenciaDTO incidenciaDTO ) throws Exception{         
+        Incidencia incidencia = incidenciaService.updateIncidencia(id, incidenciaDTO); 
+        return incidenciaMapper.toDTO( incidencia );
     }
     
     @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_INCIDENCIAS_LISTAR'))")
-    @RequestMapping(value = "/incidencias/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> deleteIncidencia(@PathVariable Long id) {
-        incidenciaService.deleteIncidencia(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);        
+    @DeleteMapping( "/incidencias/{id}" )   
+    @ResponseStatus( HttpStatus.NO_CONTENT )
+    public void deleteIncidencia(@PathVariable Long id) {
+        incidenciaService.deleteIncidencia(id);          
     }
     
     @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_INCIDENCIAS_LISTAR'))")
-    @RequestMapping(value = "/empresa/{idEmpresa}/tipo/{idTipo}/incidencias", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ComboDTO>> findIncidenciasByEmpresayTipo( @PathVariable String idEmpresa , @PathVariable int idTipo  ) {             
+    @GetMapping(  "/empresa/{idEmpresa}/tipo/{idTipo}/incidencias" )
+    @ResponseStatus( HttpStatus.OK )
+    public List<ComboDTO> findIncidenciasByEmpresayTipo( @PathVariable String idEmpresa , @PathVariable int idTipo  ) {             
         List<ComboDTO> lista = incidenciaService.findIncidenciasByEmpresayTipo( idEmpresa, idTipo );
-        return new ResponseEntity<>(lista, HttpStatus.OK);
+        return lista;
     }    
     
     

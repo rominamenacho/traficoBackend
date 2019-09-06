@@ -12,7 +12,9 @@ import com.nuebus.model.Carnet;
 import com.nuebus.model.Chofer;
 import com.nuebus.model.ChoferIncidencia;
 import com.nuebus.model.ChoferPK;
+import com.nuebus.model.ImagenChofer;
 import com.nuebus.repository.ChoferRepository;
+import com.nuebus.repository.ImagenChoferRepository;
 import com.nuebus.repository.IncidenciaRepository;
 import com.nuebus.service.ChoferService;
 import com.nuebus.vistas.MapperVistas;
@@ -53,6 +55,9 @@ public class ChoferServiceImpl implements ChoferService{
     
     @Autowired
     ChoferMapper choferMapper;
+    
+    @Autowired
+    ImagenChoferRepository imagenChoferRepository;
 
     @Override
     public Page<ChoferDTO> findChoferes(Pageable pageable){
@@ -72,7 +77,7 @@ public class ChoferServiceImpl implements ChoferService{
     
     @Override
     @Transactional(readOnly = false)
-    public void updateChofer( String cho_emp_codigo, Long cho_codigo,ChoferDTO choferDTO )throws Exception {
+    public ChoferDTO updateChofer( String cho_emp_codigo, Long cho_codigo,ChoferDTO choferDTO )throws Exception {
         
         ChoferPK claveCho = new ChoferPK();
         claveCho.setCho_emp_codigo(cho_emp_codigo);
@@ -84,21 +89,24 @@ public class ChoferServiceImpl implements ChoferService{
             throw new ResourceNotFoundException(cho_codigo,"Chofer no encontrado"); 
         }
         
-        choferMapper.mapToEntity(choferDTO, chofer);        
-        choferRepository.save(chofer);
+        choferMapper.mapToEntity(choferDTO, chofer);
+        
+        Chofer choferUpdated = choferRepository.save(chofer);
+        
+        return choferMapper.toDTO(choferUpdated);
         
     }
     
     
     @Override
     @Transactional(readOnly = false)
-    public void saveChofer(ChoferDTO choferDTO) throws Exception{   
+    public ChoferDTO saveChofer(ChoferDTO choferDTO) throws Exception{   
        
         Chofer chofer = choferMapper.toEntity(choferDTO);    
         int codigo = choferRepository.maxCodigoPersonalByEmpresa( choferDTO.getChoferPK().getCho_emp_codigo(), choferDTO.getCho_chofer() );      
         choferDTO.getChoferPK().setCho_codigo( codigo + 1 );               
-        choferRepository.save(chofer);                
-
+        Chofer choferSaved = choferRepository.save(chofer);                
+        return choferMapper.toDTO(choferSaved);
     }
     
     
@@ -277,6 +285,79 @@ public class ChoferServiceImpl implements ChoferService{
         } else {
             return chofer;
         }
+	}
+
+	@Override
+	public Page<ChoferDTO> findPersonalByBusquedaAndEmpresa( String busqueda, String empresa, Pageable pageable ) {
+		
+		if( busqueda != null ) {
+			busqueda = busqueda.toUpperCase();
+		}else {
+			busqueda = "";
+		}
+		
+		Page<ChoferDTO>  choferesDTO = choferRepository.findPersonalByBusquedaAndEmpresa( busqueda, empresa, pageable )
+													   .map( chofer -> choferMapper.toDTO(chofer) );		
+ 
+		return choferesDTO;
+	}
+
+	@Override	
+	@Transactional(readOnly = false)
+	public void updateImagenChofer(String cho_emp_codigo, long cho_codigo, byte[] imagen) {
+		
+		Chofer chofer = getChoferById( new ChoferPK(  cho_emp_codigo,  cho_codigo  ));
+		
+		if( chofer != null) {
+			ImagenChofer imagenChofer = null;
+			
+			if( chofer.getFoto() != null ) {
+				
+				imagenChofer = imagenChoferRepository.findByIdAndEmpresa(   Long.valueOf( chofer.getFoto() )
+																		  , chofer.getChoferPK().getCho_emp_codigo() );
+				
+				//imagenChofer = imagenChoferRepository.findById( Long.valueOf( chofer.getFoto() ) ).orElse(null);
+				
+			}
+			
+			if( imagenChofer == null ) {
+				imagenChofer = new ImagenChofer();
+				imagenChofer.setEmpresa( chofer.getChoferPK().getCho_emp_codigo() );
+			}
+			
+			imagenChofer.setImagen( imagen );
+			
+			ImagenChofer imagenChoferSaved =  imagenChoferRepository.save( imagenChofer );
+			
+			if( chofer.getFoto() == null ||
+				!chofer.getFoto().equalsIgnoreCase( String.valueOf( imagenChoferSaved.getId() )  )  ){
+				chofer.setFoto( String.valueOf( imagenChoferSaved.getId() ) );
+				choferRepository.save( chofer );
+			}
+			
+		}else {
+			throw new ResourceNotFoundException(cho_codigo,"Chofer no encontrado");
+		}		
+		
+		// Veamos como evoluciona el tema de la grilla 
+	}
+
+	@Override
+	public byte[] getImagenChofer( String cho_emp_codigo, long cho_codigo ) {
+		ImagenChofer imagenChofer = null;
+		Chofer chofer = getChoferById( new ChoferPK(  cho_emp_codigo,  cho_codigo  ));
+		if( chofer != null && chofer.getFoto() != null && chofer.getFoto().length() > 0 ) {
+			
+			imagenChofer = imagenChoferRepository.findByIdAndEmpresa(   Long.valueOf( chofer.getFoto() )
+					  													, chofer.getChoferPK().getCho_emp_codigo() );			
+			
+			if ( imagenChofer != null  && imagenChofer.getImagen() != null ) {
+				return imagenChofer.getImagen();
+			}
+		}
+		
+		throw new ResourceNotFoundException(cho_codigo,"Chofer no encontrado");
+		
 	}
 
 	

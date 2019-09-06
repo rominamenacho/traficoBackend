@@ -1,4 +1,4 @@
-package com.nuebus.mvc;
+package com.nuebus.controllers;
 
 import java.util.HashMap;
 import java.util.List;

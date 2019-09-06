@@ -1,6 +1,6 @@
 package com.nuebus;
 
-import static com.nuebus.model.Chofer.CHOFER;
+
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -36,14 +36,19 @@ import com.nuebus.dto.ChoferEtapasDTO;
 import com.nuebus.dto.ServicioDTO;
 import com.nuebus.dto.VehiculoEtapaDTO;
 import com.nuebus.dto.VueltaDiagDTO;
+import com.nuebus.mapper.VehiculoMapper;
 import com.nuebus.model.Chofer;
 import com.nuebus.model.ChoferPK;
 import com.nuebus.model.HorarioServicio;
+import com.nuebus.model.ImagenChofer;
 import com.nuebus.model.Servicio;
 import com.nuebus.model.ServicioPK;
+import com.nuebus.model.Vehiculo;
 import com.nuebus.model.VehiculoPK;
 import com.nuebus.model.VueltaDiag;
+import com.nuebus.repository.ImagenChoferRepository;
 import com.nuebus.repository.ServicioRepository;
+import com.nuebus.repository.VehiculoRepository;
 import com.nuebus.service.ChoferService;
 import com.nuebus.service.ServicioService;
 import com.nuebus.service.VueltaDiagService;
@@ -82,6 +87,14 @@ public class TraficoNuebusApplicationTests {
 	@Value(value = "${directorioUploadsChoferes}")
 	String directorioUploadsChoferes;
 	
+	@Autowired
+	ImagenChoferRepository imagenChoferRepository;
+	
+	@Autowired
+	VehiculoRepository vehiculoRepository;
+	
+	@Autowired
+	VehiculoMapper vehiculoMapper;
 	
 	@Test
 	public void contextLoads() {
@@ -93,8 +106,11 @@ public class TraficoNuebusApplicationTests {
 		
 		mostrarHorarios( servicio );*/
 		
+		Vehiculo vehiculo = vehiculoRepository.findById( new VehiculoPK("IMQ", 1) ).orElse(null);
 		
-		System.out.println( directorioUploadsChoferes );
+		System.out.println( "*********__________****" +  vehiculo.getVehPatente() );
+		
+		//System.out.println( "vehiculo.getMapaAsiento()*****" +  vehiculo.getMapaAsiento() );
 		
 		
 		

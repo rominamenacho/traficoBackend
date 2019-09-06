@@ -10,7 +10,11 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -47,17 +51,32 @@ public class Vehiculo implements Serializable {
     @Digits(integer=12, fraction=0)
     private long vehMovilGps = 0;   
     @Digits(integer=3, fraction=0)
-    private int vehMpaCodigo = 0;
+    //private int vehMpaCodigo = 0;
     
     @Column( name= "veh_verificacion_tecnica")
-    private java.util.Date vehVerificacionTecnicaVto = null;    
+    private java.util.Date vehVerificacionTecnicaVto = null;     
     
-    
-    private int vehEstado = 0;
-    
+    private int vehEstado = 0;    
     
     @OneToMany(  fetch = FetchType.LAZY, mappedBy = "vehiculo", cascade = CascadeType.ALL, orphanRemoval = true )
     private Set<VehiculoIncidencia> vehiculoIncidencias = new HashSet<>();
+    
+    
+    /*	@OneToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+        @JoinColumn( name = "veh_emp_codigo", referencedColumnName = "MPA_EMP_CODIGO"),
+        @JoinColumn( name = "veh_mpa_codigo",  referencedColumnName = "MPA_EMP_CODIGO")         
+    })  
+    private MapaAsiento mapaAsiento;*/ 
+    
+    
+    @ManyToOne    
+    @JoinColumns({
+        @JoinColumn( name = "veh_emp_codigo",  referencedColumnName = "MPA_EMP_CODIGO" ),
+        @JoinColumn( name = "veh_mpa_codigo",  referencedColumnName = "MPA_CODIGO" )         
+    })  
+    private MapaAsiento mapaAsiento;
+    
       
     public Vehiculo(){ super(); }
     
@@ -101,13 +120,13 @@ public class Vehiculo implements Serializable {
         this.vehMovilGps = vehMovilGps;
     }
 
-     public int getVehMpaCodigo() {
+    /*public int getVehMpaCodigo() {
         return vehMpaCodigo;
     }
 
     public void setVehMpaCodigo(int vehMpaCodigo) {
         this.vehMpaCodigo = vehMpaCodigo;
-    }
+    }*/
  
 
     public java.util.Date getVehVerificacionTecnicaVto() {
@@ -140,14 +159,23 @@ public class Vehiculo implements Serializable {
 
     public void setVehEstado(int vehEstado) {
         this.vehEstado = vehEstado;
-    }
+    }      
+	
+	public MapaAsiento getMapaAsiento() {
+		return mapaAsiento;
+	}
 
+	public void setMapaAsiento(MapaAsiento mapaAsiento) {
+		this.mapaAsiento = mapaAsiento;
+	}
+	
+	
 	@Override
 	public String toString() {
 		return "Vehiculo [vehiculoPK=" + vehiculoPK + ", vehMotor=" + vehMotor + ", vehChasis=" + vehChasis
 				+ ", vehPatente=" + vehPatente + ", vehCarroceria=" + vehCarroceria + ", vehMovilGps=" + vehMovilGps
-				+ ", vehMpaCodigo=" + vehMpaCodigo + ", vehVerificacionTecnicaVto=" + vehVerificacionTecnicaVto
-				+ ", vehEstado=" + vehEstado + ", vehiculoIncidencias=" + vehiculoIncidencias + "]";
+				+ ", vehVerificacionTecnicaVto=" + vehVerificacionTecnicaVto + ", vehEstado=" + vehEstado
+				+ ", vehiculoIncidencias=" + vehiculoIncidencias + ", mapaAsiento=" + mapaAsiento + "]";
 	}
 
 	@Override
@@ -158,8 +186,7 @@ public class Vehiculo implements Serializable {
 		result = prime * result + ((vehChasis == null) ? 0 : vehChasis.hashCode());
 		result = prime * result + vehEstado;
 		result = prime * result + ((vehMotor == null) ? 0 : vehMotor.hashCode());
-		result = prime * result + (int) (vehMovilGps ^ (vehMovilGps >>> 32));
-		result = prime * result + vehMpaCodigo;
+		result = prime * result + (int) (vehMovilGps ^ (vehMovilGps >>> 32));		
 		result = prime * result + ((vehPatente == null) ? 0 : vehPatente.hashCode());
 		result = prime * result + ((vehVerificacionTecnicaVto == null) ? 0 : vehVerificacionTecnicaVto.hashCode());
 		result = prime * result + ((vehiculoIncidencias == null) ? 0 : vehiculoIncidencias.hashCode());
@@ -194,9 +221,7 @@ public class Vehiculo implements Serializable {
 		} else if (!vehMotor.equals(other.vehMotor))
 			return false;
 		if (vehMovilGps != other.vehMovilGps)
-			return false;
-		if (vehMpaCodigo != other.vehMpaCodigo)
-			return false;
+			return false;	
 		if (vehPatente == null) {
 			if (other.vehPatente != null)
 				return false;

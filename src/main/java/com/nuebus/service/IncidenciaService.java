@@ -23,9 +23,9 @@ public interface  IncidenciaService {
 
    public Incidencia getIncidencia(Long id);
 
-   public void updateIncidencia(long id, IncidenciaDTO incidenciaDTO)throws Exception;
+   public Incidencia updateIncidencia(long id, IncidenciaDTO incidenciaDTO)throws Exception;
 
-   public void saveIncidencia(Incidencia incidencia)throws Exception;
+   public Incidencia saveIncidencia(Incidencia incidencia)throws Exception;
 
    public void deleteIncidencia(Long id);
    

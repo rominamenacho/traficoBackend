@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 
 /**
  *
@@ -28,10 +27,11 @@ public interface ChoferService {
     
     public Page<ChoferDTO> findChoferes(Pageable pageable);
     public ChoferDTO getChofer(ChoferPK id);    
-    public void updateChofer( String cho_emp_codigo, Long cho_codigo, ChoferDTO choferDTO )throws Exception;    
+    public ChoferDTO updateChofer( String cho_emp_codigo, Long cho_codigo, ChoferDTO choferDTO )throws Exception;    
     public void deleteChofer( String cho_emp_codigo, Long cho_codigo );
-    public void saveChofer( ChoferDTO choferDTO )throws Exception;
+    public ChoferDTO saveChofer( ChoferDTO choferDTO )throws Exception;
     public Page<ChoferDTO> findPersonalByEmpresa( Pageable pageable, String empresa );
+    public Page<ChoferDTO> findPersonalByBusquedaAndEmpresa( String busqueda, String empresa, Pageable pageable );
     
     public void salvarIncidenciasByChofer( String cho_emp_codigo, Long cho_codigo,
                                         Set<ChoferIncidenciaDTO>  choferIncidencias )throws Exception;   
@@ -54,5 +54,11 @@ public interface ChoferService {
     public  List< ChoferDTO > findChoferesFromHorariosServicios(String empresa,  String linea, java.util.Date inicio, java.util.Date fin );
     
     public Chofer getChoferById(ChoferPK id);  
+    
+    public void updateImagenChofer( String cho_emp_codigo,  long cho_codigo, byte[] imagen);
+    
+    public byte[] getImagenChofer( String cho_emp_codigo,  long cho_codigo);
+    
+    
     
 }

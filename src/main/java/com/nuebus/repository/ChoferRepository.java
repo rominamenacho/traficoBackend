@@ -19,12 +19,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-
 /**
  *
  * @author Valeria
@@ -193,5 +187,15 @@ public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK> {
              + " 		and :finServ ", nativeQuery = true )     
     public List<Object[]> findChoferesFromHorariosServicios(  @Param("empresa") String empresa,
             @Param("linea") String linea, @Param("inicioServ") java.util.Date inicioServ, 
-            @Param("finServ") java.util.Date finServ);  
+            @Param("finServ") java.util.Date finServ); 
+    
+    
+    @Query("select c from Chofer c where "
+    		+ "		choferPK.cho_emp_codigo = :cho_emp_codigo  "
+    		+ "		and upper( c.cho_nombre)  LIKE  CONCAT('%',:busqueda,'%') ")
+    public Page<Chofer> findPersonalByBusquedaAndEmpresa( @Param(value = "busqueda") String busqueda, 
+    													  @Param(value="cho_emp_codigo")String cho_emp_codigo , 
+    													  Pageable pageable);   
+    
+    
 }

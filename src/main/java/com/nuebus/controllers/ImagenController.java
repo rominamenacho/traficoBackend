@@ -1,4 +1,4 @@
-package com.nuebus.mvc;
+package com.nuebus.controllers;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,8 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -98,6 +101,45 @@ public class ImagenController {
 	    	cabeceras.add( HttpHeaders.CONTENT_DISPOSITION , "attachment;filename=\"" + recurso.getFilename() + "\"");
 	    	
 	    	return new ResponseEntity<Resource>( recurso, cabeceras, HttpStatus.OK );    	
+	    }
+	    
+	    
+	    
+	    @GetMapping( "img/choferes/{cho_emp_codigo}/{cho_codigo}/imagen" )    
+	    public ResponseEntity<?> getImagenChofer( @PathVariable String cho_emp_codigo, @PathVariable long cho_codigo,
+	    										  HttpServletResponse response) {    	
+	    	
+	    	byte[] image = choferService.getImagenChofer( cho_emp_codigo, cho_codigo );
+	    	response.setContentType(MediaType.IMAGE_JPEG_VALUE); 
+	    	return ResponseEntity.ok(image);      	  
+	    }
+	    
+	    @PutMapping( "upload/choferes/{cho_emp_codigo}/{cho_codigo}/uploadImagen" )    
+	    public ResponseEntity<?> uploadChoferFromBD( @RequestParam("archivo") MultipartFile archivo,
+	    			@PathVariable String cho_emp_codigo, @PathVariable long cho_codigo ) {   	
+
+	    	
+	    	Map<String, Object> response = new HashMap<>();
+	    	String nombreArchivo = archivo != null ? archivo.getOriginalFilename() : " arcivo nulo";    	
+	    	
+	    	if( !archivo.isEmpty() ){	    		    		
+	    		try {   			
+	    			 
+	    			choferService.updateImagenChofer( cho_emp_codigo,  cho_codigo, archivo.getBytes() );		
+					
+				} catch (IOException e) {				
+					e.printStackTrace();				
+					response.put("error", e.getMessage().concat(":").concat(e.getCause().getMessage()));
+					response.put("mensaje","Error al subir el archivo " + nombreArchivo );
+					return new ResponseEntity<Map<String,Object>>( response, HttpStatus.INTERNAL_SERVER_ERROR );
+				}	    		
+	    		
+	    		//imagenService.eliminarImagen(fotoAnterior, directorioUploadsChoferes);  		
+	    		
+	    		response.put("mensaje","ha subido correctamente el archivo: " + nombreArchivo);
+	    	}
+	    	
+	    	return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);  
 	    }
 
 }

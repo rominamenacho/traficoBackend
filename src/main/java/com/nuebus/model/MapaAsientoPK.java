@@ -72,6 +72,11 @@ public class MapaAsientoPK implements Serializable{
         }
         return true;
     }   
+
+    @Override
+    public String toString() {
+        return "MapaAsientoPK{" + "empresa=" + empresa + ", codigo=" + codigo + '}';
+    }   
     
     
 }

@@ -1,4 +1,4 @@
-package com.nuebus.mvc;
+package com.nuebus.controllers;
 
 import com.nuebus.dto.PersonDTO;
 import com.nuebus.service.PersonService;

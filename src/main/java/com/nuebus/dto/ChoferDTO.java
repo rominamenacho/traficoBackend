@@ -55,8 +55,8 @@ public class ChoferDTO {
     @Digits(integer = 1,fraction = 0)
     private int cho_chofer = 0; //0 si, 1 no (o sea, es auxiliar)
      
-    private Integer cho_id_aux;
-    
+    private Integer cho_id_aux;   
+   
     private String foto;
      
     //private Set<CarnetDTO> carnets = new HashSet<>();
@@ -193,7 +193,7 @@ public class ChoferDTO {
 	public void setCho_id_aux(Integer cho_id_aux) {
 		this.cho_id_aux = cho_id_aux;
 	}
-
+	
 	public String getFoto() {
 		return foto;
 	}
@@ -211,6 +211,6 @@ public class ChoferDTO {
 				+ cho_telefono_emergencia + ", cho_doc_codigo=" + cho_doc_codigo + ", cho_legajo=" + cho_legajo
 				+ ", cho_fecha_nacimiento=" + cho_fecha_nacimiento + ", cho_estado=" + cho_estado + ", cho_chofer="
 				+ cho_chofer + ", cho_id_aux=" + cho_id_aux + ", foto=" + foto + "]";
-	}		
+	}	
     
 }

@@ -1,5 +1,5 @@
 
-package com.nuebus.mvc;
+package com.nuebus.controllers;
 
 import com.nuebus.annotations.Descripcion;
 import com.nuebus.annotations.DescripcionClase;

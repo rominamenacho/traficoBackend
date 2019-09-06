@@ -60,7 +60,7 @@ public class IncidenciaDTO extends AbstractDTO {
         if(in_tipo==0){
         in_tipoString= "Unidades";
         }else if(in_tipo ==1){
-         in_tipoString= "Choferes ";
+         in_tipoString= "Personal ";
         }
         return in_tipoString;
     }
