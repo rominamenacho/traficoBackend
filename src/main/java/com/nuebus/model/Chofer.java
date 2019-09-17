@@ -1,8 +1,10 @@
 package com.nuebus.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -85,8 +87,8 @@ public class Chofer implements Serializable{
     @Column(name="cho_foto")
     private String foto;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "chofer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Carnet> carnets = new HashSet<Carnet>();  
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "chofer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Carnet> carnets = new ArrayList<>();  
      
         
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "chofer", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -222,13 +224,7 @@ public class Chofer implements Serializable{
         this.cho_estado = cho_estado;
     }
           
-    public Set<Carnet> getCarnets() {
-        return this.carnets;
-    }
-
-    public void setCarnets(Set<Carnet> carnets) {
-        this.carnets = carnets;
-    }
+  
 
     public ChoferPK getChoferPK() {
         return choferPK;
@@ -271,6 +267,14 @@ public class Chofer implements Serializable{
 		this.foto = foto;
 	}
 
+	public List<Carnet> getCarnets() {
+		return carnets;
+	}
+
+	public void setCarnets(List<Carnet> carnets) {
+		this.carnets = carnets;
+	}
+
 	@Override
 	public String toString() {
 		return "Chofer [choferPK=" + choferPK + ", cho_nombre=" + cho_nombre + ", cho_funcion=" + cho_funcion
@@ -279,20 +283,11 @@ public class Chofer implements Serializable{
 				+ cho_observaciones + ", cho_grupo_sanguineo=" + cho_grupo_sanguineo + ", cho_telefono_emergencia="
 				+ cho_telefono_emergencia + ", cho_doc_codigo=" + cho_doc_codigo + ", cho_legajo=" + cho_legajo
 				+ ", cho_fecha_nacimiento=" + cho_fecha_nacimiento + ", cho_estado=" + cho_estado + ", cho_chofer="
-				+ cho_chofer + ", cho_id_aux=" + cho_id_aux + ", foto=" + foto + ", getChoferIncidencias()="
-				+ getChoferIncidencias() + ", getCho_nombre()=" + getCho_nombre() + ", getCho_funcion()="
-				+ getCho_funcion() + ", getCho_telefono()=" + getCho_telefono() + ", getCho_documento()="
-				+ getCho_documento() + ", getCho_direccion()=" + getCho_direccion() + ", getCho_codigo_postal()="
-				+ getCho_codigo_postal() + ", getCho_observaciones()=" + getCho_observaciones()
-				+ ", getCho_grupo_sanguineo()=" + getCho_grupo_sanguineo() + ", getCho_telefono_emergencia()="
-				+ getCho_telefono_emergencia() + ", getCho_doc_codigo()=" + getCho_doc_codigo() + ", getCho_legajo()="
-				+ getCho_legajo() + ", getCho_fecha_nacimiento()=" + getCho_fecha_nacimiento() + ", getCho_estado()="
-				+ getCho_estado() + ", getCho_id_aux()=" + getCho_id_aux() + ", getCarnets()=" + getCarnets()
-				+ ", getChoferPK()=" + getChoferPK() + ", getChoferViaje()=" + getChoferViaje() + ", getCho_chofer()="
-				+ getCho_chofer() + ", getAuxiliarViaje()=" + getAuxiliarViaje() + ", getFoto()=" + getFoto()
-				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString()
-				+ "]";
-	}    
+				+ cho_chofer + ", cho_id_aux=" + cho_id_aux + ", foto=" + foto + ", carnets=" + carnets
+				+ ", choferIncidencias=" + choferIncidencias + ", ChoferViaje=" + ChoferViaje + ", AuxiliarViaje="
+				+ AuxiliarViaje + "]";
+	}
+  
   
     
 }

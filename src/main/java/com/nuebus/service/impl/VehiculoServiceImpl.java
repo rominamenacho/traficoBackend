@@ -5,18 +5,15 @@ import com.nuebus.builders.VehiculoOcupacionBuilder;
 import java.util.List;
 import java.util.ArrayList;
 
-import com.nuebus.dto.UsuarioDTO;
 import com.nuebus.dto.VehiculoDTO;
 import com.nuebus.dto.VehiculoIncidenciaDTO;
 import com.nuebus.dto.VehiculoOcupacionDTO;
-import com.nuebus.dto.VencimientoCalculadoDTO;
 import com.nuebus.excepciones.ResourceNotFoundException;
 import com.nuebus.model.VehiculoIncidencia;
 import com.nuebus.excepciones.ValidacionExcepcion;
 import com.nuebus.mapper.VehiculoMapper;
 import com.nuebus.model.Incidencia;
 import com.nuebus.model.MapaAsiento;
-import com.nuebus.model.MapaAsientoPK;
 import com.nuebus.model.Vehiculo;
 import com.nuebus.model.VehiculoPK;
 import com.nuebus.model.Vencimiento;
@@ -24,7 +21,7 @@ import com.nuebus.repository.IncidenciaRepository;
 import com.nuebus.repository.MapaAsientoRepository;
 import com.nuebus.repository.VehiculoRepository;
 import com.nuebus.service.VehiculoService;
-import com.nuebus.vencimientos.VencimientosVehiculoService;
+import com.nuebus.vencimientos.vehiculos.VencimientoVehiculoService;
 import com.nuebus.vistas.MapperVistas;
 import java.util.stream.Collectors;
 import java.util.HashSet;
@@ -63,11 +60,15 @@ public class VehiculoServiceImpl implements VehiculoService{
     IncidenciaRepository incidenciaRepository ;        
     
     @Autowired
-    VehiculoMapper vehiculoMapper;
+    VehiculoMapper vehiculoMapper;     
+    
+    @Autowired
+    MapaAsientoRepository mapaAsientoRepository;
+    
+    @Autowired
+    VencimientoVehiculoService vencimientoVehiculoService;
     
     
-    @Autowired 
-    VencimientosVehiculoService vencimientosVehiculo;
      
     @Override
     public Page<VehiculoDTO> findVehiculos(Pageable pageable) {
@@ -96,8 +97,10 @@ public class VehiculoServiceImpl implements VehiculoService{
     @Transactional( readOnly = false)
     public Vehiculo updateVehiculo( VehiculoDTO vehiculoDTO ) throws Exception {        
         Vehiculo vehiculo = getVehiculo( vehiculoDTO.getVehiculoPK().getVehEmpCodigo(), vehiculoDTO.getVehiculoPK().getVehInterno() );       
-        vehiculoMapper.mapToEntity(vehiculoDTO, vehiculo);    
-        return vehiculo;
+        vehiculoMapper.mapToEntity(vehiculoDTO, vehiculo);        
+        MapaAsiento mapa = getMapaAsiento( vehiculo.getMapaAsiento() );
+        vehiculo.setMapaAsiento(mapa);        
+        return   vehiculoRepository.save(vehiculo);
     }
 
     @Override
@@ -111,32 +114,32 @@ public class VehiculoServiceImpl implements VehiculoService{
     @Transactional(readOnly = false)
     public Vehiculo saveVehiculo(VehiculoDTO vehiculoDTO) throws Exception {
         
-        Vehiculo vehiculo = vehiculoMapper.toEntity(vehiculoDTO);     
-       
+        Vehiculo vehiculo = vehiculoMapper.toEntity(vehiculoDTO);        
         Map<String, Set<String>> errors = new HashMap<>();
                 
         if( existeInterno( vehiculo.getVehiculoPK().getVehEmpCodigo() , vehiculo.getVehiculoPK().getVehInterno()) ){           
             errors.computeIfAbsent( "vehInterno", key -> new HashSet<>()).add( "internoTomado" );             
         }         
         
-        if( errors.isEmpty() ){        
-            vehiculoRepository.save(vehiculo);
+        if( errors.isEmpty() ){  
+        	MapaAsiento mapa = getMapaAsiento( vehiculo.getMapaAsiento() );
+            vehiculo.setMapaAsiento(mapa);
+            return vehiculoRepository.save(vehiculo);
         }else{            
             throw new ValidacionExcepcion( errors );            
-        } 
+        }        
         
-        return vehiculo;
     }
 
     @Override
     public Page<VehiculoDTO> findAllVehiculosByEmpresa(Pageable pageable, String empresa) {
                
-        List<Vencimiento> vencimientos = vencimientosVehiculo.getVencimientosActivosByVehiculos( empresa );
+        List<Vencimiento> vencimientos = vencimientoVehiculoService.getVencimientosActivosByVehiculos( empresa );
         Page<VehiculoDTO> page = vehiculoRepository.findVehiculosByEmpresa( empresa, pageable ).map( vehiculo -> {        	
           
-            VehiculoDTO vehiculoDTO = mapperVistas.toDTO(
-            								vehiculoMapper.toDTO(vehiculo) );            		
-            vehiculoDTO.setVencimientos ( vencimientosVehiculo.getVencimientoCalculado( vencimientos, vehiculo ) );
+            VehiculoDTO vehiculoDTO = vehiculoMapper.toDTO(vehiculo) ;
+            
+            vehiculoDTO.setVencimientos ( vencimientoVehiculoService.getVencimientosCalculado( vencimientos, vehiculo ) );
             
             return vehiculoDTO;
             
@@ -217,7 +220,7 @@ public class VehiculoServiceImpl implements VehiculoService{
                                              estado,
                                              fechaControl.getTime())
                         .stream().map( vehiculo -> {
-                        	  return mapperVistas.toDTO( vehiculoMapper.toDTO(vehiculo) ); 
+                        	  return vehiculoMapper.toDTO(vehiculo); 
                         }).collect( Collectors.toList());
         
         
@@ -231,7 +234,7 @@ public class VehiculoServiceImpl implements VehiculoService{
                                              estadoVehiculo,
                                              fechaControl )
                         .stream().map( vehiculo -> {                               
-                            return mapperVistas.toDTO( vehiculoMapper.toDTO(vehiculo) );                            		
+                            return vehiculoMapper.toDTO(vehiculo) ;                            		
                         }).collect( Collectors.toList());
         
         
@@ -239,33 +242,39 @@ public class VehiculoServiceImpl implements VehiculoService{
 	}
 
 	public VehiculoDTO generarDTOYAddVencimientos( Vehiculo vehiculo ){
-		
-		 List<Vencimiento> vencimientos = vencimientosVehiculo
-				 									.getVencimientosActivosByVehiculos( vehiculo
-				 										         						  .getVehiculoPK()
-				 																		  .getVehEmpCodigo());
-	               
-	     VehiculoDTO vehiculoDTO = mapperVistas.toDTO(
-	            								vehiculoMapper.toDTO(vehiculo) );            		
-	     vehiculoDTO.setVencimientos ( vencimientosVehiculo.getVencimientoCalculado( vencimientos, vehiculo ) );	 
+            
+            String empresa =  vehiculo.getVehiculoPK().getVehEmpCodigo();		
+	    List<Vencimiento> vencimientos = vencimientoVehiculoService.getVencimientosActivosByVehiculos( empresa );           
+	    VehiculoDTO vehiculoDTO = 	vehiculoMapper.toDTO(vehiculo) ;	     
+	    vehiculoDTO.setVencimientos ( vencimientoVehiculoService.getVencimientosCalculado( vencimientos, vehiculo ) );	 
 	     
-	     return vehiculoDTO;
+	    return vehiculoDTO;
 	}
 	
 	@Override
 	public Page<VehiculoDTO> findByEmpresaAndBusqueda( String empresa, String busqueda, Pageable pageable ) {
 		busqueda = busqueda.toUpperCase();		
-		List<Vencimiento> vencimientos = vencimientosVehiculo.getVencimientosActivosByVehiculos( empresa );
-        Page<VehiculoDTO> page = vehiculoRepository.findAllByEmpresaAndBusqueda( empresa, busqueda, pageable )
+		List<Vencimiento> vencimientos = vencimientoVehiculoService.getVencimientosActivosByVehiculos( empresa );
+                Page<VehiculoDTO> page = vehiculoRepository.findAllByEmpresaAndBusqueda( empresa, busqueda, pageable )
         		.map( vehiculo -> {        	
           
-	            VehiculoDTO vehiculoDTO = mapperVistas.toDTO(
-	            								vehiculoMapper.toDTO(vehiculo) );            		
-	            vehiculoDTO.setVencimientos( vencimientosVehiculo.getVencimientoCalculado( vencimientos, vehiculo ) );	            
+	            VehiculoDTO vehiculoDTO = vehiculoMapper.toDTO(vehiculo);
+	            
+	            vehiculoDTO.setVencimientos( vencimientoVehiculoService.getVencimientosCalculado( vencimientos, vehiculo ) );	            
 	            return vehiculoDTO;            
          });        
            
         return  page;
 	}
+	
+	MapaAsiento getMapaAsiento( MapaAsiento mapaAsiento ){
+		MapaAsiento mapa = mapaAsientoRepository.findById( mapaAsiento.getMapaAsientoPK() ).orElse(null);
+		if( mapa == null ) {
+			throw new ResourceNotFoundException((long)-1,"El mapa asiento no existe");
+		}
+		return  mapa;
+	}
+
+    
    
 }

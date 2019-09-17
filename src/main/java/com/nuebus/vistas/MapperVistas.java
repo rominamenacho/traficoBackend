@@ -42,8 +42,7 @@ public class MapperVistas {
     ViajeEspecialMapper viajeEspecialMapper;
     @Autowired
     VehiculoMapper vehiculoMapper;    
-    @Autowired
-    MapaAsientoRepository mapaAsientoRepository;
+  
 
     public static CbMapaAsientoDTO toDTO(CbMapaAsiento mapa) {
 
@@ -182,18 +181,6 @@ public class MapperVistas {
         }
 
         return viajeEspecialDTO;
-    }
-
-    public VehiculoDTO toDTO(VehiculoDTO retorno ) {
-    	
-    	 MapaAsientoPK mapaAsientoPK = new MapaAsientoPK();
-         mapaAsientoPK.setEmpresa(retorno.getVehiculoPK().getVehEmpCodigo());
-         mapaAsientoPK.setCodigo( retorno.getVehMpaCodigo() );     
-         MapaAsiento asiento = mapaAsientoRepository.findById(mapaAsientoPK).orElse( null );   
-         retorno.setVehMpaDesc(( asiento != null ) ?asiento.getDescripcion():"Sin especificar" );
-         return retorno;
-    }
-
- 
+    } 
 
 }

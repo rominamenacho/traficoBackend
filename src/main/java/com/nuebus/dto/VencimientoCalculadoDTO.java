@@ -11,6 +11,7 @@ public class VencimientoCalculadoDTO implements Serializable{
 	String descNombreCampo;
 	Integer diasAntesVencer;
 	Date fechaVencimiento;
+        String detalle;
 
 	public VencimientoCalculadoDTO() {
 	}
@@ -63,5 +64,18 @@ public class VencimientoCalculadoDTO implements Serializable{
 		this.fechaVencimiento = fechaVencimiento;
 	}
 
+        public String getDetalle() {
+            return detalle;
+        }
+
+        public void setDetalle(String detalle) {
+            this.detalle = detalle;
+        }
+
+        @Override
+        public String toString() {
+            return "VencimientoCalculadoDTO{" + "id=" + id + ", cantidadAnticipacion=" + cantidadAnticipacion + ", nombreCampo=" + nombreCampo + ", descNombreCampo=" + descNombreCampo + ", diasAntesVencer=" + diasAntesVencer + ", fechaVencimiento=" + fechaVencimiento + ", detalle=" + detalle + '}';
+        }             
+        
 	private static final long serialVersionUID = 4827458077889546718L;
 }

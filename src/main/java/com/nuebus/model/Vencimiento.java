@@ -1,7 +1,6 @@
 package com.nuebus.model;
 
 import java.io.Serializable;
-import java.util.GregorianCalendar;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -47,8 +45,8 @@ public class Vencimiento implements Serializable {
     @JoinColumn(name = "tipoVencimiento_id", nullable = false)
     private TipoVencimiento tipoVencimiento;
     
-    @Transient
-    private Integer diasAMostrarDespuesVencido=60;
+    /*@Transient
+    private Integer diasAMostrarDespuesVencido=60;*/
     
 
 	public Long getId() {
@@ -92,33 +90,18 @@ public class Vencimiento implements Serializable {
 	}	
 
 
-	public java.util.Date getFechaControl(){
+	/*public java.util.Date getFechaControl(){
 		 GregorianCalendar fechaControl = new GregorianCalendar();	
 		 fechaControl.add( GregorianCalendar.DATE ,  getCantidadAnticipacion() );		 
     	 return fechaControl.getTime();
-	}
-	
-	/*
-	 public java.util.Date getFechaControl(){
-		 GregorianCalendar fechaControl = new GregorianCalendar();	
-		 fechaControl.add( GregorianCalendar.DATE ,  getCantidadAnticipacion() );    	 
-		 fechaControl.add( GregorianCalendar.DATE ,  - getCantidadPlazoVigencia() );
-    	 return fechaControl.getTime();
-	 }
-	  */
+	}*/
 
+    @Override
+    public String toString() {
+        return "Vencimiento{" + "id=" + id + ", empresa=" + empresa + ", activo=" + activo + ", cantidadAnticipacion=" + cantidadAnticipacion + '}';
+    }
 	
-	public Integer getDiasAMostrarDespuesVencido() {
-		return diasAMostrarDespuesVencido;
-	}	
 	
-	
-	@Override
-	public String toString() {
-		return "Vencimiento [id=" + id + ", empresa=" + empresa + ", activo=" + activo + ", cantidadAnticipacion="
-				+ cantidadAnticipacion + ", tipoVencimiento=" + tipoVencimiento + ", diasAMostrarDespuesVendido="
-				+ diasAMostrarDespuesVencido + "]";
-	}
 
 	@Override
 	public int hashCode() {

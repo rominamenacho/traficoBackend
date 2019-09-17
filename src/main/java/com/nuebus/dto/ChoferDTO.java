@@ -1,6 +1,9 @@
 package com.nuebus.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 import com.nuebus.model.ChoferPK;
 import javax.persistence.EmbeddedId;
 import javax.validation.Valid;
@@ -63,7 +66,7 @@ public class ChoferDTO {
     
     //Set<ChoferIncidenciaDTO> choferIncidencias = new HashSet<>(); 
     
-    
+    List<VencimientoCalculadoDTO> vencimientos = new ArrayList<>();
     
     public String getCho_nombre() {
         return cho_nombre;
@@ -202,6 +205,14 @@ public class ChoferDTO {
 		this.foto = foto;
 	}
 
+	public List<VencimientoCalculadoDTO> getVencimientos() {
+		return vencimientos;
+	}
+
+	public void setVencimientos(List<VencimientoCalculadoDTO> vencimientos) {
+		this.vencimientos = vencimientos;
+	}
+
 	@Override
 	public String toString() {
 		return "ChoferDTO [choferPK=" + choferPK + ", cho_nombre=" + cho_nombre + ", cho_funcion=" + cho_funcion
@@ -210,7 +221,7 @@ public class ChoferDTO {
 				+ cho_observaciones + ", cho_grupo_sanguineo=" + cho_grupo_sanguineo + ", cho_telefono_emergencia="
 				+ cho_telefono_emergencia + ", cho_doc_codigo=" + cho_doc_codigo + ", cho_legajo=" + cho_legajo
 				+ ", cho_fecha_nacimiento=" + cho_fecha_nacimiento + ", cho_estado=" + cho_estado + ", cho_chofer="
-				+ cho_chofer + ", cho_id_aux=" + cho_id_aux + ", foto=" + foto + "]";
+				+ cho_chofer + ", cho_id_aux=" + cho_id_aux + ", foto=" + foto + ", vencimientos=" + vencimientos + "]";
 	}	
     
 }

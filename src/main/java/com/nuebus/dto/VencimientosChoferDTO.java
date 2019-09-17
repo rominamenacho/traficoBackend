@@ -7,21 +7,17 @@ import com.nuebus.model.Vencimiento;
 public class VencimientosChoferDTO {
 	
 	Vencimiento vencimiento;
-	List<ChoferConCarnetsDTO> choferes;
+	List<ChoferDTO> choferes;
 	
 	
 	public VencimientosChoferDTO() {		
-	}
+	}	
 	
-	
-	
-	public VencimientosChoferDTO(Vencimiento vencimiento, List<ChoferConCarnetsDTO> choferes) {
+	public VencimientosChoferDTO(Vencimiento vencimiento, List<ChoferDTO> choferes) {
 		super();
 		this.vencimiento = vencimiento;
 		this.choferes = choferes;
 	}
-
-
 
 	public Vencimiento getVencimiento() {
 		return vencimiento;
@@ -29,10 +25,12 @@ public class VencimientosChoferDTO {
 	public void setVencimiento(Vencimiento vencimiento) {
 		this.vencimiento = vencimiento;
 	}
-	public List<ChoferConCarnetsDTO> getChoferes() {
+
+	public List<ChoferDTO> getChoferes() {
 		return choferes;
 	}
-	public void setChoferes(List<ChoferConCarnetsDTO> choferes) {
+
+	public void setChoferes(List<ChoferDTO> choferes) {
 		this.choferes = choferes;
 	}
 
@@ -40,6 +38,8 @@ public class VencimientosChoferDTO {
 	@Override
 	public String toString() {
 		return "VencimientosChoferDTO [vencimiento=" + vencimiento + ", choferes=" + choferes + "]";
-	}		
+	}	
+	
+	
 	
 }

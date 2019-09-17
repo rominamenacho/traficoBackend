@@ -34,13 +34,11 @@ public class VehiculoDTO{
     private String vehCarroceria = new String();
     @Column (nullable = true )
     @Digits(integer=12, fraction=0)
-    private long vehMovilGps = 0;   
-    @Digits(integer=3, fraction=0)
-    private int vehMpaCodigo = 0;    
-    private java.util.Date vehVerificacionTecnicaVto = null;      
-    private int vehEstado = 0;
+    private long vehMovilGps = 0;
     
-    private String vehMpaDesc = "";    
+    private java.util.Date vehVerificacionTecnicaVto = null;      
+    private int vehEstado = 0;    
+        
     
     List<VencimientoCalculadoDTO> vencimientos = new ArrayList<>();
     
@@ -89,15 +87,7 @@ public class VehiculoDTO{
 
     public void setVehMovilGps(long vehMovilGps) {
         this.vehMovilGps = vehMovilGps;
-    }
-    
-    public int getVehMpaCodigo() {
-        return vehMpaCodigo;
-    }
-
-    public void setVehMpaCodigo(int vehMpaCodigo) {
-        this.vehMpaCodigo = vehMpaCodigo;
-    }
+    }   
 
   
     public java.util.Date getVehVerificacionTecnicaVto() {
@@ -122,15 +112,7 @@ public class VehiculoDTO{
 
     public void setVehEstado(int vehEstado) {
         this.vehEstado = vehEstado;
-    }    
-
-    public String getVehMpaDesc() {
-        return vehMpaDesc;
-    }
-
-    public void setVehMpaDesc(String vehMpaDesc) {
-        this.vehMpaDesc = vehMpaDesc;
-    }
+    }   
 
 	public List<VencimientoCalculadoDTO> getVencimientos() {
 		return vencimientos;
@@ -152,10 +134,9 @@ public class VehiculoDTO{
 	public String toString() {
 		return "VehiculoDTO [vehiculoPK=" + vehiculoPK + ", vehMotor=" + vehMotor + ", vehChasis=" + vehChasis
 				+ ", vehPatente=" + vehPatente + ", vehCarroceria=" + vehCarroceria + ", vehMovilGps=" + vehMovilGps
-				+ ", vehMpaCodigo=" + vehMpaCodigo + ", vehVerificacionTecnicaVto=" + vehVerificacionTecnicaVto
-				+ ", vehEstado=" + vehEstado + ", vehMpaDesc=" + vehMpaDesc + ", vencimientos=" + vencimientos
-				+ ", mapaAsiento=" + mapaAsiento + "]";
-	}	
-
-    
+				+ ", vehVerificacionTecnicaVto=" + vehVerificacionTecnicaVto + ", vehEstado=" + vehEstado
+				+ ", vencimientos=" + vencimientos + ", mapaAsiento=" + mapaAsiento + "]";
+	}
+	
+	
 }

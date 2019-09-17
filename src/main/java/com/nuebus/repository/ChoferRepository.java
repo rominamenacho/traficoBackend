@@ -7,6 +7,7 @@
 
 package com.nuebus.repository;
 
+import com.nuebus.model.Carnet;
 import com.nuebus.model.Chofer;
 import com.nuebus.model.ChoferPK;
 import com.nuebus.vistas.combos.ComboChoferes;
@@ -163,13 +164,7 @@ public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK> {
     public List<Object[]> ocupacionChoferes( String empCodigo, java.util.Date inicio, java.util.Date fin );
     
     
-    @Query( " Select DISTINCT ch from Chofer ch join fetch ch.carnets car "
-    		+ " where ch.choferPK.cho_emp_codigo = :empresa "	
-    	 	+ " and ch.cho_estado = :estadoChofer "
-    		+ " and car.fechaVenc <= :fechaControl ")
-    public List<Chofer> getChoferesConCarnetsVencidos( @Param("empresa") String empresa,
-    											       @Param("estadoChofer") int estadoChofer,
-    											       @Param("fechaControl") Date fechaControl ); 
+  
     
     
     ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -196,6 +191,47 @@ public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK> {
     public Page<Chofer> findPersonalByBusquedaAndEmpresa( @Param(value = "busqueda") String busqueda, 
     													  @Param(value="cho_emp_codigo")String cho_emp_codigo , 
     													  Pageable pageable);   
+    
+    /// Erroneo
+    /*@Query( " Select DISTINCT ch from Chofer ch join fetch ch.carnets car "
+    		+ " where ch.choferPK.cho_emp_codigo = :empresa "	
+    	 	+ " and ch.cho_estado = :estadoChofer "    		
+    		+ " and car.fechaVenc <= :fechaControl ")
+    public List<Chofer> getChoferesConCarnetsVencidos( @Param("empresa") String empresa,
+    											       @Param("estadoChofer") int estadoChofer,    											      
+    											       @Param("fechaControl") Date fechaControl ); */
+    
+    @Query(" Select carnet from Carnet carnet "
+    		+ "	where carnet.chofer.choferPK.cho_emp_codigo = :empresa "
+    		+ "     and  carnet.tipo = :tipo "
+    		+ "  	and  carnet.chofer.cho_estado = :estadoChofer "    		
+    		+ "     and  carnet.fechaVenc <= :fechaControl ")
+    public List<Carnet>  getCarnetsVencidosByTipo( @Param("empresa") String empresa,		       								 
+		       									  @Param("tipo") Integer tipo,
+		       									  @Param("estadoChofer") int estadoChofer,
+		       									  @Param("fechaControl") Date fechaControl );
+    
+    
+    
+    @Query( " Select DISTINCT ch from Chofer ch join fetch ch.carnets car "
+		+ " where ch.choferPK.cho_emp_codigo = :empresa "	
+	 	+ " and ch.cho_estado = :estadoChofer "    		
+		+ " and car.fechaVenc <= :fechaControl ")
+	public List<Chofer> getChoferesConCarnetsVencidos( @Param("empresa") String empresa,
+											       @Param("estadoChofer") int estadoChofer,											       
+											       @Param("fechaControl") Date fechaControl ); 
+	    
+    
+    
+    @Query( " Select DISTINCT ch from Chofer ch join fetch ch.carnets car "
+    		+ " where ch.choferPK.cho_emp_codigo = :empresa "	
+    	 	+ " and ch.cho_estado = :estadoChofer "
+    		+ " and car.tipo = :tipo "
+    		+ " and car.fechaVenc <= :fechaControl ")
+    public List<Chofer> getChoferesConCarnetsVencidosByTipo( @Param("empresa") String empresa,
+    											       @Param("estadoChofer") int estadoChofer,
+    											       @Param("tipo") Integer tipo, 
+    											       @Param("fechaControl") Date fechaControl ); 
     
     
 }

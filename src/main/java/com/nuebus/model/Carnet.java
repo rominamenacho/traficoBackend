@@ -1,23 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.nuebus.model;
 
+import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 /**
  *
@@ -25,27 +21,33 @@ import org.hibernate.annotations.NotFoundAction;
  */
 
 @Entity
-//public class Carnet extends AbstractEntity{    
-public class Carnet extends AbstractEntityVersion{
+@Table(name= "carnets")
+public class Carnet implements Serializable {
+
+    private static final long serialVersionUID = 1L;    
     
-    private static final long serialVersionUID = 1L;
-    
+    @GenericGenerator(
+            name = "carnetsSequenceGenerator",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {
+                @Parameter(name = "sequence_name", value = "carnets_seq")
+                ,
+                    @Parameter(name = "initial_value", value = "1")
+                ,
+                    @Parameter(name = "increment_size", value = "1")
+            }
+    )	
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Carnet_id_seq")
-    @SequenceGenerator(name="Carnet_id_seq", sequenceName = "Carnet_ID_SEQ", allocationSize = 100)
-    private Integer id;
+    @GeneratedValue(generator = "carnetsSequenceGenerator")
+    Long id;     
     
-    int tipo;
+    Integer tipo;
     Date fechaEmision;
     Date fechaVenc;
     String numeroCarnet;    
     String observaciones;
-    
-    
-    /*
-         @NotFound(
-        action = NotFoundAction.IGNORE)
-    */
+       
+   
     
     @ManyToOne( fetch = FetchType.LAZY)
     @NotFound(
@@ -80,15 +82,8 @@ public class Carnet extends AbstractEntityVersion{
     @Override
     public int hashCode() {
         return  String.valueOf(getId()).hashCode();
-    }
+    }    
     
-    public int getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(int tipo) {
-        this.tipo = tipo;
-    }
 
     public Date getFechaEmision() {
         return fechaEmision;
@@ -131,21 +126,31 @@ public class Carnet extends AbstractEntityVersion{
         this.observaciones = observaciones;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
+    
+    
+    public Integer getTipo() {
+            return tipo;
+    }
 
-	@Override
-	public String toString() {
-		return "Carnet [id=" + id + ", tipo=" + tipo + ", fechaEmision=" + fechaEmision + ", fechaVenc=" + fechaVenc
-				+ ", numeroCarnet=" + numeroCarnet + ", observaciones=" + observaciones + "]";
-	}
-   
+    public void setTipo(Integer tipo) {
+            this.tipo = tipo;
+    }
+
+
+    @Override
+    public String toString() {
+            return "Carnet [id=" + id + ", tipo=" + tipo + ", fechaEmision=" + fechaEmision + ", fechaVenc=" + fechaVenc
+                            + ", numeroCarnet=" + numeroCarnet + ", observaciones=" + observaciones + "]";
+    }
+
     
        
 }

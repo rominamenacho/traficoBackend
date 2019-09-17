@@ -49,8 +49,9 @@ public class Vehiculo implements Serializable {
     private String vehCarroceria = new String();
     @Column (nullable = true )
     @Digits(integer=12, fraction=0)
-    private long vehMovilGps = 0;   
-    @Digits(integer=3, fraction=0)
+    private long vehMovilGps = 0;
+    
+    //@Digits(integer=3, fraction=0)
     //private int vehMpaCodigo = 0;
     
     @Column( name= "veh_verificacion_tecnica")
@@ -62,21 +63,15 @@ public class Vehiculo implements Serializable {
     private Set<VehiculoIncidencia> vehiculoIncidencias = new HashSet<>();
     
     
-    /*	@OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumns({
-        @JoinColumn( name = "veh_emp_codigo", referencedColumnName = "MPA_EMP_CODIGO"),
-        @JoinColumn( name = "veh_mpa_codigo",  referencedColumnName = "MPA_EMP_CODIGO")         
+        @JoinColumn( name = "veh_mpa_emp_codigo", referencedColumnName = "MPA_EMP_CODIGO"),
+        @JoinColumn( name = "veh_mpa_codigo",  referencedColumnName = "MPA_CODIGO")         
     })  
-    private MapaAsiento mapaAsiento;*/ 
+    private MapaAsiento mapaAsiento; 
     
     
-    @ManyToOne    
-    @JoinColumns({
-        @JoinColumn( name = "veh_emp_codigo",  referencedColumnName = "MPA_EMP_CODIGO" ),
-        @JoinColumn( name = "veh_mpa_codigo",  referencedColumnName = "MPA_CODIGO" )         
-    })  
-    private MapaAsiento mapaAsiento;
-    
+  
       
     public Vehiculo(){ super(); }
     
@@ -119,15 +114,7 @@ public class Vehiculo implements Serializable {
     public void setVehMovilGps(long vehMovilGps) {
         this.vehMovilGps = vehMovilGps;
     }
-
-    /*public int getVehMpaCodigo() {
-        return vehMpaCodigo;
-    }
-
-    public void setVehMpaCodigo(int vehMpaCodigo) {
-        this.vehMpaCodigo = vehMpaCodigo;
-    }*/
- 
+   
 
     public java.util.Date getVehVerificacionTecnicaVto() {
 		return vehVerificacionTecnicaVto;
@@ -159,23 +146,15 @@ public class Vehiculo implements Serializable {
 
     public void setVehEstado(int vehEstado) {
         this.vehEstado = vehEstado;
-    }      
-	
+    }	
+		
+
 	public MapaAsiento getMapaAsiento() {
 		return mapaAsiento;
 	}
 
 	public void setMapaAsiento(MapaAsiento mapaAsiento) {
 		this.mapaAsiento = mapaAsiento;
-	}
-	
-	
-	@Override
-	public String toString() {
-		return "Vehiculo [vehiculoPK=" + vehiculoPK + ", vehMotor=" + vehMotor + ", vehChasis=" + vehChasis
-				+ ", vehPatente=" + vehPatente + ", vehCarroceria=" + vehCarroceria + ", vehMovilGps=" + vehMovilGps
-				+ ", vehVerificacionTecnicaVto=" + vehVerificacionTecnicaVto + ", vehEstado=" + vehEstado
-				+ ", vehiculoIncidencias=" + vehiculoIncidencias + ", mapaAsiento=" + mapaAsiento + "]";
 	}
 
 	@Override
@@ -245,7 +224,13 @@ public class Vehiculo implements Serializable {
 		return true;
 	}
 
-    
+	@Override
+	public String toString() {
+		return "Vehiculo [vehiculoPK=" + vehiculoPK + ", vehMotor=" + vehMotor + ", vehChasis=" + vehChasis
+				+ ", vehPatente=" + vehPatente + ", vehCarroceria=" + vehCarroceria + ", vehMovilGps=" + vehMovilGps
+				+ ", vehVerificacionTecnicaVto=" + vehVerificacionTecnicaVto + ", vehEstado=" + vehEstado
+				+ ", vehiculoIncidencias=" + vehiculoIncidencias + ", mapaAsiento=" + mapaAsiento + "]";
+	}    
     
    
 }

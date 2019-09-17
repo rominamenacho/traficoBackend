@@ -127,12 +127,13 @@ public interface VehiculoRepository extends JpaRepository< Vehiculo, VehiculoPK>
     /////////////////////////// De acuerdo a los criterios de Vencimiento ////////////////////////////
     
     @Query( "  Select v from Vehiculo v "
-            + "  where v.vehiculoPK.vehEmpCodigo = ?1 "
-            + "    and v.vehEstado =?2 "
-            + "    and vehVerificacionTecnicaVto <= ?3 ")
+            + "  where v.vehiculoPK.vehEmpCodigo = :empresa "
+            + "    and v.vehEstado = :estado "
+            + "    and vehVerificacionTecnicaVto is not null "
+            + "    and vehVerificacionTecnicaVto <= :fechaControl ")
     public List<Vehiculo> getVencimientosByVerificacionTecnica( @Param("empresa") String empresa, 
                                            @Param("estado") Integer estado,
-                                           @Param("fecha") Date fechaControl );   
+                                           @Param("fechaControl") Date fechaControl );   
     
      	
 	@Query( " Select v from Vehiculo v where"

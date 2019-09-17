@@ -3,6 +3,9 @@ package com.nuebus.model;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -34,10 +37,11 @@ public class VehiculoPK  implements Serializable{
     @NotBlank
     @Size( max = 4)
     private String vehEmpCodigo = new String();
+    
     @Column
     @NotNull
     @Digits(integer=4, fraction=0)
-    private Integer vehInterno = 0;
+    private Integer vehInterno = 0;  
     
     public VehiculoPK(){
     

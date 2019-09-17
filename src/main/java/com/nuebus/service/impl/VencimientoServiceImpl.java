@@ -1,21 +1,18 @@
 package com.nuebus.service.impl;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.nuebus.dto.ChoferConCarnetsDTO;
-import com.nuebus.dto.VencimientosChoferDTO;
 import com.nuebus.excepciones.ResourceNotFoundException;
 import com.nuebus.model.TipoVencimiento;
 import com.nuebus.model.Vencimiento;
 import com.nuebus.repository.TipoVencimientoRepository;
 import com.nuebus.repository.VencimientoRepository;
 import com.nuebus.service.VencimientoService;
-import com.nuebus.vencimientos.VencimientosChofer;
-import com.nuebus.vencimientos.VencimientosChoferCarnet;
+
+
 
 @Service
 @Transactional(readOnly = true)
@@ -27,10 +24,7 @@ public class VencimientoServiceImpl implements VencimientoService {
 	VencimientoRepository vencimientoRepository;
 	@Autowired
 	TipoVencimientoRepository tipoVencimientoRepository;
-	@Autowired
-	VencimientosChoferCarnet vencimientosChoferCarnet;
-	@Autowired
-	VencimientosChofer vencimientosChofer;
+	
 
 	@Override
 	public List<Vencimiento> getVencimientos(String empresa) {
@@ -103,40 +97,6 @@ public class VencimientoServiceImpl implements VencimientoService {
 		return vencimientoRepository.findByEmpresaAndNombreEntidad(empresa, nombreEntidad, activo);
 	}
 
-	@Override
-	public List<VencimientosChoferDTO> calcularVencimientosChoferes(String empresa, int estadoChofer) {
-
-		List<VencimientosChoferDTO> vencimientosChofer = new ArrayList<VencimientosChoferDTO>();
-		List<Vencimiento> vencimientos = getVencimientosByEmpresaAndNombreEntidad(empresa,
-				VencimientosChofer.ENTIDAD_CARNET, VENCIMIENTO_ACTIVO);
-		for (Vencimiento venc : vencimientos) {
-
-			if (venc.getTipoVencimiento() != null && venc.getTipoVencimiento().getNombreCampo()
-					.equals(VencimientosChoferCarnet.FECHA_VENC_CAMPO_CARNET)) {
-
-				VencimientosChoferDTO vencimientoChoDTO = vencimientosChoferCarnet.calcularVencimietosChofer(empresa,
-						estadoChofer, venc);
-
-				vencimientosChofer.add(vencimientoChoDTO);
-			}
-
-		}
-		return vencimientosChofer;
-
-	}
-
-	@Override
-	public void calcularVencimietosChofer(String empresa, List<ChoferConCarnetsDTO> choferesDTO) {
-		List<Vencimiento> vencimientos = getVencimientosByEmpresaAndNombreEntidad(empresa,
-				VencimientosChofer.ENTIDAD_CARNET, VENCIMIENTO_ACTIVO);
-
-		for (Vencimiento venc : vencimientos) {
-			if (venc.getTipoVencimiento() != null && venc.getTipoVencimiento().getNombreCampo()
-					.equals(VencimientosChoferCarnet.FECHA_VENC_CAMPO_CARNET)) {
-				vencimientosChoferCarnet.calcularVencimietosChofer(venc, choferesDTO);
-			}
-		}
-
-	}
+	
 
 }
