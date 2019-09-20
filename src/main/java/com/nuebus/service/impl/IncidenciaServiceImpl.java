@@ -58,14 +58,13 @@ public class IncidenciaServiceImpl implements IncidenciaService{
 
     @Transactional(readOnly = false) 
     @Override
-    public Incidencia updateIncidencia(long id, IncidenciaDTO incidenciaDTO)throws Exception {
+    public Incidencia updateIncidencia(long id, IncidenciaDTO incidenciaDTO)throws Exception {   	
         
         Incidencia incidencia = incidenciaRepository.findById(id).orElse( null );
         if (incidencia == null) {
             throw new ResourceNotFoundException(id,"Incidencia no encontrada"); 
         }     
-        incidenciaMapper.mapToEntity(incidenciaDTO, incidencia);   
-        
+        incidenciaMapper.mapToEntity(incidenciaDTO, incidencia);        
         Incidencia incidenciaUpdated = incidenciaRepository.save(incidencia);
         
         return incidenciaUpdated;        
@@ -80,7 +79,7 @@ public class IncidenciaServiceImpl implements IncidenciaService{
         //Map<String, Set<String>> errors = Utilities.validarEntity( incidencia );       
         Map<String, Set<String>> errors = new HashMap<>();
         
-        if( existeCodigo( incidencia.getIn_empresa(), incidencia.getIn_tipo(), incidencia.getCodigo()) ){           
+        if( existeCodigo( incidencia.getEmpresa(), incidencia.getTipo(), incidencia.getCodigo()) ){           
             errors.computeIfPresent( "codigo",( key, value ) -> { value.add( "el codigo especificado ya ha sido ocupado" ); return value; } );
             errors.computeIfAbsent( "codigo", key -> new HashSet<>()).add( "el codigo especificado ya ha sido ocupado" ); 
         } 

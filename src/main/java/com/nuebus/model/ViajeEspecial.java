@@ -163,18 +163,18 @@ public class ViajeEspecial implements Serializable {
 
     public void setChoferViaje(Set<ChoferViaje> ChoferViaje) {
         this.ChoferViaje = ChoferViaje;
-    }   
+    }
 
+        
     public Set<AuxiliarViaje> getAuxiliarViaje() {
-        return AuxiliarViaje;
-    }
+		return AuxiliarViaje;
+	}
 
-    public void setAuxiliarViaje(Set<AuxiliarViaje> AuxiliarViaje) {
-        this.AuxiliarViaje = AuxiliarViaje;
-    }
-    
-    
-    @Override
+	public void setAuxiliarViaje(Set<AuxiliarViaje> auxiliarViaje) {
+		AuxiliarViaje = auxiliarViaje;
+	}
+
+	@Override
     public String toString() {
         return  "id= " + id + ";empCodigo= " + empCodigo + ";agenciaContratante= " + agenciaContratante
                 + ";fechaHoraSalida= " + fechaHoraSalida + ";origen= " + origen + "; destino =  " + destino

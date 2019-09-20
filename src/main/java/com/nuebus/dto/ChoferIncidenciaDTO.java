@@ -54,6 +54,13 @@ public class ChoferIncidenciaDTO{
 
     public void setId(Long id) {
         this.id = id;
-    }   
+    }
+
+	@Override
+	public String toString() {
+		return "ChoferIncidenciaDTO [id=" + id + ", idIncidencia=" + idIncidencia + ", inicio=" + inicio + ", fin="
+				+ fin + "]";
+	}   
+    
     
 }

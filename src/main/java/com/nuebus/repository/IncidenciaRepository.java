@@ -21,18 +21,18 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface IncidenciaRepository extends PagingAndSortingRepository<Incidencia, Long>{
     
     @Query( " Select CASE WHEN COUNT(i) > 0 THEN true ELSE false END from Incidencia i "
-            + " where i.in_empresa  =?1 "
-            + "   and i.in_tipo=?2 "
+            + " where i.empresa  =?1 "
+            + "   and i.tipo=?2 "
             + "   and i.codigo=?3  " )
     public boolean existeCodigoByEmpresayTipo( String empresa, int tipo , String codigo );
 
         
-    @Query("Select i from Incidencia i where i.in_empresa = ?1 ")
+    @Query("Select i from Incidencia i where i.empresa = ?1 ")
     public Page<Incidencia> findIncidenciasByEmpresa(String in_empresa , Pageable pageable);   
     
   
-    @Query(" Select new com.nuebus.vistas.combos.Combo(i.id, i.in_descripcion) "
-           + " from Incidencia i where i.in_empresa = ?1 and i.in_tipo = ?2 ")
+    @Query(" Select new com.nuebus.vistas.combos.Combo(i.id, i.descripcion) "
+           + " from Incidencia i where i.empresa = ?1 and i.tipo = ?2 ")
     public ArrayList<Combo> findIncidenciasByEmpresayTipo(String in_empresa , int in_tipo);       
     
 }

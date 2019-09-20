@@ -5,12 +5,17 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.nuebus.dto.VencimientosChoferDTO;
+import com.nuebus.dto.VencimientosVehiculoDTO;
 import com.nuebus.excepciones.ResourceNotFoundException;
 import com.nuebus.model.TipoVencimiento;
 import com.nuebus.model.Vencimiento;
 import com.nuebus.repository.TipoVencimientoRepository;
 import com.nuebus.repository.VencimientoRepository;
 import com.nuebus.service.VencimientoService;
+import com.nuebus.vencimientos.choferes.VencimientoChoferService;
+import com.nuebus.vencimientos.vehiculos.VencimientoVehiculoService;
 
 
 
@@ -24,6 +29,13 @@ public class VencimientoServiceImpl implements VencimientoService {
 	VencimientoRepository vencimientoRepository;
 	@Autowired
 	TipoVencimientoRepository tipoVencimientoRepository;
+	
+    @Autowired
+	VencimientoVehiculoService vencimientoVehiculoService;
+    
+    @Autowired
+    VencimientoChoferService vencimientoChoferService;
+
 	
 
 	@Override
@@ -95,6 +107,19 @@ public class VencimientoServiceImpl implements VencimientoService {
 	public List<Vencimiento> getVencimientosByEmpresaAndNombreEntidad(String empresa, String nombreEntidad,
 			boolean activo) {
 		return vencimientoRepository.findByEmpresaAndNombreEntidad(empresa, nombreEntidad, activo);
+	}
+
+	@Override
+	public List<VencimientosVehiculoDTO> getVehiculosConVencimientos(String vehEmpCodigo, int vehEstado) {
+		return vencimientoVehiculoService.calcularAllVencimientosVehiculos( vehEmpCodigo, vehEstado);		
+	}
+
+	@Override
+	public List<VencimientosChoferDTO> getChoferesConVencimientos(String cho_emp_codigo, int cho_estado) {
+		 List<VencimientosChoferDTO> vencimientosRespuesta = vencimientoChoferService
+                 .calcularVencimientos( cho_emp_codigo, cho_estado );
+		 
+		 return vencimientosRespuesta;
 	}
 
 	

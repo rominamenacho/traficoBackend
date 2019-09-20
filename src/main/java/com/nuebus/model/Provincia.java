@@ -1,5 +1,6 @@
 package com.nuebus.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,8 +13,11 @@ import javax.persistence.Table;
 
 @Entity 
 @Table(name = "Provincias") 
-public class Provincia {
-    @Id
+public class Provincia implements Serializable{	
+
+	private static final long serialVersionUID = 1L;
+	
+	@Id
     int proCodigo;       
     String proNombre;
 

@@ -12,8 +12,11 @@ import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.hibernate.annotations.Parameter;
 
 /**
  *
@@ -24,12 +27,21 @@ import org.hibernate.annotations.NotFoundAction;
 @Table(name="chofer_viaje_esp")
 public class ChoferViaje {
     
-      
+
+     @GenericGenerator(
+            name = "choferViajesSequenceGenerator",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {
+                @Parameter(name = "sequence_name", value = "CHOFER_VIAJE_ID_SEQ")
+                ,
+                    @Parameter(name = "initial_value", value = "1")
+                ,
+                    @Parameter(name = "increment_size", value = "1")
+            }
+    )	
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CHOFER_VIAJE_ID_SEQ")
-    @SequenceGenerator(name="CHOFER_VIAJE_ID_SEQ", sequenceName = "CHOFER_VIAJE_ID_SEQ", allocationSize = 100)
-    private Long id;
-       
+    @GeneratedValue(generator = "choferViajesSequenceGenerator")
+    Long id;       
         
     java.util.Date inicio;
     java.util.Date fin;

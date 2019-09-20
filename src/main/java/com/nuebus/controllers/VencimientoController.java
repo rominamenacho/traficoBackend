@@ -3,6 +3,8 @@ package com.nuebus.controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,8 @@ import com.nuebus.annotations.Descripcion;
 import com.nuebus.annotations.DescripcionClase;
 import com.nuebus.dto.VencimientosChoferDTO;
 import com.nuebus.dto.VencimientosVehiculoDTO;
+import com.nuebus.model.Chofer;
+import com.nuebus.model.Vehiculo;
 import com.nuebus.model.Vencimiento;
 import com.nuebus.service.VencimientoService;
 
@@ -37,15 +41,8 @@ public class VencimientoController {
     final static Logger LOG = LoggerFactory.getLogger(VencimientoController.class);
 
     @Autowired
-    VencimientoService vencimientoService;
-   
-    @Autowired
-    VencimientoVehiculoService vencimientoVehiculoService;
-
-    @Autowired
-    VencimientoChoferService vencimientoChoferService;
-
-
+    VencimientoService vencimientoService; 
+    
     @Descripcion(value="Gestionar Conf Vencimientos",permission="ROLE_CONF_VENCIMIENTOS_LISTAR")
     @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_CONF_VENCIMIENTOS_LISTAR'))")
     @RequestMapping(value = "/vencimientos/empresa/{empresa}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -82,23 +79,60 @@ public class VencimientoController {
     @Descripcion(value="Listar Vencimientos",permission="ROLE_VENCIMIENTOS_LISTAR")
     @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_VENCIMIENTOS_LISTAR') or hasRole('ROLE_CHOFERES_LISTAR'))")
     @GetMapping(value = "/vencimientos/empresa/{cho_emp_codigo}/estado/{cho_estado}/choferes" )
-    public ResponseEntity<Object > getChoferesConVencimientos( @PathVariable String cho_emp_codigo, @PathVariable int cho_estado ) {       
+    @ResponseStatus( code = HttpStatus.OK)
+    public List<VencimientosChoferDTO> getChoferesConVencimientos( @PathVariable String cho_emp_codigo, @PathVariable int cho_estado ) {       
 
-         List<VencimientosChoferDTO> vencimientosRespuesta = vencimientoChoferService
-                                                               .calcularVencimientos( cho_emp_codigo, cho_estado );                
-          return new ResponseEntity<>( vencimientosRespuesta, HttpStatus.OK );
+         List<VencimientosChoferDTO> vencimientosRespuesta = vencimientoService
+                                                               .getChoferesConVencimientos( cho_emp_codigo, cho_estado );                
+          return vencimientosRespuesta;
     }
 
 
     @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_VENCIMIENTOS_LISTAR') or hasRole('ROLE_UNIDADES_LISTAR'))")
     @GetMapping("/vencimientos/empresa/{vehEmpCodigo}/estado/{vehEstado}/vehiculos" )
     @ResponseStatus( code = HttpStatus.OK)
-    public List<VencimientosVehiculoDTO> getVehiculosConVencimientos(@PathVariable String vehEmpCodigo,  @PathVariable int vehEstado ) {        
-          //List<VehiculoDTO> vehiculos = vehiculoService.getVehiculosConVencimientos( vehEmpCodigo, vehEstado );
-          List<VencimientosVehiculoDTO> vencVehiculo = vencimientoVehiculoService.calcularAllVencimientosVehiculos( vehEmpCodigo, 
-                                                                                                                                                                                                                  vehEstado);
+    public List<VencimientosVehiculoDTO> getVehiculosConVencimientos(@PathVariable String vehEmpCodigo,  @PathVariable int vehEstado ) {       
+
+          List<VencimientosVehiculoDTO> vencVehiculo
+          = vencimientoService.getVehiculosConVencimientos( vehEmpCodigo, vehEstado);
           return  vencVehiculo;
     }
 	    
+    
+    @GetMapping("/vencimientos/empresa/{empresa}/existenVencimientos" )
+    @ResponseStatus( code = HttpStatus.OK)
+    public boolean existenVencimientos(@PathVariable String empresa ) {
+    	
+          return  existenVencimientosHabilitados( empresa )
+        		  && ( existenVencimientosVehiculos( empresa )
+        				  ||  existenVencimientosChoferes( empresa ) );
+    }
+    
+    private boolean existenVencimientosHabilitados( String empresa ) {
+    	
+    	List<Vencimiento> vencimientos = vencimientoService.getVencimientos(empresa)
+				   .stream().filter( v -> v.getActivo() == true ).collect( Collectors.toList() );
+
+    	return  vencimientos != null && !vencimientos.isEmpty();
+    	
+    }
+    
+    private boolean existenVencimientosVehiculos( String empresa ) {
+    	
+    	List<VencimientosVehiculoDTO> vencimientos = vencimientoService.getVehiculosConVencimientos(empresa ,
+    																		Vehiculo.HABILITADO);				   
+    	return  vencimientos != null && !vencimientos.isEmpty();    	
+    }
+    
+    
+    private boolean existenVencimientosChoferes( String empresa ) {
+    	
+    	   List<VencimientosChoferDTO> vencimientos = vencimientoService
+                   .getChoferesConVencimientos( empresa, Chofer.HABILITADO );  		   
+    	return  vencimientos != null && !vencimientos.isEmpty();    	
+    }
+    
+    
+   
 
 }

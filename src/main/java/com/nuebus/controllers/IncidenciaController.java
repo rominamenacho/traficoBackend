@@ -71,8 +71,8 @@ public class IncidenciaController {
     @PreAuthorize("(hasRole('ROLE_ADMIN') or hasRole('ROLE_INCIDENCIAS_LISTAR'))")
     @PostMapping(  "/incidencias" )  
     @ResponseStatus( HttpStatus.CREATED )
-    public IncidenciaDTO createIncidencia(@Valid @RequestBody IncidenciaDTO incidenciaDTO) throws Exception{                      
-        Incidencia incidencia = incidenciaMapper.toEntity(incidenciaDTO);    
+    public IncidenciaDTO createIncidencia(@Valid @RequestBody IncidenciaDTO incidenciaDTO) throws Exception{           
+        Incidencia incidencia = incidenciaService.saveIncidencia( incidenciaMapper.toEntity(incidenciaDTO) );
         return incidenciaMapper.toDTO( incidencia );                   
     }
 

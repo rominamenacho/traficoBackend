@@ -3,45 +3,66 @@ package com.nuebus.model;
 
 import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
+import com.nuebus.enumeraciones.TipoIncidencia;
+
 
 /**
  *
  * @author Usuario
  */
 @Entity
-public class Incidencia extends AbstractEntityVersion{
-    
-    private static final long serialVersionUID = 1L;
+@Table( name="Incidencias" )
+public class Incidencia extends AbstractEntityVersion{    
     
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_incidencia_idincidencia")
-    @SequenceGenerator(name="seq_incidencia_idincidencia", sequenceName = "seq_incidencia_idincidencia", allocationSize = 100)
+    @GenericGenerator(
+	      name = "incidenciaSequenceGenerator",
+	      strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+	      parameters = {
+	        @Parameter(name = "sequence_name", value = "incidencia_seq"),
+	        @Parameter(name = "initial_value", value = "5"),
+	        @Parameter(name = "increment_size", value = "1")
+	        }
+    )    
+    @GeneratedValue( generator = "incidenciaSequenceGenerator" )  
     private Long id;    
 
     @Size( max = 60)
-    private String  in_descripcion;
+    @Column( name = "in_descripcion", length = 60 )  
+    private String  descripcion;
+    
+    
     @Digits(integer=1, fraction=0)
-    private Integer in_tipo;
-    @Size( max = 60)
-    private String  in_color;
-    @NotNull
-    @NotBlank
+    @Column( name="in_tipo" )
+    private Integer tipo;
+    
+    @Size( max = 40)
+    @Column( name="in_color" , length = 40 )
+    private String  color;
+    
+    @NotNull    
     @Size( max = 4)
-    private String  in_empresa;
-    @NotBlank
+    @Column( name = "in_empresa", nullable = false, length = 4)
+    private String  empresa ;
+    
     @Size( max = 10, message = "Debe especificar un codigo.")
+    @Column( name="codigo", length = 10 )
     private String codigo; 
+    
+    private Boolean activo; 
     
     public Incidencia(){}
     
@@ -76,66 +97,73 @@ public class Incidencia extends AbstractEntityVersion{
         this.id = id;
     }    
 
-    public String getIn_descripcion() {
-        return in_descripcion;
-    }
-
-    public void setIn_descripcion(String in_descripcion) {
-        this.in_descripcion = in_descripcion;
-    }
-
-    public Integer getIn_tipo() {
-        return in_tipo;
-    }
-
-    public void setIn_tipo(Integer in_tipo) {
-        this.in_tipo = in_tipo;
-    }
-    
-      public String getIn_tipoString() {
-        String in_tipoString="";
-        /*0 unidades , 1 choferes */
-        if(in_tipo==0){
-        in_tipoString= "Unidades";
-        }else if(in_tipo ==1){
-          in_tipoString= "Choferes";
+   
+    public String getTipoString() {
+        String in_tipoString="";        
+        if( tipo == TipoIncidencia.UNIDAD.tipo ) {
+        	in_tipoString= TipoIncidencia.UNIDAD.descripcion;
+        }else if( tipo == TipoIncidencia.CHOFER.tipo ){
+           in_tipoString= TipoIncidencia.CHOFER.descripcion;
         }
         return in_tipoString;
-    }
+    }  
 
-        public String getIn_color() {
-        return in_color;
-    }
+    public String getEmpresa() {
+		return empresa;
+	}
 
-    public void setIn_color(String in_color) {
-        this.in_color = in_color;
-    }
+	public void setEmpresa(String empresa) {
+		this.empresa = empresa;
+	}
 
-    public String getIn_empresa() {
-        return in_empresa;
-    }
-
-    public void setIn_empresa(String in_empresa) {
-        if(!in_empresa.equals("")){
-        this.in_empresa = in_empresa;
-        }else{
-        //this.userContext.getEmpresa();
-        }        
-    }
-
-    public String getCodigo() {
+	public String getCodigo() {
         return codigo;
     }
 
     public void setCodigo(String codigo) {
         this.codigo = codigo;
-    }
-    
-    public String toString(){
+    }    
         
-        return  "id="+ id + ";in_descripcion=" +  in_descripcion + ";in_tipo=" + in_tipo 
-                + ";in_color="+ in_color + ";in_empresa=" + in_empresa + ";codigo=" + codigo;
-    
-    }
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public Integer getTipo() {
+		return tipo;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	public void setTipo(Integer tipo) {
+		this.tipo = tipo;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+	
+	
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+
+	
+	@Override
+	public String toString() {
+		return "Incidencia [id=" + id + ", descripcion=" + descripcion + ", tipo=" + tipo + ", color=" + color
+				+ ", empresa=" + empresa + ", codigo=" + codigo + ", activo=" + activo + "]";
+	}
+
+	private static final long serialVersionUID = 1L;
     
 }

@@ -29,7 +29,7 @@ public class Group{
             parameters = {
                 @Parameter(name = "sequence_name", value = "Group_seq")
                 ,
-                    @Parameter(name = "initial_value", value = "1")
+                    @Parameter(name = "initial_value", value = "3")
                 ,
                     @Parameter(name = "increment_size", value = "1")
             }

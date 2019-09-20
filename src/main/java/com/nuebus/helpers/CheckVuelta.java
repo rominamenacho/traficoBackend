@@ -90,7 +90,7 @@ public abstract class CheckVuelta {
         
         incConflictos.forEach( i -> {
             Incidencia incidencia = incidenciaService.getIncidencia( i.getIdIncidencia() );
-            String detalle = " Con Incidencia " + incidencia.getIn_descripcion() 
+            String detalle = " Con Incidencia " + incidencia.getDescripcion() 
                            + " Desde "  + Utilities.dateToString( i.getInicio(), Utilities.FORMAT_DATEHOUR)
                            + " Hasta " + Utilities.dateToString( i.getFin(), Utilities.FORMAT_DATEHOUR);
             addError( sujeto, detalle  );                

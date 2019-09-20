@@ -153,7 +153,7 @@ public class ChoferServiceImpl implements ChoferService{
             ChoferIncidencia choIncid;            
             List<ChoferIncidencia> lista = new ArrayList<>();        
             
-            for( ChoferIncidenciaDTO chInc: incidencias  ){
+            for( ChoferIncidenciaDTO chInc: incidencias  ){           	
                     
                 choIncid = new ChoferIncidencia();          
                 choIncid.setId(chInc.getId() );               

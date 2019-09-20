@@ -14,15 +14,17 @@ import javax.persistence.Table;
 @Entity
 @Table( name="escalas")
 public class Escala implements Serializable{
-    
-  @Id  
-  String  escCodigo;
-  String  escNombre;
-  int escProCodigo;
-  
-  public Escala(){
-  
-  }
+
+	private static final long serialVersionUID = 1L;
+	
+	@Id  
+	String  escCodigo;
+	String  escNombre;
+	int escProCodigo;
+	  
+	public Escala(){
+	  
+	}
 
     public String getEscCodigo() {
         return escCodigo;
