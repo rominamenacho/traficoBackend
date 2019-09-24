@@ -36,7 +36,6 @@ public class Chofer implements Serializable{
     public static final int SEGUNDO_CHOFER = 2;
     public static final int PRIMER_AUX = 3;
     public static final int SEGUNDO_AUX = 4;
-
     
     public static final int HABILITADO = 0;
     public static final int DESHABILITADO = 1;   
@@ -45,46 +44,72 @@ public class Chofer implements Serializable{
     @Valid
     @EmbeddedId
     private ChoferPK choferPK;
+    
     @NotBlank
     @NotNull
     @Size(max = 40)
-    private String cho_nombre = new String();
+    @Column( name="cho_nombre", length = 40 )
+    private String nombre = new String();
+    
     @Size(max = 60)
-    private String cho_funcion = new String();
+    @Column( name="cho_funcion", length = 60 )
+    private String funcion = new String();
     
     //@NotBlank
     @Size(max = 50)
-    private String cho_telefono = new String();
+    @Column(name="cho_telefono", length=50 )
+    private String telefono = new String();
+    
     @NotBlank    
     @Size(max = 11)
-    private String cho_documento = new String();
+    @Column( name="cho_documento", length = 11 )
+    private String documento = new String();
+    
     @Size(max = 300)
-    private String cho_direccion = new String();    
+    @Column( name = "cho_direccion", length = 300)
+    private String direccion = new String(); 
+    
     @Size(max = 20)
-    private String cho_codigo_postal = new String();    
+    @Column( name ="cho_codigo_postal", length = 20 )
+    private String codigoPostal = new String();    
+    
     @Size(max = 255)
-    private String cho_observaciones = new String();
+    @Column( name = "cho_observaciones", length = 255 )
+    private String observaciones = new String();
+    
     @Size(max = 50)
-    private String cho_grupo_sanguineo = new String();
+    @Column( name = "cho_grupo_sanguineo", length = 50  )
+    private String grupoSanguineo = new String();
     
     //@NotBlank
     @Size(max = 50)
-    private String cho_telefono_emergencia = new String();
+    @Column( name="cho_telefono_emergencia", length = 50)
+    private String telefonoEmergencia = new String();
     
     @Digits(integer = 2,fraction = 0)
-    private int cho_doc_codigo = 0;        
-    @Digits(integer = 10,fraction = 0)
-    private long cho_legajo;        
-    private java.util.Date cho_fecha_nacimiento = null;    
-    @Digits(integer = 1,fraction = 0)
-    private int cho_estado = 0;
-    @Digits(integer = 1,fraction = 0)
-    private int cho_chofer = 0; /*0 es chofer, 1 es auxiliar*/
+    @Column( name= "cho_doc_codigo")
+    private int codigoDoc = 0;        
     
-    private Integer cho_id_aux;
+    @Digits(integer = 10,fraction = 0)
+    @Column( name="cho_legajo" )
+    private long legajo;        
+    
+    @Column( name="cho_fecha_nacimiento")
+    private java.util.Date fechaNacimiento = null;
+    
+    @Digits(integer = 1,fraction = 0)
+    @Column( name="cho_estado")
+    private int estado = 0;
+    
+    @Digits(integer = 1,fraction = 0)
+    @Column( name="cho_chofer" )
+    private int tipoChofer = 0; /*0 es chofer, 1 es auxiliar*/
+    
+    @Column(name="cho_id_aux")
+    private Integer idAux;
     
     @Size(max = 255)
-    @Column(name="cho_foto")
+    @Column( name="cho_foto", length = 255 )
     private String foto;
     
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "chofer", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -96,10 +121,10 @@ public class Chofer implements Serializable{
     
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "chofer", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<ChoferViaje> ChoferViaje = new HashSet<>(); 
+    Set<ChoferViaje> choferViaje = new HashSet<>(); 
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "chofer", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<ChoferViaje> AuxiliarViaje = new HashSet<>(); 
+    Set<ChoferViaje> auxiliarViaje = new HashSet<>(); 
     
     public Chofer(){}
     
@@ -109,122 +134,8 @@ public class Chofer implements Serializable{
 
     public void setChoferIncidencias(Set<ChoferIncidencia> choferIncidencias) {
         this.choferIncidencias = choferIncidencias;
-    }
-    
-    public String getCho_nombre() {
-        return cho_nombre;
-    }
-
-    public void setCho_nombre(String cho_nombre) {
-        this.cho_nombre = cho_nombre;
-    }
-    
-
-    public String getCho_funcion() {
-        return cho_funcion;
-    }
-
-    public void setCho_funcion(String cho_funcion) {
-        this.cho_funcion = cho_funcion;
-    }
-
-    public String getCho_telefono() {
-        return cho_telefono;
-    }
-
-    public void setCho_telefono(String cho_telefono) {
-        this.cho_telefono = cho_telefono;
-    }
-
-    public String getCho_documento() {
-        return cho_documento;
-    }
-
-    public void setCho_documento(String cho_documento) {
-        this.cho_documento = cho_documento;
-    }
-
-    public String getCho_direccion() {
-        return cho_direccion;
-    }
-
-    public void setCho_direccion(String cho_direccion) {
-        this.cho_direccion = cho_direccion;
-    }
-
-    public String getCho_codigo_postal() {
-        return cho_codigo_postal;
-    }
-
-    public void setCho_codigo_postal(String cho_codigo_postal) {
-        this.cho_codigo_postal = cho_codigo_postal;
-    }
-
-    public String getCho_observaciones() {
-        return cho_observaciones;
-    }
-
-    public void setCho_observaciones(String cho_observaciones) {
-        this.cho_observaciones = cho_observaciones;
-    }
-
-    public String getCho_grupo_sanguineo() {
-        return cho_grupo_sanguineo;
-    }
-
-    public void setCho_grupo_sanguineo(String cho_grupo_sanguineo) {
-        this.cho_grupo_sanguineo = cho_grupo_sanguineo;
-    }
-
-    public String getCho_telefono_emergencia() {
-        return cho_telefono_emergencia;
-    }
-
-    public void setCho_telefono_emergencia(String cho_telefono_emergencia) {
-        this.cho_telefono_emergencia = cho_telefono_emergencia;
-    }
-
-    public int getCho_doc_codigo() {
-        return cho_doc_codigo;
-    }
-
-    public void setCho_doc_codigo(int cho_doc_codigo) {
-        this.cho_doc_codigo = cho_doc_codigo;
-    }
-
-    public long getCho_legajo() {
-        return cho_legajo;
-    }
-
-    public void setCho_legajo(long cho_legajo) {
-        this.cho_legajo = cho_legajo;
-    }
-
-    public Date getCho_fecha_nacimiento() {
-        return cho_fecha_nacimiento;
-    }
-
-    public void setCho_fecha_nacimiento(Date cho_fecha_nacimiento) {
-        this.cho_fecha_nacimiento = cho_fecha_nacimiento;
-    }   
-
-    public int getCho_estado() {
-        return cho_estado;
     }    
-
-    public Integer getCho_id_aux() {
-		return cho_id_aux;
-	}
-
-	public void setCho_id_aux(Integer cho_id_aux) {
-		this.cho_id_aux = cho_id_aux;
-	}
-
-	public void setCho_estado(int cho_estado) {
-        this.cho_estado = cho_estado;
-    }
-          
-  
+    
 
     public ChoferPK getChoferPK() {
         return choferPK;
@@ -232,33 +143,137 @@ public class Chofer implements Serializable{
 
     public void setChoferPK(ChoferPK choferPK) {
         this.choferPK = choferPK;
-    } 
-
-    public Set<ChoferViaje> getChoferViaje() {
-        return ChoferViaje;
     }
-
-    public void setChoferViaje(Set<ChoferViaje> ChoferViaje) {
-        this.ChoferViaje = ChoferViaje;
-    }  
-
-    public int getCho_chofer() {
-        return cho_chofer;
-    }
-
-    public void setCho_chofer(int cho_chofer) {
-        this.cho_chofer = cho_chofer;
-    }   
-
-    public Set<ChoferViaje> getAuxiliarViaje() {
-        return AuxiliarViaje;
-    }
-
-    public void setAuxiliarViaje(Set<ChoferViaje> AuxiliarViaje) {
-        this.AuxiliarViaje = AuxiliarViaje;
-    }
+   
     
-    
+	public String getNombre() {
+		return nombre;
+	}
+
+	public String getFuncion() {
+		return funcion;
+	}
+
+	public String getTelefono() {
+		return telefono;
+	}
+
+	public String getDocumento() {
+		return documento;
+	}
+
+	public String getDireccion() {
+		return direccion;
+	}
+
+	public String getCodigoPostal() {
+		return codigoPostal;
+	}
+
+	public String getObservaciones() {
+		return observaciones;
+	}
+
+	public String getGrupoSanguineo() {
+		return grupoSanguineo;
+	}
+
+	public String getTelefonoEmergencia() {
+		return telefonoEmergencia;
+	}
+
+	public int getCodigoDoc() {
+		return codigoDoc;
+	}
+
+	public long getLegajo() {
+		return legajo;
+	}
+
+	public java.util.Date getFechaNacimiento() {
+		return fechaNacimiento;
+	}
+
+	public int getEstado() {
+		return estado;
+	}
+
+	public int getTipochofer() {
+		return tipoChofer;
+	}
+
+	public Integer getIdAux() {
+		return idAux;
+	}
+
+	public Set<ChoferViaje> getAuxiliarViaje() {
+		return auxiliarViaje;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public void setFuncion(String funcion) {
+		this.funcion = funcion;
+	}
+
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
+
+	public void setDocumento(String documento) {
+		this.documento = documento;
+	}
+
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
+	}
+
+	public void setCodigoPostal(String codigoPostal) {
+		this.codigoPostal = codigoPostal;
+	}
+
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
+	}
+
+	public void setGrupoSanguineo(String grupoSanguineo) {
+		this.grupoSanguineo = grupoSanguineo;
+	}
+
+	public void setTelefonoEmergencia(String telefonoEmergencia) {
+		this.telefonoEmergencia = telefonoEmergencia;
+	}
+
+	public void setCodigoDoc(int codigoDoc) {
+		this.codigoDoc = codigoDoc;
+	}
+
+	public void setLegajo(long legajo) {
+		this.legajo = legajo;
+	}
+
+	public void setFechaNacimiento(java.util.Date fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
+	}
+
+	public void setEstado(int estado) {
+		this.estado = estado;
+	}
+
+	public void setTipochofer(int tipochofer) {
+		this.tipoChofer = tipochofer;
+	}
+
+	public void setIdAux(Integer idAux) {
+		this.idAux = idAux;
+	}
+
+	public void setAuxiliarViaje(Set<ChoferViaje> auxiliarViaje) {
+		this.auxiliarViaje = auxiliarViaje;
+	}
+
 	public String getFoto() {
 		return foto;
 	}
@@ -275,19 +290,24 @@ public class Chofer implements Serializable{
 		this.carnets = carnets;
 	}
 
+	public Set<ChoferViaje> getChoferViaje() {
+		return choferViaje;
+	}
+
+	public void setChoferViaje(Set<ChoferViaje> choferViaje) {
+		this.choferViaje = choferViaje;
+	}
+
 	@Override
 	public String toString() {
-		return "Chofer [choferPK=" + choferPK + ", cho_nombre=" + cho_nombre + ", cho_funcion=" + cho_funcion
-				+ ", cho_telefono=" + cho_telefono + ", cho_documento=" + cho_documento + ", cho_direccion="
-				+ cho_direccion + ", cho_codigo_postal=" + cho_codigo_postal + ", cho_observaciones="
-				+ cho_observaciones + ", cho_grupo_sanguineo=" + cho_grupo_sanguineo + ", cho_telefono_emergencia="
-				+ cho_telefono_emergencia + ", cho_doc_codigo=" + cho_doc_codigo + ", cho_legajo=" + cho_legajo
-				+ ", cho_fecha_nacimiento=" + cho_fecha_nacimiento + ", cho_estado=" + cho_estado + ", cho_chofer="
-				+ cho_chofer + ", cho_id_aux=" + cho_id_aux + ", foto=" + foto + ", carnets=" + carnets
-				+ ", choferIncidencias=" + choferIncidencias + ", ChoferViaje=" + ChoferViaje + ", AuxiliarViaje="
-				+ AuxiliarViaje + "]";
+		return "Chofer [choferPK=" + choferPK + ", nombre=" + nombre + ", funcion=" + funcion + ", telefono=" + telefono
+				+ ", documento=" + documento + ", direccion=" + direccion + ", codigoPostal=" + codigoPostal
+				+ ", observaciones=" + observaciones + ", grupoSanguineo=" + grupoSanguineo + ", telefonoEmergencia="
+				+ telefonoEmergencia + ", codigoDoc=" + codigoDoc + ", legajo=" + legajo + ", fechaNacimiento="
+				+ fechaNacimiento + ", estado=" + estado + ", tipochofer=" + tipoChofer + ", idAux=" + idAux + ", foto="
+				+ foto + ", carnets=" + carnets + "]";
 	}
   
-  
+    
     
 }

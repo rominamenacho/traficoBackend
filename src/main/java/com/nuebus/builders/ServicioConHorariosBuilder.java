@@ -185,9 +185,9 @@ public class ServicioConHorariosBuilder {
 		 ChoferDTO choferDTO = getChofer( choferEtapasDTO.getChoferPK() );
 		 
 		 if ( choferDTO != null ) {
-			 choferEtapasDTO.setNombre( choferDTO.getCho_nombre() );			 
-			 choferEtapasDTO.setTipoChofer(choferDTO.getCho_chofer());         
-			 choferEtapasDTO.setIdAux( choferDTO.getCho_id_aux() );
+			 choferEtapasDTO.setNombre( choferDTO.getNombre() );			 
+			 choferEtapasDTO.setTipoChofer(choferDTO.getTipoChofer());         
+			 choferEtapasDTO.setIdAux( choferDTO.getIdAux() );
 		     String descTipo = ( choferEtapasDTO.getTipoChofer() == CHOFER )? "(CHO)":"(AUX)";
 		     choferEtapasDTO.setNombreConTipo( choferEtapasDTO.getIdAux() + descTipo + choferEtapasDTO.getNombre() );		         
 		 }		 

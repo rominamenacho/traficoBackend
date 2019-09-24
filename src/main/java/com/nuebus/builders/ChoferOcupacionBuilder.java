@@ -41,7 +41,7 @@ public class ChoferOcupacionBuilder {
        String descTipo; 
        for( Object[] obj: listaObj  ){
            choferPK =  buildChoferPK( ((String) obj[0]).trim(),( (BigDecimal) obj[1]).intValue() ); 
-           choferPKStr = choferPK.getCho_emp_codigo() + String.valueOf( choferPK.getCho_codigo() ) ;
+           choferPKStr = choferPK.getEmpCodigo() + String.valueOf( choferPK.getCodigo() ) ;
            
            choferOcup = new ChoferOcupacionDTO();
            choferOcup.setChoferPK(  choferPK  );

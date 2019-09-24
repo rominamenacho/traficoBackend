@@ -130,7 +130,7 @@ public class DiagramacionController {
     public ResponseEntity<List<ChoferesPKDet>> finAllChoferes( @PathVariable String idEmpresa ) {             
         
         Page<ChoferDTO> lista = choferService.findPersonalByEmpresa( null, idEmpresa );
-        List<ChoferesPKDet> listaCho = lista.getContent().stream().map( cho -> new ChoferesPKDet( cho.getChoferPK(), cho.getCho_nombre() ) )
+        List<ChoferesPKDet> listaCho = lista.getContent().stream().map( cho -> new ChoferesPKDet( cho.getChoferPK(), cho.getNombre() ) )
                 .collect( Collectors.toList() );     
         return new ResponseEntity<>(listaCho, HttpStatus.OK);
         

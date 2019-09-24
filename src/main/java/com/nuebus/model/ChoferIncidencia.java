@@ -109,8 +109,8 @@ public class ChoferIncidencia implements Serializable{
     
     public String toString(){
         
-        return "chofer.getChoferPK().getCho_emp_codigo()= " + chofer.getChoferPK().getCho_emp_codigo()
-         +  "; chofer.getChoferPK().getCho_codigo()= " + chofer.getChoferPK().getCho_codigo()
+        return "chofer.getChoferPK().getCho_emp_codigo()= " + chofer.getChoferPK().getEmpCodigo()
+         +  "; chofer.getChoferPK().getCho_codigo()= " + chofer.getChoferPK().getCodigo()
          +  ";incidencia.getId()= " + incidencia.getId() 
          +  ";inicio= " + inicio + ";fin=" + inicio;    
     }

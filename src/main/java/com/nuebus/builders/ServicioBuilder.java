@@ -99,8 +99,8 @@ public class ServicioBuilder {
          ChoferEtapasDTO chofer = new ChoferEtapasDTO();         
          
          ChoferPK choferPK = new ChoferPK();
-         choferPK.setCho_emp_codigo( (String)obj[0]  );
-         choferPK.setCho_codigo(((BigDecimal) obj[4]).intValue());       
+         choferPK.setEmpCodigo( (String)obj[0]  );
+         choferPK.setCodigo(((BigDecimal) obj[4]).intValue());       
          chofer.setChoferPK(choferPK);
          
          chofer.setEtaDesde( ((BigDecimal) obj[8]).intValue() );

@@ -188,7 +188,7 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
         boolean tieneErrores = false;
         for( ChoferViaje unChoViaje: lista  ){
             WrapChoferPKError.ChoferPKError choErr = (new WrapChoferPKError()).new ChoferPKError();
-            claveChofer =  unChoViaje.getChofer().getChoferPK().getCho_emp_codigo() + unChoViaje.getChofer().getChoferPK().getCho_codigo();            
+            claveChofer =  unChoViaje.getChofer().getChoferPK().getEmpCodigo() + unChoViaje.getChofer().getChoferPK().getCodigo();            
             if( !disponibles.contains( claveChofer ) || claveChofer == null ){
                 choErr.getCho_codigo().add("No se encuentra disponible " +  claveChofer);
                 tieneErrores = true;
@@ -208,7 +208,7 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
         boolean tieneErrores = false;
         for( AuxiliarViaje unChoViaje: lista  ){
             WrapChoferPKError.ChoferPKError choErr = (new WrapChoferPKError()).new ChoferPKError();
-            claveChofer =  unChoViaje.getAuxiliar().getChoferPK().getCho_emp_codigo() + unChoViaje.getAuxiliar().getChoferPK().getCho_codigo();            
+            claveChofer =  unChoViaje.getAuxiliar().getChoferPK().getEmpCodigo() + unChoViaje.getAuxiliar().getChoferPK().getCodigo();            
             if( !disponibles.contains( claveChofer ) || claveChofer == null ){
                 choErr.getCho_codigo().add("No se encuentra disponible " +  claveChofer);
                 tieneErrores = true;
@@ -296,12 +296,12 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
             
             unChofer =  new ChoferesPKDet();            
             unChofer.setChoferPK( choferVieja.getChofer().getChoferPK() );
-            nombreChofer = choferVieja.getChofer().getChoferPK().getCho_codigo() + " - " + choferVieja.getChofer().getCho_nombre();
+            nombreChofer = choferVieja.getChofer().getChoferPK().getCodigo() + " - " + choferVieja.getChofer().getNombre();
             unChofer.setNombreChofer(nombreChofer);
-            claveChofer = choferVieja.getChofer().getChoferPK().getCho_emp_codigo() + choferVieja.getChofer().getChoferPK().getCho_codigo();
-            esChofer=choferVieja.getChofer().getCho_chofer();
+            claveChofer = choferVieja.getChofer().getChoferPK().getEmpCodigo() + choferVieja.getChofer().getChoferPK().getCodigo();
+            esChofer=choferVieja.getChofer().getTipochofer();
             
-            if( choferVieja.getChofer().getCho_estado() != Chofer.HABILITADO ){
+            if( choferVieja.getChofer().getEstado() != Chofer.HABILITADO ){
                 unChofer.getDetalles().add( "El conductor se encuentra deshabilitado."  );
             }
             
@@ -332,12 +332,12 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
             
             unChofer =  new ChoferesPKDet();            
             unChofer.setChoferPK(auxViaje.getAuxiliar().getChoferPK() );
-            nombreChofer = auxViaje.getAuxiliar().getChoferPK().getCho_codigo() + " - " + auxViaje.getAuxiliar().getCho_nombre();
+            nombreChofer = auxViaje.getAuxiliar().getChoferPK().getCodigo() + " - " + auxViaje.getAuxiliar().getNombre();
             unChofer.setNombreChofer(nombreChofer);
-            claveChofer = auxViaje.getAuxiliar().getChoferPK().getCho_emp_codigo() + auxViaje.getAuxiliar().getChoferPK().getCho_codigo();
-            esChofer=auxViaje.getAuxiliar().getCho_chofer();
+            claveChofer = auxViaje.getAuxiliar().getChoferPK().getEmpCodigo() + auxViaje.getAuxiliar().getChoferPK().getCodigo();
+            esChofer=auxViaje.getAuxiliar().getTipochofer();
             
-            if( auxViaje.getAuxiliar().getCho_estado() != Chofer.HABILITADO ){
+            if( auxViaje.getAuxiliar().getEstado() != Chofer.HABILITADO ){
                 unChofer.getDetalles().add( "El auxiliar se encuentra deshabilitado."  );
             }
             

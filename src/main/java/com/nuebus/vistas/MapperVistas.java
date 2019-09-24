@@ -122,17 +122,17 @@ public class MapperVistas {
         final int DESHABILITADO = 1;
 
         for (ChoferViaje chViaje : viajeEspecial.getChoferViaje()) {
-            if(chViaje != null && chViaje.getChofer() != null && chViaje.getChofer().getCho_chofer()== 0){
+            if(chViaje != null && chViaje.getChofer() != null && chViaje.getChofer().getTipochofer()== 0){
 
-            claveChofer = chViaje.getChofer().getChoferPK().getCho_emp_codigo() + chViaje.getChofer().getChoferPK().getCho_codigo();
+            claveChofer = chViaje.getChofer().getChoferPK().getEmpCodigo() + chViaje.getChofer().getChoferPK().getCodigo();
 
-            int estado = (chViaje.getChofer().getCho_estado() == Chofer.DESHABILITADO
+            int estado = (chViaje.getChofer().getEstado() == Chofer.DESHABILITADO
                     || (listaConf.get(claveChofer) != null
                     && listaConf.get(claveChofer).size() > 0)) ? DESHABILITADO : HABILITADO;
 
             unEstado = new ChoferMinDTO();
             unEstado.setChoferPK(chViaje.getChofer().getChoferPK());
-            unEstado.setCho_nombre(chViaje.getChofer().getCho_nombre());
+            unEstado.setCho_nombre(chViaje.getChofer().getNombre());
             unEstado.setCho_estado(estado);
 
             choferes.add(unEstado);
@@ -146,16 +146,16 @@ public class MapperVistas {
 
 
         for (AuxiliarViaje auxViaje : viajeEspecial.getAuxiliarViaje()) {
-            if( auxViaje!= null && auxViaje.getAuxiliar() != null  && auxViaje.getAuxiliar().getCho_chofer()== 1){
-            claveAux = auxViaje.getAuxiliar().getChoferPK().getCho_emp_codigo() + auxViaje.getAuxiliar().getChoferPK().getCho_codigo();
+            if( auxViaje!= null && auxViaje.getAuxiliar() != null  && auxViaje.getAuxiliar().getTipochofer()== 1){
+            claveAux = auxViaje.getAuxiliar().getChoferPK().getEmpCodigo() + auxViaje.getAuxiliar().getChoferPK().getCodigo();
 
-            int estado2 = (auxViaje.getAuxiliar().getCho_estado() == Chofer.DESHABILITADO
+            int estado2 = (auxViaje.getAuxiliar().getEstado() == Chofer.DESHABILITADO
                     || (listaConf.get(claveAux) != null
                     && listaConf.get(claveAux).size() > 0)) ? DESHABILITADO : HABILITADO;
 
             unEstado2 = new ChoferMinDTO();
             unEstado2.setChoferPK(auxViaje.getAuxiliar().getChoferPK());
-            unEstado2.setCho_nombre(auxViaje.getAuxiliar().getCho_nombre());
+            unEstado2.setCho_nombre(auxViaje.getAuxiliar().getNombre());
             unEstado2.setCho_estado(estado2);
 
             auxiliares.add(unEstado2);

@@ -20,71 +20,75 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Embeddable
 public class ChoferPK implements Serializable{
-    @NotBlank
-    @NotNull
+
+	@NotNull
     @Size(max = 4)
-    @Column
-    private String cho_emp_codigo = new String();
-    @Column
+    @Column( name= "cho_emp_codigo", length = 4 )
+    private String empCodigo = new String();
+    
+    
     @Digits(integer = 10,fraction = 0)
-    private long cho_codigo; 
+    @Column( name="cho_codigo" )
+    private long codigo; 
     
     public ChoferPK( ){
     }
     
-    
-    public ChoferPK( String cho_emp_codigo, long cho_codigo ){
-       this.cho_emp_codigo = cho_emp_codigo;
-       this.cho_codigo = cho_codigo;
-    }
+	public ChoferPK( String empCodigo, long codigo) {
+		super();
+		this.empCodigo = empCodigo;
+		this.codigo = codigo;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final ChoferPK other = (ChoferPK) obj;
-        if (this.cho_codigo != other.cho_codigo) {
-            return false;
-        }
-        if (!Objects.equals(this.cho_emp_codigo, other.cho_emp_codigo)) {
-            return false;
-        }
-        return true;
-    }    
- 
-    @Override
-    public int hashCode() {
-        return cho_emp_codigo.hashCode() +  String.valueOf(cho_codigo).hashCode();
-    }
-    
+	public String getEmpCodigo() {
+		return empCodigo;
+	}
 
-    public String getCho_emp_codigo() {
-        return cho_emp_codigo;
-    }
+	public long getCodigo() {
+		return codigo;
+	}
 
-    public void setCho_emp_codigo(String cho_emp_codigo) {
-        this.cho_emp_codigo = cho_emp_codigo;
-    }
+	public void setEmpCodigo(String empCodigo) {
+		this.empCodigo = empCodigo;
+	}
 
-    public long getCho_codigo() {
-        return cho_codigo;
-    }
+	public void setCodigo(long codigo) {
+		this.codigo = codigo;
+	}
 
-    public void setCho_codigo(long cho_codigo) {
-        this.cho_codigo = cho_codigo;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (codigo ^ (codigo >>> 32));
+		result = prime * result + ((empCodigo == null) ? 0 : empCodigo.hashCode());
+		return result;
+	}
 
-    @Override
-    public String toString() {
-        return "ChoferPK{" + "cho_emp_codigo=" + cho_emp_codigo + ", cho_codigo=" + cho_codigo + '}';
-    }
-    
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ChoferPK other = (ChoferPK) obj;
+		if (codigo != other.codigo)
+			return false;
+		if (empCodigo == null) {
+			if (other.empCodigo != null)
+				return false;
+		} else if (!empCodigo.equals(other.empCodigo))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "ChoferPK [empCodigo=" + empCodigo + ", codigo=" + codigo + "]";
+	}
+
+	private static final long serialVersionUID = 1L;
     
 }

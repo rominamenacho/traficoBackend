@@ -26,26 +26,23 @@ import org.springframework.data.repository.query.Param;
  */
 public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK> {
     //aca habria q agregar al where q cho_chofer = 0 y hacer un met igual q cho_chofer=1 para los auxiliares
-    @Query("select c from Chofer c where choferPK.cho_emp_codigo = ?1 ")
-    public Page<Chofer> findChoferesByEmpresa(String cho_emp_codigo , Pageable pageable);
+    @Query("select c from Chofer c where choferPK.empCodigo = :empCodigo  ")
+    public Page<Chofer> findChoferesByEmpresa( @Param("empCodigo") String empCodigo , Pageable pageable);
     
-    @Query("select c from Chofer c where choferPK.cho_emp_codigo = ?1  ")
-    public Page<Chofer> findPersonalByEmpresa(String cho_emp_codigo , Pageable pageable);
+    @Query("select c from Chofer c where choferPK.empCodigo = :empCodigo  ")
+    public Page<Chofer> findPersonalByEmpresa(String empCodigo , Pageable pageable);
     
-    @Query("select max( choferPK.cho_codigo ) from Chofer c where choferPK.cho_emp_codigo = ?1  and c.cho_chofer=?2")
-    public Integer maxCodigoPersonalByEmpresa(String cho_emp_codigo, int funcion );
+    @Query("select max( choferPK.codigo ) from Chofer c where choferPK.empCodigo = :empCodigo  and c.tipoChofer= :tipoChofer")
+    public Integer maxCodigoPersonalByEmpresa( @Param("empCodigo") String empCodigo, @Param("tipoChofer") int tipoChofer );
 
     //Ver cdo comprobar las incidencias y los servicios asignados        
-    @Query("select new com.nuebus.vistas.combos.ComboChoferes( c.choferPK, c.cho_nombre  ) from Chofer c "
-           + " where c.choferPK.cho_emp_codigo = ?1 "
-           + "   and c.cho_estado =?2 " 
-            + "and c.cho_chofer=?3")
-    public List<ComboChoferes> finPersonalByEstado(String cho_emp_codigo, int estado, int funcion  );
-    
-     
-    @Query( value = " Select c.cho_nombre from choferes c " + "    where c.cho_emp_codigo = 'IMQ' and c.CHO_CHOFER=0 ", nativeQuery = true )
-    public List<Object> findPersonalByViaje();
-    
+    @Query("select new com.nuebus.vistas.combos.ComboChoferes( c.choferPK, c.nombre  ) from Chofer c "
+           + " where c.choferPK.empCodigo = :empCodigo "
+           + "   and c.estado = :estado " 
+            + "and c.tipoChofer= :tipoChofer ")
+    public List<ComboChoferes> finPersonalByEstado( @Param("empCodigo") String empCodigo, 
+    												@Param("estado") int estado, @Param("tipoChofer") int tipoChofer  );    
+  
      
     public interface ChoferLibre {                
         Long getCodigo();        
@@ -186,10 +183,10 @@ public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK> {
     
     
     @Query("select c from Chofer c where "
-    		+ "		choferPK.cho_emp_codigo = :cho_emp_codigo  "
-    		+ "		and upper( c.cho_nombre)  LIKE  CONCAT('%',:busqueda,'%') ")
+    		+ "		choferPK.empCodigo = :empCodigo  "
+    		+ "		and upper( c.nombre)  LIKE  CONCAT('%',:busqueda,'%') ")
     public Page<Chofer> findPersonalByBusquedaAndEmpresa( @Param(value = "busqueda") String busqueda, 
-    													  @Param(value="cho_emp_codigo")String cho_emp_codigo , 
+    													  @Param(value="empCodigo")String empCodigo , 
     													  Pageable pageable);   
     
     /// Erroneo
@@ -202,9 +199,9 @@ public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK> {
     											       @Param("fechaControl") Date fechaControl ); */
     
     @Query(" Select carnet from Carnet carnet "
-    		+ "	where carnet.chofer.choferPK.cho_emp_codigo = :empresa "
+    		+ "	where carnet.chofer.choferPK.empCodigo = :empresa "
     		+ "     and  carnet.tipo = :tipo "
-    		+ "  	and  carnet.chofer.cho_estado = :estadoChofer "    		
+    		+ "  	and  carnet.chofer.estado = :estadoChofer "    		
     		+ "     and  carnet.fechaVenc <= :fechaControl ")
     public List<Carnet>  getCarnetsVencidosByTipo( @Param("empresa") String empresa,		       								 
 		       									  @Param("tipo") Integer tipo,
@@ -214,8 +211,8 @@ public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK> {
     
     
     @Query( " Select DISTINCT ch from Chofer ch join fetch ch.carnets car "
-		+ " where ch.choferPK.cho_emp_codigo = :empresa "	
-	 	+ " and ch.cho_estado = :estadoChofer "    		
+		+ " where ch.choferPK.empCodigo = :empresa "	
+	 	+ " and ch.estado = :estadoChofer "    		
 		+ " and car.fechaVenc <= :fechaControl ")
 	public List<Chofer> getChoferesConCarnetsVencidos( @Param("empresa") String empresa,
 											       @Param("estadoChofer") int estadoChofer,											       
@@ -224,8 +221,8 @@ public interface ChoferRepository extends JpaRepository<Chofer, ChoferPK> {
     
     
     @Query( " Select DISTINCT ch from Chofer ch join fetch ch.carnets car "
-    		+ " where ch.choferPK.cho_emp_codigo = :empresa "	
-    	 	+ " and ch.cho_estado = :estadoChofer "
+    		+ " where ch.choferPK.empCodigo = :empresa "	
+    	 	+ " and ch.estado = :estadoChofer "
     		+ " and car.tipo = :tipo "
     		+ " and car.fechaVenc <= :fechaControl ")
     public List<Chofer> getChoferesConCarnetsVencidosByTipo( @Param("empresa") String empresa,

@@ -1,18 +1,13 @@
 package com.nuebus.helpers;
 
-import com.nuebus.dto.ChoferEtapasDTO;
-import com.nuebus.dto.ServicioDTO;
-import com.nuebus.dto.VehiculoEtapaDTO;
-import com.nuebus.dto.VueltaDiagDTO;
-import com.nuebus.model.ChoferPK;
-import com.nuebus.model.ServicioPK;
-import com.nuebus.model.VehiculoPK;
-import com.nuebus.utilidades.Utilities;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.nuebus.dto.VueltaDiagDTO;
 
 /**
  *
@@ -39,7 +34,7 @@ public class CtrlCheckVuelta {
     }    
     
 
-    public static VueltaDiagDTO getServicioPrueba(){       
+    /*public static VueltaDiagDTO getServicioPrueba(){       
         
         ////////////////////////// IDA //////////////////
        
@@ -78,8 +73,8 @@ public class CtrlCheckVuelta {
         
         
         ChoferPK choferPK = new ChoferPK();
-        choferPK.setCho_emp_codigo("IMQ");
-        choferPK.setCho_codigo(8);
+        choferPK.setEmpCodigo("IMQ");
+        choferPK.setCodigo(8);
                 
         ChoferEtapasDTO cho = new ChoferEtapasDTO();
         cho.setChoferPK(choferPK);
@@ -129,8 +124,8 @@ public class CtrlCheckVuelta {
         
         
         choferPK = new ChoferPK();
-        choferPK.setCho_emp_codigo("IMQ");
-        choferPK.setCho_codigo(8);
+        choferPK.setEmpCodigo("IMQ");
+        choferPK.setCodigo(8);
                 
         cho = new ChoferEtapasDTO();
         cho.setChoferPK(choferPK);
@@ -142,7 +137,7 @@ public class CtrlCheckVuelta {
 
         return vuelta;
 
-    }                
+    } */               
     
     
 }

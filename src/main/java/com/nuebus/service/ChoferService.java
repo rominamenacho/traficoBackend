@@ -43,9 +43,7 @@ public interface ChoferService {
     
     public  List<CarnetDTO> getCarnetsByChofer( String cho_emp_codigo,  long cho_codigo );
     
-    public List<ComboChoferes> getPersonal( String empCodigo, int estado, int funcion );
-    
-    public void findPersonalByViaje(long idViaje);//?? empCodigo, long idViaje, java.util.Date inicio, java.util.Date fin, int estadoChofer, int funcion
+    public List<ComboChoferes> getPersonal( String empCodigo, int estado, int funcion );   
     
     public  List<ChoferOcupacionDTO> findPersonalOcupacionByEmpresa( String empresa,  java.util.Date inicio, java.util.Date fin );
      
