@@ -47,315 +47,306 @@ public class ChoferServiceImpl implements ChoferService{
     final static Logger LOG = LoggerFactory.getLogger(ChoferServiceImpl.class);
 
     @Autowired
-    ChoferRepository choferRepository;    
-    
-    @Autowired 
-    IncidenciaRepository incidenciaRepository ;
-    
-    
+    ChoferRepository choferRepository;
+
+    @Autowired
+    IncidenciaRepository incidenciaRepository;
+
     @Autowired
     ChoferMapper choferMapper;
-    
+
     @Autowired
     ImagenChoferRepository imagenChoferRepository;
 
     @Override
-    public Page<ChoferDTO> findChoferes(Pageable pageable){
-         return choferRepository.findAll( pageable ).map(chofer -> choferMapper.toDTO(chofer));
-    }   
+    public Page<ChoferDTO> findChoferes(Pageable pageable) {
+        return choferRepository.findAll(pageable).map(chofer -> choferMapper.toDTO(chofer));
+    }
 
     @Override
     public ChoferDTO getChofer(ChoferPK id) {
-        
+
         Chofer chofer = choferRepository.getOne(id);
         if (chofer == null) {
             return null;
         } else {
             return choferMapper.toDTO(chofer);
         }
-    }   
-    
-    @Override
-    @Transactional(readOnly = false)
-    public ChoferDTO updateChofer( String empCodigo, Long codigo,ChoferDTO choferDTO )throws Exception {
-        
-        ChoferPK claveCho = new ChoferPK();
-        claveCho.setEmpCodigo( empCodigo );
-        claveCho.setCodigo( codigo );
-                
-        Chofer chofer = choferRepository.findById( claveCho ).orElse( null );   
-        
-        if( chofer == null ){
-            throw new ResourceNotFoundException( codigo ,"Chofer no encontrado"); 
-        }
-        
-        choferMapper.mapToEntity(choferDTO, chofer);
-        
-        Chofer choferUpdated = choferRepository.save(chofer);
-        
-        return choferMapper.toDTO(choferUpdated);
-        
     }
-    
-    
+
     @Override
     @Transactional(readOnly = false)
-    public ChoferDTO saveChofer(ChoferDTO choferDTO) throws Exception{   
-       
-        Chofer chofer = choferMapper.toEntity(choferDTO);    
-        int codigo = choferRepository.maxCodigoPersonalByEmpresa( choferDTO.getChoferPK().getEmpCodigo(), 
-        														  choferDTO.getTipoChofer() );      
-        choferDTO.getChoferPK().setCodigo( codigo + 1 );               
-        Chofer choferSaved = choferRepository.save(chofer);                
+    public ChoferDTO updateChofer(String empCodigo, Long codigo, ChoferDTO choferDTO) throws Exception {
+
+        ChoferPK claveCho = new ChoferPK();
+        claveCho.setEmpCodigo(empCodigo);
+        claveCho.setCodigo(codigo);
+
+        Chofer chofer = choferRepository.findById(claveCho).orElse(null);
+
+        if (chofer == null) {
+            throw new ResourceNotFoundException(codigo, "Chofer no encontrado");
+        }
+
+        choferMapper.mapToEntity(choferDTO, chofer);
+
+        Chofer choferUpdated = choferRepository.save(chofer);
+
+        return choferMapper.toDTO(choferUpdated);
+
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public ChoferDTO saveChofer(ChoferDTO choferDTO) throws Exception {
+
+        Chofer chofer = choferMapper.toEntity(choferDTO);
+        int codigo = choferRepository.maxCodigoPersonalByEmpresa(choferDTO.getChoferPK().getEmpCodigo(),
+                choferDTO.getTipoChofer());
+        choferDTO.getChoferPK().setCodigo(codigo + 1);
+        Chofer choferSaved = choferRepository.save(chofer);
         return choferMapper.toDTO(choferSaved);
     }
-    
-    
+
     @Override
     @Transactional(readOnly = false)
-    public void deleteChofer( String empCodigo, Long codigo ) {     
-        
-        ChoferPK choferPK = new ChoferPK();        
-        choferPK.setEmpCodigo( empCodigo );
-        choferPK.setCodigo( codigo );
-        
-        Chofer chofer = choferRepository.findById( choferPK ).orElse( null );   
-        
-        if( chofer == null ){
-            throw new ResourceNotFoundException( codigo ,"Chofer no encontrado"); 
+    public void deleteChofer(String empCodigo, Long codigo) {
+
+        ChoferPK choferPK = new ChoferPK();
+        choferPK.setEmpCodigo(empCodigo);
+        choferPK.setCodigo(codigo);
+
+        Chofer chofer = choferRepository.findById(choferPK).orElse(null);
+
+        if (chofer == null) {
+            throw new ResourceNotFoundException(codigo, "Chofer no encontrado");
         }
-        
+
         choferRepository.delete(chofer);
-    }   
-    
-   
+    }
 
     @Override
     public Page<ChoferDTO> findPersonalByEmpresa(Pageable pageable, String empresa) {
-         return choferRepository.findPersonalByEmpresa( empresa, pageable ).map(chofer -> choferMapper.toDTO(chofer));
+        return choferRepository.findPersonalByEmpresa(empresa, pageable).map(chofer -> choferMapper.toDTO(chofer));
     }
-    
-      
+
     @Override
     @Transactional(readOnly = false)
-    public void salvarIncidenciasByChofer( String empCodigo, Long codigo,
-                                           Set<ChoferIncidenciaDTO>  incidencias )throws Exception{
-        
-            ChoferPK idChofer = new ChoferPK();
-            idChofer.setEmpCodigo( empCodigo );
-            idChofer.setCodigo( codigo );
-            
-            Chofer unChofer =  choferRepository.findById(idChofer).orElse( null );     
-            
-            if( unChofer == null ){
-                throw new ResourceNotFoundException( codigo,"Chofer no encontrado" ); 
-            }
-              
-            ChoferIncidencia choIncid;            
-            List<ChoferIncidencia> lista = new ArrayList<>();        
-            
-            for( ChoferIncidenciaDTO chInc: incidencias  ){           	
-                    
-                choIncid = new ChoferIncidencia();          
-                choIncid.setId(chInc.getId() );               
-                choIncid.setIncidencia( incidenciaRepository.findById(chInc.getIdIncidencia()).orElse( null ) ); 
-                choIncid.setChofer(unChofer);
-                choIncid.setInicio( chInc.getInicio() );
-                choIncid.setFin( chInc.getFin() );
-                lista.add(choIncid);
-                
-            } 
-            
-            unChofer.getChoferIncidencias().clear();            
-            unChofer.getChoferIncidencias().addAll( lista  );
-            choferRepository.save( unChofer );      
-    }  
-    
-    
-    
-    @Override
-    public List<ChoferIncidenciaDTO> getIncidenciasByChofer( String empCodigo, long codigo ){  
-        
+    public void salvarIncidenciasByChofer(String empCodigo, Long codigo,
+            Set<ChoferIncidenciaDTO> incidencias) throws Exception {
+
         ChoferPK idChofer = new ChoferPK();
-        idChofer.setEmpCodigo( empCodigo );
-        idChofer.setCodigo( codigo );
-        
-        Chofer unChofer = choferRepository.findById( idChofer ).orElse( null );
-        
-        if( unChofer == null ){
-            throw new ResourceNotFoundException( codigo,"Chofer no encontrado" ); 
+        idChofer.setEmpCodigo(empCodigo);
+        idChofer.setCodigo(codigo);
+
+        Chofer unChofer = choferRepository.findById(idChofer).orElse(null);
+
+        if (unChofer == null) {
+            throw new ResourceNotFoundException(codigo, "Chofer no encontrado");
         }
-        
+
+        ChoferIncidencia choIncid;
+        List<ChoferIncidencia> lista = new ArrayList<>();
+
+        for (ChoferIncidenciaDTO chInc : incidencias) {
+
+            choIncid = new ChoferIncidencia();
+            choIncid.setId(chInc.getId());
+            choIncid.setIncidencia(incidenciaRepository.findById(chInc.getIdIncidencia()).orElse(null));
+            choIncid.setChofer(unChofer);
+            choIncid.setInicio(chInc.getInicio());
+            choIncid.setFin(chInc.getFin());
+            lista.add(choIncid);
+
+        }
+
+        unChofer.getChoferIncidencias().clear();
+        unChofer.getChoferIncidencias().addAll(lista);
+        choferRepository.save(unChofer);
+    }
+
+    @Override
+    public List<ChoferIncidenciaDTO> getIncidenciasByChofer(String empCodigo, long codigo) {
+
+        ChoferPK idChofer = new ChoferPK();
+        idChofer.setEmpCodigo(empCodigo);
+        idChofer.setCodigo(codigo);
+
+        Chofer unChofer = choferRepository.findById(idChofer).orElse(null);
+
+        if (unChofer == null) {
+            throw new ResourceNotFoundException(codigo, "Chofer no encontrado");
+        }
+
         return unChofer.getChoferIncidencias().stream().
-                map( choInc -> MapperVistas.toChoferIncidenciaDTO(choInc) ).collect(Collectors.toList()); 
-        
+                map(choInc -> MapperVistas.toChoferIncidenciaDTO(choInc)).collect(Collectors.toList());
+
     }
 
     @Override
     @Transactional(readOnly = false)
-    public void salvarCarnetsByChofer( String empCodigo, Long codigo, Set<CarnetDTO> carnetsDTO) {
-        
-        ChoferPK idChofer = new ChoferPK();
-        idChofer.setEmpCodigo( empCodigo  );
-        idChofer.setCodigo( codigo );
+    public void salvarCarnetsByChofer(String empCodigo, Long codigo, Set<CarnetDTO> carnetsDTO) {
 
-        Chofer unChofer =  choferRepository.findById(idChofer).orElse( null );    
-        
-        if( unChofer == null ){
-            throw new ResourceNotFoundException( codigo ,"Chofer no encontrado"); 
+        ChoferPK idChofer = new ChoferPK();
+        idChofer.setEmpCodigo(empCodigo);
+        idChofer.setCodigo(codigo);
+
+        Chofer unChofer = choferRepository.findById(idChofer).orElse(null);
+
+        if (unChofer == null) {
+            throw new ResourceNotFoundException(codigo, "Chofer no encontrado");
         }
-        
+
         Set<Carnet> carnets = choferMapper.carnetsDTOToCarnets(carnetsDTO);
-        for( Carnet carnet: carnets  ){          
+        for (Carnet carnet : carnets) {
             carnet.setChofer(unChofer);
         }
-        unChofer.getCarnets().clear();            
-        unChofer.getCarnets().addAll( carnets  );
-        choferRepository.save( unChofer );            
+        unChofer.getCarnets().clear();
+        unChofer.getCarnets().addAll(carnets);
+        choferRepository.save(unChofer);
     }
 
     @Override
-    public List<CarnetDTO> getCarnetsByChofer( String empCodigo, long codigo ) {        
-           
+    public List<CarnetDTO> getCarnetsByChofer(String empCodigo, long codigo) {
+
         ChoferPK idChofer = new ChoferPK();
-        idChofer.setEmpCodigo( empCodigo );
-        idChofer.setCodigo( codigo );
-        
-        Chofer unChofer = choferRepository.findById( idChofer ).orElse( null );    
-        
-        if( unChofer == null ){
-            throw new ResourceNotFoundException( codigo ,"Chofer no encontrado"); 
+        idChofer.setEmpCodigo(empCodigo);
+        idChofer.setCodigo(codigo);
+
+        Chofer unChofer = choferRepository.findById(idChofer).orElse(null);
+
+        if (unChofer == null) {
+            throw new ResourceNotFoundException(codigo, "Chofer no encontrado");
         }
-        
+
         return unChofer.getCarnets().stream().
-                map( carnet -> choferMapper.carnetToCarnetDTO(carnet) ).collect(Collectors.toList()); 
-        
+                map(carnet -> choferMapper.carnetToCarnetDTO(carnet)).collect(Collectors.toList());
+
     }
 
     @Override
-    public List<ComboChoferes> getPersonal( String empCodigo, int estado, int funcion) {        
-        return  choferRepository.finPersonalByEstado( empCodigo, estado, funcion );        
+    public List<ComboChoferes> getPersonal(String empCodigo, int estado, int funcion) {
+        return choferRepository.finPersonalByEstado(empCodigo, estado, funcion);
     }
-
-   
 
     @Override
     public List<ChoferOcupacionDTO> findPersonalOcupacionByEmpresa(String empresa, Date inicio, Date fin) {
-        
-        return   new ChoferOcupacionBuilder( choferRepository.ocupacionChoferes( empresa, inicio, fin ) ).build();
-        
+
+        return new ChoferOcupacionBuilder(choferRepository.ocupacionChoferes(empresa, inicio, fin)).build();
+
     }
 
-	@Override
-	public List<Chofer> getChoferesConCarnetsVencidos(String empresa, int estadoChofer, Date fechaControl) {
-		return choferRepository.getChoferesConCarnetsVencidos( empresa, estadoChofer, fechaControl );
-	}
+    @Override
+    public List<Chofer> getChoferesConCarnetsVencidos(String empresa, int estadoChofer, Date fechaControl) {
+        return choferRepository.getChoferesConCarnetsVencidos(empresa, estadoChofer, fechaControl);
+    }
 
-	@Override
-	public List<ChoferDTO> findChoferesFromHorariosServicios(String empresa, String linea, Date inicio, Date fin) {
-		 List< ChoferDTO > choferes = new ArrayList<>();
-		 List<Object[]> chofs = choferRepository.findChoferesFromHorariosServicios(empresa, linea, inicio, fin);
-		 
-		 for( Object[] obj: chofs) {
-			 
-		 	ChoferDTO chofer = new ChoferDTO();
-		 	ChoferPK choPK = new ChoferPK(); 
-		 	choPK.setEmpCodigo( (String)obj[0]  );
-		 	choPK.setCodigo(((BigDecimal) obj[1]).intValue());       
-	        chofer.setChoferPK(choPK);
-	        chofer.setNombre(((String) obj[2]));
-	        chofer.setTipoChofer(((BigDecimal) obj[3]).intValue());    
-	        chofer.setEstado( ((BigDecimal) obj[4]).intValue() );
-	        chofer.setIdAux( ((BigDecimal) obj[5]).intValue() );
-			 
-			choferes.add( chofer );			 
-		 }
-		 
-		 return choferes;
-	}
+    @Override
+    public List<ChoferDTO> findChoferesFromHorariosServicios(String empresa, String linea, Date inicio, Date fin) {
+        List< ChoferDTO> choferes = new ArrayList<>();
+        List<Object[]> chofs = choferRepository.findChoferesFromHorariosServicios(empresa, linea, inicio, fin);
 
-	@Override
-	public Chofer getChoferById(ChoferPK id) {
-		Chofer chofer = choferRepository.getOne(id);
+        for (Object[] obj : chofs) {
+
+            ChoferDTO chofer = new ChoferDTO();
+            ChoferPK choPK = new ChoferPK();
+            choPK.setEmpCodigo((String) obj[0]);
+            choPK.setCodigo(((BigDecimal) obj[1]).intValue());
+            chofer.setChoferPK(choPK);
+            chofer.setNombre(((String) obj[2]));
+            chofer.setTipoChofer(((BigDecimal) obj[3]).intValue());
+            chofer.setEstado(((BigDecimal) obj[4]).intValue());
+            chofer.setIdAux(((BigDecimal) obj[5]).intValue());
+
+            choferes.add(chofer);
+        }
+
+        return choferes;
+    }
+
+    @Override
+    public Chofer getChoferById(ChoferPK id) {
+        Chofer chofer = choferRepository.getOne(id);
         if (chofer == null) {
             return null;
         } else {
             return chofer;
         }
-	}
+    }
 
-	@Override
-	public Page<ChoferDTO> findPersonalByBusquedaAndEmpresa( String busqueda, String empresa, Pageable pageable ) {
-		
-		if( busqueda != null ) {
-			busqueda = busqueda.toUpperCase();
-		}else {
-			busqueda = "";
-		}
-		
-		Page<ChoferDTO>  choferesDTO = choferRepository.findPersonalByBusquedaAndEmpresa( busqueda, empresa, pageable )
-													   .map( chofer -> choferMapper.toDTO(chofer) );		
- 
-		return choferesDTO;
-	}
+    @Override
+    public Page<ChoferDTO> findPersonalByBusquedaAndEmpresa(String busqueda, String empresa, Pageable pageable) {
 
-	@Override	
-	@Transactional(readOnly = false)
-	public void updateImagenChofer(String empCodigo, long codigo, byte[] imagen) {
-		
-		Chofer chofer = getChoferById( new ChoferPK(  empCodigo,  codigo  ));
-		
-		if( chofer != null) {
-			ImagenChofer imagenChofer = null;
-			
-			if( chofer.getFoto() != null ) {
-				
-				imagenChofer = imagenChoferRepository.findByIdAndEmpresa(   Long.valueOf( chofer.getFoto() )
-																		  , chofer.getChoferPK().getEmpCodigo() );
-				
-				//imagenChofer = imagenChoferRepository.findById( Long.valueOf( chofer.getFoto() ) ).orElse(null);
-				
-			}
-			
-			if( imagenChofer == null ) {
-				imagenChofer = new ImagenChofer();
-				imagenChofer.setEmpresa( chofer.getChoferPK().getEmpCodigo() );
-			}
-			
-			imagenChofer.setImagen( imagen );
-			
-			ImagenChofer imagenChoferSaved =  imagenChoferRepository.save( imagenChofer );
-			
-			if( chofer.getFoto() == null ||
-				!chofer.getFoto().equalsIgnoreCase( String.valueOf( imagenChoferSaved.getId() )  )  ){
-				chofer.setFoto( String.valueOf( imagenChoferSaved.getId() ) );
-				choferRepository.save( chofer );
-			}
-			
-		}else {
-			throw new ResourceNotFoundException( codigo ,"Chofer no encontrado");
-		}		
-		
-		// Veamos como evoluciona el tema de la grilla 
-	}
+        if (busqueda != null) {
+            busqueda = busqueda.toUpperCase();
+        } else {
+            busqueda = "";
+        }
 
-	@Override
-	public byte[] getImagenChofer( String empCodigo, long codigo ) {
-		ImagenChofer imagenChofer = null;
-		Chofer chofer = getChoferById( new ChoferPK(  empCodigo,  codigo  ));
-		if( chofer != null && chofer.getFoto() != null && chofer.getFoto().length() > 0 ) {
-			
-			imagenChofer = imagenChoferRepository.findByIdAndEmpresa(   Long.valueOf( chofer.getFoto() )
-					  													, chofer.getChoferPK().getEmpCodigo() );			
-			
-			if ( imagenChofer != null  && imagenChofer.getImagen() != null ) {
-				return imagenChofer.getImagen();
-			}
-		}
-		
-		throw new ResourceNotFoundException( codigo ,"Chofer no encontrado");
-		
-	}	
+        Page<ChoferDTO> choferesDTO = choferRepository.findPersonalByBusquedaAndEmpresa(busqueda, empresa, pageable)
+                .map(chofer -> choferMapper.toDTO(chofer));
+
+        return choferesDTO;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public ChoferDTO updateImagenChofer(String empCodigo, long codigo, byte[] imagen) {
+
+        Chofer chofer = getChoferById(new ChoferPK(empCodigo, codigo));
+
+        if (chofer != null) {
+            ImagenChofer imagenChofer = null;
+
+            if (chofer.getFoto() != null) {
+
+                imagenChofer = imagenChoferRepository.findByIdAndEmpresa(Long.valueOf(chofer.getFoto()),
+                         chofer.getChoferPK().getEmpCodigo());
+
+                //imagenChofer = imagenChoferRepository.findById( Long.valueOf( chofer.getFoto() ) ).orElse(null);
+            }
+
+            if (imagenChofer == null) {
+                imagenChofer = new ImagenChofer();
+                imagenChofer.setEmpresa(chofer.getChoferPK().getEmpCodigo());
+            }
+
+            imagenChofer.setImagen(imagen);
+
+            ImagenChofer imagenChoferSaved = imagenChoferRepository.save(imagenChofer);
+            
+            Chofer choferUpdated = chofer;
+            
+            if (chofer.getFoto() == null
+                    || !chofer.getFoto().equalsIgnoreCase(String.valueOf(imagenChoferSaved.getId()))) {
+                chofer.setFoto(String.valueOf(imagenChoferSaved.getId()));
+                choferUpdated = choferRepository.save(chofer);
+            }
+
+            return  choferMapper.toDTO(choferUpdated);
+            
+        } else {
+            throw new ResourceNotFoundException(codigo, "Chofer no encontrado");
+        }        
+    }
+
+    @Override
+    public byte[] getImagenChofer(String empCodigo, long codigo) {
+        ImagenChofer imagenChofer = null;
+        Chofer chofer = getChoferById(new ChoferPK(empCodigo, codigo));
+        if (chofer != null && chofer.getFoto() != null && chofer.getFoto().length() > 0) {
+
+            imagenChofer = imagenChoferRepository.findByIdAndEmpresa(Long.valueOf(chofer.getFoto()),
+                     chofer.getChoferPK().getEmpCodigo());
+
+            if (imagenChofer != null && imagenChofer.getImagen() != null) {
+                return imagenChofer.getImagen();
+            }
+        }
+
+        throw new ResourceNotFoundException(codigo, "Chofer no encontrado");
+
+    }
      
     
 }

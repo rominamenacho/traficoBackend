@@ -103,7 +103,7 @@ public class Chofer implements Serializable{
     
     @Digits(integer = 1,fraction = 0)
     @Column( name="cho_chofer" )
-    private int tipoChofer = 0; /*0 es chofer, 1 es auxiliar*/
+    private Integer tipoChofer = 0; 
     
     @Column(name="cho_id_aux")
     private Integer idAux;
@@ -198,9 +198,7 @@ public class Chofer implements Serializable{
 		return estado;
 	}
 
-	public int getTipochofer() {
-		return tipoChofer;
-	}
+	
 
 	public Integer getIdAux() {
 		return idAux;
@@ -261,12 +259,8 @@ public class Chofer implements Serializable{
 	public void setEstado(int estado) {
 		this.estado = estado;
 	}
-
-	public void setTipochofer(int tipochofer) {
-		this.tipoChofer = tipochofer;
-	}
-
-	public void setIdAux(Integer idAux) {
+        
+        public void setIdAux(Integer idAux) {
 		this.idAux = idAux;
 	}
 
@@ -297,6 +291,15 @@ public class Chofer implements Serializable{
 	public void setChoferViaje(Set<ChoferViaje> choferViaje) {
 		this.choferViaje = choferViaje;
 	}
+
+        public Integer getTipoChofer() {
+            return tipoChofer;
+        }
+
+        public void setTipoChofer(Integer tipoChofer) {
+            this.tipoChofer = tipoChofer;
+        }
+        
 
 	@Override
 	public String toString() {

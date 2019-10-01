@@ -53,7 +53,7 @@ public interface ChoferService {
     
     public Chofer getChoferById(ChoferPK id);  
     
-    public void updateImagenChofer( String cho_emp_codigo,  long cho_codigo, byte[] imagen);
+    public ChoferDTO updateImagenChofer( String cho_emp_codigo,  long cho_codigo, byte[] imagen);
     
     public byte[] getImagenChofer( String cho_emp_codigo,  long cho_codigo);
     

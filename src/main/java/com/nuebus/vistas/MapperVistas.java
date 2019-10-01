@@ -5,7 +5,6 @@ import com.nuebus.dto.ChoferIncidenciaDTO;
 import com.nuebus.dto.ChoferMinDTO;
 import com.nuebus.dto.ComboDTO;
 import com.nuebus.dto.ComboStrDTO;
-import com.nuebus.dto.VehiculoDTO;
 import com.nuebus.dto.VehiculoIncidenciaDTO;
 import com.nuebus.dto.VehiculoMinDTO;
 import com.nuebus.dto.ViajeEspecialDTO;
@@ -16,12 +15,9 @@ import com.nuebus.model.Chofer;
 import com.nuebus.model.ChoferIncidencia;
 import com.nuebus.model.ChoferViaje;
 import com.nuebus.model.Escala;
-import com.nuebus.model.MapaAsiento;
-import com.nuebus.model.MapaAsientoPK;
 import com.nuebus.model.Vehiculo;
 import com.nuebus.model.VehiculoIncidencia;
 import com.nuebus.model.ViajeEspecial;
-import com.nuebus.repository.MapaAsientoRepository;
 import com.nuebus.vistas.combos.CbMapaAsiento;
 import com.nuebus.vistas.combos.Combo;
 import com.nuebus.vistas.combos.ComboStr;
@@ -122,7 +118,7 @@ public class MapperVistas {
         final int DESHABILITADO = 1;
 
         for (ChoferViaje chViaje : viajeEspecial.getChoferViaje()) {
-            if(chViaje != null && chViaje.getChofer() != null && chViaje.getChofer().getTipochofer()== 0){
+            if(chViaje != null && chViaje.getChofer() != null && chViaje.getChofer().getTipoChofer() == 0){
 
             claveChofer = chViaje.getChofer().getChoferPK().getEmpCodigo() + chViaje.getChofer().getChoferPK().getCodigo();
 
@@ -146,7 +142,7 @@ public class MapperVistas {
 
 
         for (AuxiliarViaje auxViaje : viajeEspecial.getAuxiliarViaje()) {
-            if( auxViaje!= null && auxViaje.getAuxiliar() != null  && auxViaje.getAuxiliar().getTipochofer()== 1){
+            if( auxViaje!= null && auxViaje.getAuxiliar() != null  && auxViaje.getAuxiliar().getTipoChofer()== 1){
             claveAux = auxViaje.getAuxiliar().getChoferPK().getEmpCodigo() + auxViaje.getAuxiliar().getChoferPK().getCodigo();
 
             int estado2 = (auxViaje.getAuxiliar().getEstado() == Chofer.DESHABILITADO

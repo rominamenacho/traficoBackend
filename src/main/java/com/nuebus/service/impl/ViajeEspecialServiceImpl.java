@@ -299,7 +299,7 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
             nombreChofer = choferVieja.getChofer().getChoferPK().getCodigo() + " - " + choferVieja.getChofer().getNombre();
             unChofer.setNombreChofer(nombreChofer);
             claveChofer = choferVieja.getChofer().getChoferPK().getEmpCodigo() + choferVieja.getChofer().getChoferPK().getCodigo();
-            esChofer=choferVieja.getChofer().getTipochofer();
+            esChofer=choferVieja.getChofer().getTipoChofer();
             
             if( choferVieja.getChofer().getEstado() != Chofer.HABILITADO ){
                 unChofer.getDetalles().add( "El conductor se encuentra deshabilitado."  );
@@ -335,7 +335,7 @@ public class ViajeEspecialServiceImpl implements ViajeEspecialService{
             nombreChofer = auxViaje.getAuxiliar().getChoferPK().getCodigo() + " - " + auxViaje.getAuxiliar().getNombre();
             unChofer.setNombreChofer(nombreChofer);
             claveChofer = auxViaje.getAuxiliar().getChoferPK().getEmpCodigo() + auxViaje.getAuxiliar().getChoferPK().getCodigo();
-            esChofer=auxViaje.getAuxiliar().getTipochofer();
+            esChofer=auxViaje.getAuxiliar().getTipoChofer();
             
             if( auxViaje.getAuxiliar().getEstado() != Chofer.HABILITADO ){
                 unChofer.getDetalles().add( "El auxiliar se encuentra deshabilitado."  );

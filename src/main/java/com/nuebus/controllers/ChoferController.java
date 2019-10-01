@@ -9,31 +9,21 @@ import com.nuebus.dto.ListaCarnetDTO;
 import com.nuebus.dto.ListaChoferIncidencia;
 import com.nuebus.erroresJson.WrapCarnetError;
 import com.nuebus.erroresJson.WrapChoferIncidenciaError;
-import com.nuebus.model.Chofer;
-import com.nuebus.model.ChoferPK;
 import com.nuebus.repository.ChoferRepository;
-import com.nuebus.repository.ImagenChoferRepository;
 import com.nuebus.service.ChoferService;
 import com.nuebus.service.VencimientoService;
 import com.nuebus.utilidades.Utilities;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -45,11 +35,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 
 /**
