@@ -20,6 +20,7 @@ import com.nuebus.model.UsuarioPK;
 import com.nuebus.repository.MailSenderRepository;
 import com.nuebus.repository.PasswordResetTokenRepository;
 import com.nuebus.service.EmailSenderService;
+import com.nuebus.utilidades.IAuthenticationFacade;
 import com.nuebus.utilidades.Utilities;
 import java.util.Calendar;
 import java.util.Optional;
@@ -47,6 +48,10 @@ public class UserServiceImpl implements UserService {
     
     @Autowired
     PasswordResetTokenRepository passwordResetTokenRepository;
+    
+    @Autowired
+    IAuthenticationFacade authenticationFacade;     
+    
     
     @Value("${ipExternaServer}")
     String ipExternaServer;
@@ -174,6 +179,43 @@ public class UserServiceImpl implements UserService {
         }        
         return passToken.getUser();
     }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void updatePasswordChange(String oldPassword, String newpassword, String confirmNewPassword) {        
+       
+        Usuario usuario = usuarioRepository.findByUsername( authenticationFacade.getUsuario().getUsername() );     
+        
+        valdidarPasswordChange( usuario, oldPassword, newpassword, confirmNewPassword );
+        
+        usuario.setPassword(newpassword);
+        usuarioRepository.save( usuario );   
+        
+    }
+    
+    private void valdidarPasswordChange( Usuario usuario, String oldPassword, 
+                                         String newpassword, String confirmNewPassword ){
+        
+        if( newpassword == null ){
+            throw new  ErrorException( "Error Validacion", "Debe especificar Contraseña" );  
+        }
+        
+        if( confirmNewPassword == null ){
+            throw new  ErrorException( "Error Validacion", "Debe especificar la confirmacion de la Contraseña" );  
+        }
+        
+        if( !newpassword.equalsIgnoreCase(confirmNewPassword) ){
+            throw new  ErrorException( "Error Validacion", "La contraseña y su confirmacion deben ser iguales" );  
+        }       
+        
+        if( usuario == null 
+            || !usuario.getPassword().equals(oldPassword) ){
+            throw new  ErrorException( "Error Validacion", "La contraseña actual es incorrecta" );  
+        }
+    
+    }
+    
+    
 
     
 

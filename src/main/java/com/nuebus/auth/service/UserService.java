@@ -28,4 +28,7 @@ public interface UserService {
             long legajoPersonal, String emailPersonal);
 
     public void updatePasswordReseteada(String token, String password, String confirmPassword);
+    
+    public void updatePasswordChange( String oldPassword, String newpassword, String confirmNewPassword );
+    
 }

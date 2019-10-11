@@ -8,6 +8,7 @@ import com.nuebus.auth.service.UserService;
 import com.nuebus.dto.GroupDTO;
 import com.nuebus.dto.ResetPassDTO;
 import com.nuebus.dto.UsuarioDTO;
+import com.nuebus.model.Usuario;
 import com.nuebus.utilidades.IAuthenticationFacade;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -46,8 +47,9 @@ public class UsuarioController {
 	final static Logger LOG = LoggerFactory.getLogger(UsuarioController.class);
     @Autowired
     UserService userService;
+   
     @Autowired
-  	private IAuthenticationFacade authenticationFacade;     
+    IAuthenticationFacade authenticationFacade;  
     
     @Descripcion(value="Listar Usuarios de todas las empresas",permission="ROLE_USUARIOS_TODOS_LISTAR")
     @RequestMapping(value = "api/usuarios", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -103,6 +105,16 @@ public class UsuarioController {
     	return new ResponseEntity<>( HttpStatus.NO_CONTENT);
     } 
     
+    @RequestMapping( value = "api/usuarios/updatePassword", method = RequestMethod.POST,
+                     consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE} )
+    @ResponseStatus( HttpStatus.NO_CONTENT )
+    public void savePassword( @RequestBody final MultiValueMap<String, String > form ) {
+       
+        userService.updatePasswordChange( form.getFirst("oldPassword"),
+                                          form.getFirst("password"),
+                                          form.getFirst("confirmPassword") );     
+
+    }    
     
     //==================== Fuera del api asi no pasa por el filtro========================================
     
@@ -128,7 +140,6 @@ public class UsuarioController {
                                             formVars.getFirst("password"),
                                             formVars.getFirst("confirmPassword") );
         
-    }     
-    
+    }    
        
 }
