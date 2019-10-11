@@ -2,7 +2,6 @@
 package com.nuebus.model;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -11,15 +10,16 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.Digits;
+import org.hibernate.annotations.JoinColumnOrFormula;
+import org.hibernate.annotations.JoinColumnsOrFormulas;
+import org.hibernate.annotations.JoinFormula;
 
 /**
  *
@@ -63,13 +63,20 @@ public class Vehiculo implements Serializable {
     private Set<VehiculoIncidencia> vehiculoIncidencias = new HashSet<>();
     
     
-    @ManyToOne
+    /*@ManyToOne
     @JoinColumns({
         @JoinColumn( name = "veh_mpa_emp_codigo", referencedColumnName = "MPA_EMP_CODIGO"),
         @JoinColumn( name = "veh_mpa_codigo",  referencedColumnName = "MPA_CODIGO")         
     })  
-    private MapaAsiento mapaAsiento; 
+    private MapaAsiento mapaAsiento; */
     
+    
+    @ManyToOne
+    @JoinColumnsOrFormulas(value = {
+        @JoinColumnOrFormula(formula = @JoinFormula(value = "veh_emp_codigo", referencedColumnName = "MPA_EMP_CODIGO")),
+        @JoinColumnOrFormula(column = @JoinColumn(name = "veh_mpa_codigo", referencedColumnName = "MPA_CODIGO")),        
+    })  
+    private MapaAsiento mapaAsiento;
     
   
       

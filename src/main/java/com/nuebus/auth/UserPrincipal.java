@@ -19,10 +19,7 @@ public class UserPrincipal implements UserDetails  {
 	String password;
 	String username;
 	
-	private Collection<? extends GrantedAuthority> authorities;	
-
-
-	
+	private Collection<? extends GrantedAuthority> authorities;
 	
 
 	public UserPrincipal(String empresa, Integer agencia, String nombre, String password, String username,
@@ -39,7 +36,7 @@ public class UserPrincipal implements UserDetails  {
 
 	public static UserPrincipal create( Usuario usuario, List<GrantedAuthority>  authorities ) {				
 		return new  UserPrincipal( usuario.getUsuarioPk().getEmpresa(),
-								   usuario.getAgencia(),
+								   usuario.getAgencia().getAgenciaPK().getCodigo(),
 								   usuario.getNombre(),
 								   usuario.getPassword(),	
 								   usuario.getUsername(),

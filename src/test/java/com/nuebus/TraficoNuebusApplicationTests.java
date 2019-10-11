@@ -2,9 +2,10 @@ package com.nuebus;
 
 
 
-import com.nuebus.dto.VencimientosChoferDTO;
-import com.nuebus.vencimientos.choferes.VencimientoChoferService;
-import java.util.List;
+import com.nuebus.auth.service.UserService;
+import com.nuebus.model.MailConfig;
+import com.nuebus.repository.MailSenderRepository;
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +18,20 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class TraficoNuebusApplicationTests {
+    
+    @Autowired
+    UserService userService;
+    
+    @Autowired
+    MailSenderRepository mailSenderRepository;
 	
 	
-	@Autowired 
-        VencimientoChoferService vencimientoChoferService;
+    @Test
+    public void contextLoads() {
         
        
-	
-	@Test
-	public void contextLoads() {
-            
-             List<VencimientosChoferDTO> vencimientos =  vencimientoChoferService.calcularVencimientos("IMQ", 0);
-              
-             vencimientos.forEach( System.out::println);
-		
-	}
+
+    }
 	
 	
 

@@ -62,7 +62,8 @@ public class Utilities {
     public static final String POSTERIOR     = ">";
     public static final String IGUAL    = "=";
     
-   
+    public static final String SALTO_LINEA = "\n";
+    
     /**
      * Constructor
      */    
