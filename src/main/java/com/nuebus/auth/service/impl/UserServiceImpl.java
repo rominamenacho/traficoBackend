@@ -11,6 +11,7 @@ import com.nuebus.auth.service.UserService;
 import com.nuebus.dto.GroupDTO;
 import com.nuebus.dto.UsuarioDTO;
 import com.nuebus.excepciones.ErrorException;
+import com.nuebus.excepciones.ResourceNotFoundException;
 import com.nuebus.mapper.UserMapper;
 import com.nuebus.model.Group;
 import com.nuebus.model.MailConfig;
@@ -182,10 +183,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = false)
-    public void updatePasswordChange(String oldPassword, String newpassword, String confirmNewPassword) {        
-       
-        Usuario usuario = usuarioRepository.findByUsername( authenticationFacade.getUsuario().getUsername() );     
+    public void updatePasswordChange(String oldPassword, String newpassword, String confirmNewPassword) {               
         
+        Usuario usuario = usuarioRepository.findByUsername( authenticationFacade.getUsuario().getUsername() );           
         valdidarPasswordChange( usuario, oldPassword, newpassword, confirmNewPassword );
         
         usuario.setPassword(newpassword);
@@ -195,6 +195,9 @@ public class UserServiceImpl implements UserService {
     
     private void valdidarPasswordChange( Usuario usuario, String oldPassword, 
                                          String newpassword, String confirmNewPassword ){
+        if( usuario == null ){
+            throw new ResourceNotFoundException( (long)-1, "Usuario no encontrado" );
+        }        
         
         if( newpassword == null ){
             throw new  ErrorException( "Error Validacion", "Debe especificar Contraseña" );  
@@ -206,17 +209,16 @@ public class UserServiceImpl implements UserService {
         
         if( !newpassword.equalsIgnoreCase(confirmNewPassword) ){
             throw new  ErrorException( "Error Validacion", "La contraseña y su confirmacion deben ser iguales" );  
-        }       
+        }              
         
-        if( usuario == null 
-            || !usuario.getPassword().equals(oldPassword) ){
+        if( !usuario.getPassword().equals( oldPassword ) ){ 
+            
+            System.out.println( usuario );
+            
+            System.out.println("Pass Actual " + usuario.getPassword() + " - Pass Vieja " + oldPassword );
             throw new  ErrorException( "Error Validacion", "La contraseña actual es incorrecta" );  
         }
     
-    }
-    
-    
-
-    
+    }   
 
 }
