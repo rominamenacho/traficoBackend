@@ -8,9 +8,9 @@ package com.nuebus.repository;
 import com.nuebus.model.Incidencia;
 import com.nuebus.vistas.combos.Combo;
 import java.util.ArrayList;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -33,6 +33,9 @@ public interface IncidenciaRepository extends PagingAndSortingRepository<Inciden
   
     @Query(" Select new com.nuebus.vistas.combos.Combo(i.id, i.descripcion) "
            + " from Incidencia i where i.empresa = ?1 and i.tipo = ?2 ")
-    public ArrayList<Combo> findIncidenciasByEmpresayTipo(String in_empresa , int in_tipo);       
+    public ArrayList<Combo> findIncidenciasByEmpresayTipo(String in_empresa , int in_tipo); 
+    
+      
+    public List<Incidencia> findByEmpresaAndTipo( String empresa, Integer tipo );   
     
 }

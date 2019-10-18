@@ -69,10 +69,10 @@ public class Incidencia extends AbstractEntityVersion{
     @OneToMany( fetch = FetchType.LAZY, mappedBy = "incidencia", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<ChoferIncidencia> choferIncidencias;    
     
-    @OneToMany( fetch = FetchType.LAZY, mappedBy = "incidencia", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<VehiculoIncidencia> vehiculoIncidencias;  
+    /*@OneToMany( fetch = FetchType.LAZY, mappedBy = "incidencia", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<VehiculoIncidencia> vehiculoIncidencias;  */
 
-    public Set<VehiculoIncidencia> getVehiculoIncidencias() {
+    /*public Set<VehiculoIncidencia> getVehiculoIncidencias() {
         return vehiculoIncidencias;
     }
 
@@ -87,7 +87,7 @@ public class Incidencia extends AbstractEntityVersion{
 
     public void setChoferIncidencias(Set<ChoferIncidencia> choferIncidencias) {
         this.choferIncidencias = choferIncidencias;
-    }
+    }*/
 
     public Long getId() {
         return id;

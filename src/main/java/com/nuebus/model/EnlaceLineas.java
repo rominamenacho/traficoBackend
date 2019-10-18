@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
@@ -23,7 +24,11 @@ import org.hibernate.annotations.Parameter;
  */
 
 @Entity
-@Table( name = "Enlaces_lineas" )
+@Table( name = "Enlaces_lineas",
+        uniqueConstraints={
+            @UniqueConstraint(columnNames={ "empCodigo", "linEmpCodigoIda", "linCodigoIda",
+                                            "linEmpCodigoVta", "linCodigoVta" }),          
+         })
 public class EnlaceLineas implements Serializable {
     
     private static final long serialVersionUID = 1L;

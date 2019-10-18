@@ -204,9 +204,9 @@ public class GlobalExceptionHandler {
 
         loguearError(response, request);
 
-        ex.printStackTrace();
+        //ex.printStackTrace();
 
-        return new ResponseEntity<ExceptionResponse>(response, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
 
     }
 

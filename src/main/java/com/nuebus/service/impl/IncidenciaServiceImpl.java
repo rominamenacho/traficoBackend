@@ -8,7 +8,6 @@ import com.nuebus.mapper.IncidenciaMapper;
 import com.nuebus.model.Incidencia;
 import com.nuebus.repository.IncidenciaRepository;
 import com.nuebus.service.IncidenciaService;
-import com.nuebus.utilidades.Utilities;
 import com.nuebus.vistas.MapperVistas;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -117,9 +116,11 @@ public class IncidenciaServiceImpl implements IncidenciaService{
     
     
     @Override
-    public List<ComboDTO> findIncidenciasByEmpresayTipo(String empresa, int in_tipo) {     
-        return incidenciaRepository.findIncidenciasByEmpresayTipo( empresa, in_tipo  ).stream().
-                map( comboInc -> MapperVistas.toDTO(comboInc) ).collect(Collectors.toList());       
+    public List<Incidencia> findIncidenciasByEmpresayTipo(String empresa, int in_tipo) {     
+        /*return incidenciaRepository.findIncidenciasByEmpresayTipo( empresa, in_tipo  ).stream().
+                map( comboInc -> MapperVistas.toDTO(comboInc) ).collect(Collectors.toList());      */
+        
+        return incidenciaRepository.findByEmpresaAndTipo(empresa, in_tipo );
     }  
     
     

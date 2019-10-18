@@ -1,18 +1,13 @@
 package com.nuebus.service.impl;
 
-import com.nuebus.dto.ChoferEtapasDTO;
 import com.nuebus.dto.ServicioDTO;
-import com.nuebus.dto.VehiculoEtapaDTO;
 import com.nuebus.dto.VehiculoOcupacionDTO;
 import com.nuebus.dto.VueltaDiagDTO;
 import com.nuebus.excepciones.ResourceNotFoundException;
-import static com.nuebus.model.Chofer.AUXILIAR;
 
-import com.nuebus.model.Chofer;
 import com.nuebus.model.HorarioServicio;
 import com.nuebus.model.HorarioServicioPK;
 import com.nuebus.model.Servicio;
-import com.nuebus.model.ServicioPK;
 import com.nuebus.model.VueltaDiag;
 import com.nuebus.repository.HorarioServicioRepository;
 import com.nuebus.repository.ServicioRepository;
@@ -23,8 +18,6 @@ import com.nuebus.service.VueltaDiagService;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,6 +1,6 @@
 package com.nuebus.repository;
 
-import com.nuebus.model.Usuario;
+
 import com.nuebus.model.Vehiculo;
 import com.nuebus.model.VehiculoPK;
 import com.nuebus.vistas.combos.ComboVehiculo;
@@ -18,21 +18,23 @@ import org.springframework.data.repository.query.Param;
  */
 public interface VehiculoRepository extends JpaRepository< Vehiculo, VehiculoPK> {
 
-    @Query("select v from Vehiculo v where v.vehiculoPK.vehEmpCodigo = ?1 ")
-    public Page<Vehiculo> findVehiculosByEmpresa(String vehEmpCodigo , Pageable pageable);    
+    @Query("select v from Vehiculo v where v.vehiculoPK.vehEmpCodigo = :vehEmpCodigo ")
+    public Page<Vehiculo> findVehiculosByEmpresa( @Param("vehEmpCodigo") String vehEmpCodigo , 
+                                                  Pageable pageable);    
 
     @Query( " Select CASE WHEN COUNT( v ) > 0 THEN true ELSE false END from Vehiculo v "
-            + " where v.vehiculoPK.vehEmpCodigo = ?1 "
-            + "   and v.vehiculoPK.vehInterno = ?2 " )           
-    public boolean existeInternoByEmpresa( String vehEmpCodigo, int vehInterno);
+            + " where v.vehiculoPK.vehEmpCodigo = :vehEmpCodigo "
+            + "   and v.vehiculoPK.vehInterno = :vehInterno " )           
+    public boolean existeInternoByEmpresa( @Param("vehEmpCodigo") String vehEmpCodigo, 
+                                           @Param("vehInterno") int vehInterno );
 
        
     
     //Los habilitados
     @Query( " Select new com.nuebus.vistas.combos.ComboVehiculo( v.vehiculoPK, v.vehiculoPK.vehInterno ) from Vehiculo v "
-            + " where v.vehiculoPK.vehEmpCodigo = ?1 "
+            + " where v.vehiculoPK.vehEmpCodigo = :vehEmpCodigo "
             + "   and v.vehEstado = 0 " )           
-    public List<ComboVehiculo> findVehiculosByEmpresa( String vehEmpCodigo );
+    public List<ComboVehiculo> findVehiculosByEmpresa( @Param("vehEmpCodigo") String vehEmpCodigo );
 
     
     @Query( value = " Select ve.veh_emp_codigo, ve.veh_interno from vehiculos ve "

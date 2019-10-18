@@ -33,7 +33,7 @@ public interface  IncidenciaService {
    
    public Page<IncidenciaDTO> findIncidenciasByEmpresa(Pageable pageable, String empresa);
    
-   public List<ComboDTO> findIncidenciasByEmpresayTipo( String empresa, int in_tipo);
+   public List<Incidencia> findIncidenciasByEmpresayTipo( String empresa, int in_tipo);
     
    
 }
