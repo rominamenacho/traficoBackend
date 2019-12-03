@@ -30,6 +30,8 @@ import com.nuebus.model.ChoferPK;
 import com.nuebus.repository.ChoferRepository;
 import com.nuebus.service.ChoferService;
 import com.nuebus.service.ImagenService;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RestController
 public class ImagenController {
@@ -46,7 +48,63 @@ public class ImagenController {
 
     private final Logger log = LoggerFactory.getLogger(ImagenController.class);
 
-    @RequestMapping(value = "upload/choferes/{cho_emp_codigo}/{cho_codigo}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    //@GetMapping("img/choferes/{cho_emp_codigo}/{cho_codigo}/imagen")
+    @GetMapping("imagen/choferes/empresa/{cho_emp_codigo}/codigo/{cho_codigo}")
+    public ResponseEntity<?> getImagenChofer(@PathVariable String cho_emp_codigo, @PathVariable long cho_codigo,
+            HttpServletResponse response) {
+
+        byte[] image = choferService.getImagenChofer(cho_emp_codigo, cho_codigo);
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        return ResponseEntity.ok(image);
+    }
+
+    //@PutMapping("upload/choferes/{cho_emp_codigo}/{cho_codigo}/uploadImagen")
+    @PutMapping("imagen/choferes/empresa/{cho_emp_codigo}/codigo/{cho_codigo}")
+    public ResponseEntity<?> uploadChoferFromBD(@RequestParam("archivo") MultipartFile archivo,
+            @PathVariable String cho_emp_codigo, @PathVariable long cho_codigo) {
+
+        Map<String, Object> response = new HashMap<>();
+        String nombreArchivo = archivo != null ? archivo.getOriginalFilename() : " arcivo nulo";        
+        ChoferDTO choferDTO = null;
+
+        if ( archivo!= null && !archivo.isEmpty()) {            
+            try {
+
+               choferDTO = choferService.updateImagenChofer(cho_emp_codigo, cho_codigo, archivo.getBytes());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                response.put("error", e.getMessage().concat(":").concat(e.getCause().getMessage()));
+                response.put("mensaje", "Error al subir el archivo " + nombreArchivo);
+                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            }            
+        }
+        return new ResponseEntity<>( choferDTO , HttpStatus.OK);
+    }
+    
+    
+    @DeleteMapping("imagen/choferes/empresa/{cho_emp_codigo}/codigo/{cho_codigo}")
+    @ResponseStatus( HttpStatus.OK )
+    public ChoferDTO deleteImagenChofer( @PathVariable String cho_emp_codigo,  @PathVariable long cho_codigo ) {        
+       return choferService.eliminarImagenChofer( cho_emp_codigo,  cho_codigo );
+    } 
+    
+    
+    /////////////////////// PRUEBAS
+    
+    @GetMapping("img/choferes/{nombreFoto:.+}")
+    public ResponseEntity<Resource> verFoto(@PathVariable("nombreFoto") String nombreFoto) {
+
+        Resource recurso = imagenService.verImagen(nombreFoto, directorioUploadsChoferes);
+
+        HttpHeaders cabeceras = new HttpHeaders();
+        cabeceras.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + recurso.getFilename() + "\"");
+
+        return new ResponseEntity<>(recurso, cabeceras, HttpStatus.OK);
+    }
+    
+    // Sin base de datos con directorio
+    @RequestMapping(value = "imagen/choferes/{cho_emp_codigo}/{cho_codigo}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> uploadChofer(@RequestParam("archivo") MultipartFile archivo,
             @PathVariable String cho_emp_codigo, @PathVariable long cho_codigo) {
 
@@ -76,49 +134,6 @@ public class ImagenController {
         }
 
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
-    }
-
-    @GetMapping("img/choferes/{nombreFoto:.+}")
-    public ResponseEntity<Resource> verFoto(@PathVariable("nombreFoto") String nombreFoto) {
-
-        Resource recurso = imagenService.verImagen(nombreFoto, directorioUploadsChoferes);
-
-        HttpHeaders cabeceras = new HttpHeaders();
-        cabeceras.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + recurso.getFilename() + "\"");
-
-        return new ResponseEntity<>(recurso, cabeceras, HttpStatus.OK);
-    }
-
-    @GetMapping("img/choferes/{cho_emp_codigo}/{cho_codigo}/imagen")
-    public ResponseEntity<?> getImagenChofer(@PathVariable String cho_emp_codigo, @PathVariable long cho_codigo,
-            HttpServletResponse response) {
-
-        byte[] image = choferService.getImagenChofer(cho_emp_codigo, cho_codigo);
-        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
-        return ResponseEntity.ok(image);
-    }
-
-    @PutMapping("upload/choferes/{cho_emp_codigo}/{cho_codigo}/uploadImagen")
-    public ResponseEntity<?> uploadChoferFromBD(@RequestParam("archivo") MultipartFile archivo,
-            @PathVariable String cho_emp_codigo, @PathVariable long cho_codigo) {
-
-        Map<String, Object> response = new HashMap<>();
-        String nombreArchivo = archivo != null ? archivo.getOriginalFilename() : " arcivo nulo";        
-        ChoferDTO choferDTO = null;
-
-        if ( archivo!= null && !archivo.isEmpty()) {            
-            try {
-
-               choferDTO = choferService.updateImagenChofer(cho_emp_codigo, cho_codigo, archivo.getBytes());
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                response.put("error", e.getMessage().concat(":").concat(e.getCause().getMessage()));
-                response.put("mensaje", "Error al subir el archivo " + nombreArchivo);
-                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-            }            
-        }
-        return new ResponseEntity<>( choferDTO , HttpStatus.OK);
     }
 
 }

@@ -27,7 +27,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 	public static final String TOKEN_BASED_AUTH_ENTRY_POINT ="/api/**";
 	public static final String ENTRY_POINT = "/api/login";
 	public static final String ENTRY_POINT_UPLOADS_IMG = "/upload/**";
-	public static final String ENTRY_POINT_VIEW_IMG = "/img/**";
+	public static final String ENTRY_POINT_VIEW_IMG = "/imagen/**";
 	
 
 

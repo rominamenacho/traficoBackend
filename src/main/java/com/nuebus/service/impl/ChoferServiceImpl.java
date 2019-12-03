@@ -347,6 +347,28 @@ public class ChoferServiceImpl implements ChoferService{
         throw new ResourceNotFoundException(codigo, "Chofer no encontrado");
 
     }
+
+    @Override
+    @Transactional(readOnly = false)
+    public ChoferDTO eliminarImagenChofer(String empCodigo, long codigo ) {
+         Chofer chofer = getChoferById( new ChoferPK(empCodigo, codigo));         
+         if( chofer != null ){
+            ImagenChofer imagenChofer = null;
+            if ( chofer.getFoto() != null ) {
+                
+                imagenChofer = imagenChoferRepository.findByIdAndEmpresa(Long.valueOf(chofer.getFoto()),
+                         chofer.getChoferPK().getEmpCodigo());               
+                imagenChoferRepository.delete(imagenChofer);
+                
+                chofer.setFoto( null );                              
+                return  choferMapper.toDTO(choferRepository.save( chofer ));            
+            }
+            
+            return choferMapper.toDTO( chofer );              
+         }else {
+            throw new ResourceNotFoundException(codigo, "Chofer no encontrado");
+         }   
+    }
      
     
 }

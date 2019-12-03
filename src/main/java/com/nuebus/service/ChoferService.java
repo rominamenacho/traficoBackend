@@ -57,6 +57,8 @@ public interface ChoferService {
     
     public byte[] getImagenChofer( String cho_emp_codigo,  long cho_codigo);
     
+    public ChoferDTO eliminarImagenChofer( String cho_emp_codigo,  long cho_codigo );
+    
     
     
 }
