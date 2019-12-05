@@ -104,6 +104,7 @@ public class Chofer implements Serializable{
     @Column( name="cho_chofer" )
     private Integer tipoChofer = 0; 
     
+    @NotNull
     @Column(name="cho_id_aux")
     private Integer idAux;
     

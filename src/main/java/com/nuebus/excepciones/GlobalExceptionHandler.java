@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.nuebus.utilidades.IAuthenticationFacade;
 import com.nuebus.utilidades.Utilities;
+import javax.validation.ConstraintViolation;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -118,6 +119,11 @@ public class GlobalExceptionHandler {
         logger.error("Validacion Generica handler executed");
         return new ResponseEntity<>(ex.objeto, HttpStatus.BAD_REQUEST);
     }
+    
+    @ExceptionHandler( com.nuebus.excepciones.ValidacionRunTimeExcepcion.class )
+    public ResponseEntity< Map<String, Set<String>>> handleValidacionRunTimeExcepcion(com.nuebus.excepciones.ValidacionRunTimeExcepcion ex) {
+        return new ResponseEntity<>(ex.getErrors(), HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(org.springframework.dao.InvalidDataAccessApiUsageException.class)
     public void handleHibernateHibernateException(InvalidDataAccessApiUsageException ex) {
@@ -164,6 +170,23 @@ public class GlobalExceptionHandler {
         loguearError(response, request);
         return new ResponseEntity<ExceptionResponse>(response, HttpStatus.NOT_FOUND);
     }
+    
+    
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(javax.validation.ConstraintViolationException.class)
+    public ResponseEntity< Object> handleConstraintViolation( javax.validation.ConstraintViolationException ex, HttpServletRequest request) {
+         StringBuilder msg=new StringBuilder(ex.getMessage());
+         msg.append("\n");
+         
+         for ( ConstraintViolation cv : ex.getConstraintViolations() ) {
+            msg.append(cv.getPropertyPath());
+            msg.append(" -> ");
+            msg.append(cv.getMessage());
+            msg.append("\n");
+         }        
+        return new ResponseEntity<>( msg , HttpStatus.BAD_REQUEST);
+    }        
+            
 
     @ResponseStatus(value = HttpStatus.CONFLICT)
     @ExceptionHandler(org.springframework.dao.DataAccessException.class)

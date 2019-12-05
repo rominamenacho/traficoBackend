@@ -1,7 +1,10 @@
 package com.nuebus.utilidades;
 
+import com.nuebus.excepciones.ValidacionRunTimeExcepcion;
+import java.math.BigDecimal;
 import java.text.*;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -14,17 +17,19 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
    
-/**
- * A Class class.
- * <P>
- * @author Oracle JDeveloper Team
- */
+
 public class Utilities {
+    
+    private static Logger logger = LoggerFactory.getLogger(Utilities.class);
+    
+    
     public static final String FORMAT_ORACLE_TIMESTAMP = "dd/mm/yyyy hh24:mi:ss";
     public static final String FORMAT_JAVA_TIMESTAMP = "dd/MM/yyyy HH:mm:ss";
     
@@ -235,6 +240,24 @@ public class Utilities {
         return error;    
     }
     
+     public static  <E> Map<String, Set<String>>  validateEntityAndThrowExcep( E objeto ){    
+        
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+                
+        Map<String, Set<String>> errors = new HashMap<>();        
+        Set<ConstraintViolation<E>> violations = validator.validate(objeto);        
+        for (ConstraintViolation<E> violation : violations) {      
+            errors.computeIfPresent( violation.getPropertyPath().toString(),( key, value ) -> { value.add( violation.getMessage() ); return value; } );
+            errors.computeIfAbsent( violation.getPropertyPath().toString(), key -> new HashSet<>()).add( violation.getMessage() );   
+        }   
+        
+        if( !errors.isEmpty() ){
+            throw new ValidacionRunTimeExcepcion( errors ); 
+        }        
+        return errors;       
+    }      
+     
     
     public static String dateToString(java.util.Date fecha, String pattern){
         SimpleDateFormat template;
@@ -266,6 +289,47 @@ public class Utilities {
             date = null;
         }
         return date;
+    }
+    
+     public static String getString( Object campo ){
+        String retorno = "";        
+        if( campo != null ){
+           retorno = ((String)campo).trim();
+        }
+        return retorno;
+    }
+    
+    public static int getInt( Object campo ){
+        int retorno = -1;    
+        if( campo != null ){
+            try{
+                retorno = ((BigDecimal) campo).intValue();
+            }catch( Exception ex ){ retorno = -1; logger.error( ex.getMessage() ); }    
+        }
+        return retorno;
+    }
+    
+    public static long getLong( Object campo ){
+        long retorno = -1;    
+        if( campo != null ){
+            try{
+                retorno = ((BigDecimal) campo).longValue();
+            }catch( Exception ex ){ retorno = -1; logger.error( ex.getMessage() ); }  
+        }
+        return retorno;
+    }
+    
+    public static Date getDate( Object campo ){        
+        GregorianCalendar dateDefault = new GregorianCalendar();
+        dateDefault.set(GregorianCalendar.YEAR, 1900);
+        
+        Date retorno = dateDefault.getTime();    
+        if( campo != null ){
+            try{
+                retorno = (java.util.Date)campo; 
+            }catch( Exception ex ){ retorno = dateDefault.getTime();  logger.error( ex.getMessage() ); }     
+        }
+        return retorno;
     }
     
 }

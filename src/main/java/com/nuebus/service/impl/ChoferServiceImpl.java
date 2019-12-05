@@ -17,6 +17,7 @@ import com.nuebus.repository.ChoferRepository;
 import com.nuebus.repository.ImagenChoferRepository;
 import com.nuebus.repository.IncidenciaRepository;
 import com.nuebus.service.ChoferService;
+import com.nuebus.utilidades.Utilities;
 import com.nuebus.vistas.MapperVistas;
 import com.nuebus.vistas.combos.ComboChoferes;
 
@@ -89,7 +90,7 @@ public class ChoferServiceImpl implements ChoferService{
         }
 
         choferMapper.mapToEntity(choferDTO, chofer);
-
+        Utilities.validateEntityAndThrowExcep( chofer );
         Chofer choferUpdated = choferRepository.save(chofer);
 
         return choferMapper.toDTO(choferUpdated);
@@ -104,6 +105,7 @@ public class ChoferServiceImpl implements ChoferService{
         int codigo = choferRepository.maxCodigoPersonalByEmpresa(choferDTO.getChoferPK().getEmpCodigo(),
                 choferDTO.getTipoChofer());
         choferDTO.getChoferPK().setCodigo(codigo + 1);
+        Utilities.validateEntityAndThrowExcep( chofer );
         Chofer choferSaved = choferRepository.save(chofer);
         return choferMapper.toDTO(choferSaved);
     }
